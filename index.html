@@ -154,7 +154,7 @@
       overflow: hidden;
     }
 
-    /* PANEL GAUCHE */
+    /* PANEL GAUCHE - Catégories */
     .roulettes-panel {
       width: 260px;
       background: #0f0f14;
@@ -232,18 +232,19 @@
       color: #88889a;
     }
 
-    /* PANEL CENTRAL - Roulette */
-    .roulette-panel {
+    /* PANEL CENTRAL - Roulette + Liste */
+    .center-panel {
       flex: 1;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
       background: #0a0a0e;
+      overflow-y: auto;
     }
 
     .slot-machine {
       text-align: center;
-      padding: 24px;
+      padding: 24px 24px 16px 24px;
+      border-bottom: 1px solid #2a2a35;
     }
 
     .weapon-label {
@@ -256,6 +257,7 @@
       font-family: monospace;
       text-transform: uppercase;
       letter-spacing: 1px;
+      display: inline-block;
     }
 
     .reel-viewport {
@@ -265,11 +267,13 @@
       overflow: hidden;
       background: #0f0f14;
       border: 2px solid #3a3a48;
+      position: relative;
     }
 
     .reel-strip {
       display: flex;
       flex-direction: column;
+      transition: transform 0.1s linear;
     }
 
     .reel-item {
@@ -298,12 +302,51 @@
       letter-spacing: 1px;
     }
 
+    .result-display {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #14141c;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 10;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .result-display.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .result-display img {
+      max-width: 180px;
+      max-height: 180px;
+      object-fit: contain;
+    }
+
+    .result-display .result-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #aa88ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      padding: 0 16px;
+    }
+
     .btn-spin {
-      margin-top: 24px;
+      margin-top: 20px;
       background: #14141c;
       border: 2px solid #3a3a48;
-      padding: 12px 32px;
-      font-size: 15px;
+      padding: 10px 32px;
+      font-size: 14px;
       font-weight: bold;
       color: #aa88ff;
       cursor: pointer;
@@ -322,26 +365,24 @@
       cursor: not-allowed;
     }
 
-    /* PANEL DROIT - Liste des éléments avec recherche */
-    .items-panel {
-      width: 300px;
-      background: #0f0f14;
-      border-left: 1px solid #2a2a35;
+    /* Liste des éléments (sous la roulette) */
+    .items-section {
+      padding: 16px 24px 24px 24px;
+      flex: 1;
       display: flex;
       flex-direction: column;
+      min-height: 250px;
     }
 
     .items-header {
-      padding: 16px;
-      border-bottom: 1px solid #2a2a35;
-      background: #0c0c10;
+      margin-bottom: 12px;
     }
 
     .items-header h3 {
       color: #aa88ff;
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 2px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .search-bar {
@@ -352,7 +393,7 @@
       color: #c8c8d8;
       font-family: monospace;
       font-size: 11px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .search-bar:focus {
@@ -370,9 +411,9 @@
       background: #14141c;
       border: 1px solid #3a3a48;
       color: #c8c8d8;
-      padding: 6px 12px;
+      padding: 5px 10px;
       cursor: pointer;
-      font-size: 10px;
+      font-size: 9px;
       font-family: monospace;
       transition: 0.15s;
     }
@@ -393,14 +434,15 @@
     .items-list {
       flex: 1;
       overflow-y: auto;
-      padding: 12px;
+      max-height: 200px;
+      border: 1px solid #2a2a35;
+      background: #0f0f14;
     }
 
     .item-check {
       background: #14141c;
-      border: 1px solid #2a2a35;
-      padding: 8px 10px;
-      margin-bottom: 6px;
+      border-bottom: 1px solid #2a2a35;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -410,22 +452,99 @@
 
     .item-check:hover {
       background: #1c1c26;
-      border-color: #8866cc;
     }
 
     .item-check input {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       cursor: pointer;
       accent-color: #aa88ff;
     }
 
     .item-check .item-name {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 500;
       color: #d0d0e0;
       flex: 1;
       text-transform: uppercase;
+    }
+
+    /* PANEL DROIT - Historique */
+    .history-panel {
+      width: 280px;
+      background: #0f0f14;
+      border-left: 1px solid #2a2a35;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .history-header {
+      padding: 16px;
+      border-bottom: 1px solid #2a2a35;
+      background: #0c0c10;
+    }
+
+    .history-header h3 {
+      color: #aa88ff;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .history-item {
+      background: #14141c;
+      border: 1px solid #2a2a35;
+      padding: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: grab;
+      transition: 0.1s;
+    }
+
+    .history-item:active {
+      cursor: grabbing;
+    }
+
+    .history-item.dragging {
+      opacity: 0.4;
+    }
+
+    .history-item img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      background: #0a0a0e;
+      border: 1px solid #3a3a48;
+    }
+
+    .history-info {
+      flex: 1;
+    }
+
+    .history-name {
+      font-size: 10px;
+      font-weight: 600;
+      color: #d0d0e0;
+      text-transform: uppercase;
+    }
+
+    .history-category {
+      font-size: 8px;
+      color: #aa88ff;
+      text-transform: uppercase;
+    }
+
+    .history-time {
+      font-size: 8px;
+      color: #6a6a7a;
+      margin-top: 2px;
     }
 
     .clear-history-btn {
@@ -517,19 +636,9 @@
       color: #aa88ff;
     }
 
-    /* Animation */
-    @keyframes pop {
-      0% { transform: scale(0.7); opacity: 0; }
-      80% { transform: scale(1.05); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .picked {
-      animation: pop 0.4s ease-out;
-    }
-
     /* Responsive */
     @media (max-width: 1000px) {
-      .items-panel { width: 260px; }
+      .history-panel { width: 240px; }
       .reel-viewport { width: 220px; height: 260px; }
       .reel-item { height: 260px; }
       .reel-item img { max-width: 130px; max-height: 130px; }
@@ -537,18 +646,19 @@
 
     @media (max-width: 900px) {
       .roulettes-panel { width: 220px; }
-      .items-panel { width: 240px; }
-      .player-card { min-width: 150px; }
+      .history-panel { width: 220px; }
     }
 
     @media (max-width: 768px) {
       .main-content { flex-direction: column; }
-      .roulettes-panel { width: 100%; max-height: 150px; flex-direction: row; overflow-x: auto; }
+      .roulettes-panel { width: 100%; max-height: 120px; flex-direction: row; overflow-x: auto; }
       .roulettes-list { flex-direction: row; overflow-x: auto; }
-      .roulette-item { min-width: 120px; }
-      .items-panel { width: 100%; max-height: 250px; }
-      .players-banner { order: 2; }
-      .main-content { order: 1; }
+      .roulette-item { min-width: 100px; }
+      .history-panel { width: 100%; max-height: 200px; }
+      .center-panel { order: 1; }
+      .roulettes-panel { order: 2; }
+      .history-panel { order: 3; }
+      .items-list { max-height: 150px; }
     }
   </style>
 </head>
@@ -570,29 +680,41 @@
       <div class="roulettes-list" id="categoriesList"></div>
     </div>
 
-    <!-- PANEL CENTRAL - Roulette -->
-    <div class="roulette-panel">
+    <!-- PANEL CENTRAL - Roulette + Liste des éléments -->
+    <div class="center-panel">
       <div class="slot-machine">
         <div class="weapon-label" id="weaponLabel">SÉLECTIONNE UNE CATÉGORIE</div>
         <div class="reel-viewport" id="reelViewport">
           <div class="reel-strip" id="reelStrip"></div>
+          <div class="result-display" id="resultDisplay">
+            <img id="resultImg" src="" alt="">
+            <div class="result-name" id="resultName"></div>
+          </div>
         </div>
         <button class="btn-spin" id="spinBtn" disabled>SPIN</button>
       </div>
+
+      <!-- Liste des éléments sous la roulette -->
+      <div class="items-section">
+        <div class="items-header">
+          <h3>LISTE DES ÉLÉMENTS</h3>
+          <input type="text" id="searchBar" class="search-bar" placeholder="RECHERCHER...">
+          <div class="list-controls">
+            <button id="checkAllBtn">TOUT COCHER</button>
+            <button id="uncheckAllBtn">TOUT DÉCOCHER</button>
+            <span class="count-selected" id="countSelected">0 sélectionné(s)</span>
+          </div>
+        </div>
+        <div class="items-list" id="itemsList"></div>
+      </div>
     </div>
 
-    <!-- PANEL DROIT - Liste des éléments avec recherche -->
-    <div class="items-panel">
-      <div class="items-header">
-        <h3>LISTE DES ÉLÉMENTS</h3>
-        <input type="text" id="searchBar" class="search-bar" placeholder="RECHERCHER...">
-        <div class="list-controls">
-          <button id="checkAllBtn">TOUT COCHER</button>
-          <button id="uncheckAllBtn">TOUT DÉCOCHER</button>
-          <span class="count-selected" id="countSelected">0 sélectionné(s)</span>
-        </div>
+    <!-- PANEL DROIT - Historique -->
+    <div class="history-panel">
+      <div class="history-header">
+        <h3>HISTORIQUE (DRAG & DROP)</h3>
       </div>
-      <div class="items-list" id="itemsList"></div>
+      <div class="history-list" id="historyList"></div>
       <button class="clear-history-btn" id="clearHistoryBtn">EFFACER L'HISTORIQUE</button>
     </div>
   </div>
@@ -672,21 +794,25 @@
   let history = [];
   let currentCategory = null;
   let currentItems = [];
-  let selectedItems = []; // Items cochés pour la roulette
   let spinning = false;
   let nextPlayerId = 1;
   let draggedItem = null;
   let pendingConfirmCallback = null;
   let spinTimeout = null;
   let searchQuery = "";
+  let animationFrame = null;
   
   // DOM Elements
   const playersListEl = document.getElementById('playersList');
   const categoriesListEl = document.getElementById('categoriesList');
   const itemsListEl = document.getElementById('itemsList');
+  const historyListEl = document.getElementById('historyList');
   const weaponLabel = document.getElementById('weaponLabel');
   const reelStrip = document.getElementById('reelStrip');
   const reelViewport = document.getElementById('reelViewport');
+  const resultDisplay = document.getElementById('resultDisplay');
+  const resultImg = document.getElementById('resultImg');
+  const resultName = document.getElementById('resultName');
   const spinBtn = document.getElementById('spinBtn');
   const searchBar = document.getElementById('searchBar');
   const checkAllBtn = document.getElementById('checkAllBtn');
@@ -727,14 +853,12 @@
     pendingConfirmCallback = null;
   }
   
-  // Mettre à jour le compteur d'éléments sélectionnés
   function updateCount() {
     const selected = currentItems.filter(item => item.checked);
     countSelectedEl.textContent = selected.length + ' sélectionné(s)';
     spinBtn.disabled = selected.length === 0;
   }
   
-  // Obtenir les éléments sélectionnés
   function getSelectedItems() {
     return currentItems.filter(item => item.checked);
   }
@@ -876,10 +1000,63 @@
       time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
     });
     if (history.length > 50) history.pop();
+    renderHistory();
     Storage.saveHistory(history);
   }
   
-  // ==================== LISTE DES ÉLÉMENTS (avec recherche et sélection) ====================
+  function renderHistory() {
+    if (!historyListEl) return;
+    
+    if (history.length === 0) {
+      historyListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun tirage</div>';
+      return;
+    }
+    
+    historyListEl.innerHTML = history.map((item, idx) => `
+      <div class="history-item" draggable="true" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}">
+        <img src="${item.img || ''}" onerror="this.style.display='none'">
+        <div class="history-info">
+          <div class="history-name">${escapeHtml(item.name)}</div>
+          <div class="history-category">${escapeHtml(item.category?.toUpperCase() || 'GÉNÉRAL')}</div>
+          <div class="history-time">${item.time}</div>
+        </div>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.history-item').forEach(el => {
+      el.setAttribute('draggable', 'true');
+      el.removeEventListener('dragstart', el._dragStartHandler);
+      el.removeEventListener('dragend', el._dragEndHandler);
+      
+      el._dragStartHandler = (e) => {
+        const name = el.dataset.itemName;
+        const img = el.dataset.itemImg;
+        const cat = el.dataset.itemCat;
+        draggedItem = { name, img, category: cat };
+        e.dataTransfer.setData('text/plain', JSON.stringify(draggedItem));
+        el.classList.add('dragging');
+      };
+      el._dragEndHandler = () => {
+        el.classList.remove('dragging');
+        draggedItem = null;
+      };
+      
+      el.addEventListener('dragstart', el._dragStartHandler);
+      el.addEventListener('dragend', el._dragEndHandler);
+    });
+  }
+  
+  function clearHistory() {
+    showConfirm('Effacer tout l\'historique des tirages ?', (confirmed) => {
+      if (confirmed) {
+        history = [];
+        renderHistory();
+        Storage.saveHistory(history);
+      }
+    });
+  }
+  
+  // ==================== LISTE DES ÉLÉMENTS ====================
   function renderItemsList() {
     if (!itemsListEl || !currentItems.length) {
       if (itemsListEl) itemsListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun élément</div>';
@@ -902,7 +1079,6 @@
       </div>
     `).join('');
     
-    // Ajouter les événements aux checkboxes
     filtered.forEach(item => {
       const cb = document.getElementById(`cb_${item.id}`);
       if (cb) {
@@ -958,11 +1134,19 @@
   }
   
   function resetReel() {
+    if (resultDisplay) resultDisplay.classList.remove('active');
     renderReel();
     if (currentCategory && weaponLabel) {
       const catInfo = DESTINY_DATA.categories[currentCategory];
       weaponLabel.innerHTML = catInfo ? catInfo.title : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE';
     }
+  }
+  
+  function showResult(item) {
+    if (resultImg) resultImg.src = item.img || '';
+    if (resultName) resultName.textContent = item.name;
+    if (resultDisplay) resultDisplay.classList.add('active');
+    if (weaponLabel) weaponLabel.innerHTML = item.name;
   }
   
   function spin() {
@@ -971,12 +1155,14 @@
     const selected = getSelectedItems();
     if (selected.length === 0) return;
     
-    // Annuler un timeout précédent
     if (spinTimeout) clearTimeout(spinTimeout);
+    if (animationFrame) cancelAnimationFrame(animationFrame);
     
     spinning = true;
     spinBtn.disabled = true;
     spinBtn.innerHTML = 'SPINNING...';
+    
+    if (resultDisplay) resultDisplay.classList.remove('active');
     
     const stepHeight = 300;
     const selectedIndex = Math.floor(Math.random() * selected.length);
@@ -998,49 +1184,29 @@
       if (reelStrip) reelStrip.style.transform = `translateY(${currentY}px)`;
       
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        animationFrame = requestAnimationFrame(animate);
       } else {
-        // Position finale exacte
         const finalY = -selectedIndex * stepHeight;
         if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
         
         const selectedItem = selected[selectedIndex];
-        if (weaponLabel) weaponLabel.innerHTML = selectedItem.name;
+        showResult(selectedItem);
+        addToHistory(selectedItem);
         
-        // Afficher le résultat
-        if (reelViewport) {
-          reelViewport.innerHTML = `
-            <div class="reel-item picked" style="height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
-              <img src="${selectedItem.img || ''}" style="max-width:180px; max-height:180px; object-fit:contain;" onerror="this.style.display='none'">
-              <div style="font-size:16px; font-weight:bold; color:#aa88ff; text-transform:uppercase; letter-spacing:1px;">${escapeHtml(selectedItem.name)}</div>
-            </div>
-          `;
-          
-          // Ajouter à l'historique
-          addToHistory(selectedItem);
-          
-          // Remettre la roulette après 2.5 secondes
-          spinTimeout = setTimeout(() => {
-            if (reelViewport && reelStrip) {
-              reelViewport.innerHTML = '';
-              reelViewport.appendChild(reelStrip);
-              resetReel();
-            }
-            spinning = false;
-            spinBtn.disabled = false;
-            spinBtn.innerHTML = 'SPIN';
-            spinTimeout = null;
-          }, 2500);
-        } else {
+        spinTimeout = setTimeout(() => {
+          resetReel();
           spinning = false;
           spinBtn.disabled = false;
           spinBtn.innerHTML = 'SPIN';
-        }
+          spinTimeout = null;
+        }, 2500);
+        
+        animationFrame = null;
       }
     }
     
     resetReel();
-    requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
   }
   
   // ==================== CATÉGORIES ====================
@@ -1053,7 +1219,7 @@
         <div class="item-icon">${categories[key].logo ? `<img src="${categories[key].logo}" alt="${categories[key].title}">` : ''}</div>
         <div class="item-info">
           <div class="item-title">${categories[key].title}</div>
-          <div class="item-sub">${getItemsByCategory(key).length} items</div>
+          <div class="item-sub">${(DESTINY_DATA.items[key] || []).length} items</div>
         </div>
       </div>
     `).join('');
@@ -1074,11 +1240,13 @@
     if (spinning) return;
     
     currentCategory = categoryKey;
-    // Copier les items avec un état checked par défaut à true
-    currentItems = getItemsByCategory(categoryKey).map(item => ({
+    const sourceItems = DESTINY_DATA.items[categoryKey] || [];
+    currentItems = sourceItems.map(item => ({
       ...item,
       checked: true
     }));
+    
+    console.log(`Catégorie: ${categoryKey} - ${currentItems.length} items`);
     
     document.querySelectorAll('.roulette-item').forEach(el => {
       if (el.dataset.category === categoryKey) {
@@ -1118,15 +1286,6 @@
     closePlayerModal();
   }
   
-  function clearHistory() {
-    showConfirm('Effacer tout l\'historique des tirages ?', (confirmed) => {
-      if (confirmed) {
-        history = [];
-        Storage.saveHistory(history);
-      }
-    });
-  }
-  
   // ==================== INITIALISATION ====================
   function init() {
     if (typeof DESTINY_DATA === 'undefined') {
@@ -1149,8 +1308,8 @@
     
     renderCategories();
     renderPlayers();
+    renderHistory();
     
-    // Événements
     if (spinBtn) spinBtn.addEventListener('click', spin);
     if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearHistory);
     if (addPlayerBtn) addPlayerBtn.addEventListener('click', openPlayerModal);
@@ -1198,10 +1357,9 @@
       });
     }
     
-    console.log('Application prête - ' + players.length + ' joueurs');
+    console.log('Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
   }
   
-  // Démarrer l'application quand le DOM est prêt
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

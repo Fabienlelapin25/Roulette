@@ -330,7 +330,7 @@
       max-width: 180px;
       max-height: 180px;
       object-fit: contain;
-      animation: pulse 1s ease-out;
+      animation: zoomExplosion 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
 
     .result-display .result-name {
@@ -338,21 +338,43 @@
       font-weight: bold;
       color: #aa88ff;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       text-align: center;
       padding: 0 16px;
-      animation: fadeInUp 0.8s ease-out;
+      animation: fadeInUp 0.5s ease-out 0.1s both;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(0.5); opacity: 0; }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); opacity: 1; }
+    /* Nouvel effet de zoom explosif */
+    @keyframes zoomExplosion {
+      0% {
+        transform: scale(0.2) rotate(-15deg);
+        opacity: 0;
+        filter: blur(4px);
+      }
+      40% {
+        transform: scale(1.1) rotate(2deg);
+      }
+      70% {
+        transform: scale(0.98);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+        filter: blur(0);
+      }
     }
 
     @keyframes fadeInUp {
-      0% { transform: translateY(20px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
+      0% {
+        transform: translateY(30px);
+        opacity: 0;
+        letter-spacing: 5px;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+        letter-spacing: 2px;
+      }
     }
 
     .btn-spin {
@@ -656,6 +678,7 @@
       .reel-viewport { width: 220px; height: 260px; }
       .reel-item { height: 260px; }
       .reel-item img { max-width: 130px; max-height: 130px; }
+      .result-display img { max-width: 150px; max-height: 150px; }
     }
 
     @media (max-width: 900px) {
@@ -814,7 +837,6 @@
   let spinTimeout = null;
   let searchQuery = "";
   let animationFrame = null;
-  let spinStartTime = null;
   
   // DOM Elements
   const playersListEl = document.getElementById('playersList');
@@ -1147,9 +1169,9 @@
     spinBtn.disabled = false;
   }
   
+  // resetReel ne fait que cacher le résultat, sans reconstruire la roulette
   function resetReel() {
     if (resultDisplay) resultDisplay.classList.remove('active');
-    renderReel();
   }
   
   function showResult(item) {
@@ -1173,8 +1195,11 @@
     spinBtn.disabled = true;
     spinBtn.innerHTML = 'SPINNING...';
     
+    // Cacher le résultat précédent
     if (resultDisplay) resultDisplay.classList.remove('active');
-    resetReel();
+    
+    // RECONSTRUIRE LA ROULETTE AVANT DE LANCER L'ANIMATION
+    renderReel();
     
     // Petit délai pour laisser la roulette se repositionner
     setTimeout(() => {
@@ -1282,6 +1307,7 @@
       checked: true
     }));
     
+    // Cacher le résultat quand on change de catégorie
     if (resultDisplay) resultDisplay.classList.remove('active');
     
     console.log(`Catégorie: ${categoryKey} - ${currentItems.length} items`);

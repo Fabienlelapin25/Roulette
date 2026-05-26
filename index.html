@@ -232,7 +232,7 @@
       color: #88889a;
     }
 
-    /* PANEL CENTRAL */
+    /* PANEL CENTRAL - Roulette */
     .roulette-panel {
       flex: 1;
       display: flex;
@@ -322,79 +322,113 @@
       cursor: not-allowed;
     }
 
-    /* PANEL DROIT */
-    .selections-panel {
-      width: 280px;
+    /* PANEL DROIT - Liste des éléments avec recherche */
+    .items-panel {
+      width: 300px;
       background: #0f0f14;
       border-left: 1px solid #2a2a35;
       display: flex;
       flex-direction: column;
     }
 
-    .selections-header {
+    .items-header {
       padding: 16px;
       border-bottom: 1px solid #2a2a35;
       background: #0c0c10;
     }
 
-    .selections-header h3 {
+    .items-header h3 {
       color: #aa88ff;
       font-size: 12px;
       letter-spacing: 2px;
+      margin-bottom: 12px;
     }
 
-    .selections-list {
+    .search-bar {
+      width: 100%;
+      padding: 8px 12px;
+      background: #0a0a0e;
+      border: 1px solid #3a3a48;
+      color: #c8c8d8;
+      font-family: monospace;
+      font-size: 11px;
+      margin-bottom: 12px;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: #8866cc;
+    }
+
+    .list-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .list-controls button {
+      background: #14141c;
+      border: 1px solid #3a3a48;
+      color: #c8c8d8;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 10px;
+      font-family: monospace;
+      transition: 0.15s;
+    }
+
+    .list-controls button:hover {
+      background: #1c1c26;
+      border-color: #8866cc;
+    }
+
+    .count-selected {
+      color: #aa88ff;
+      font-size: 10px;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .items-list {
       flex: 1;
       overflow-y: auto;
       padding: 12px;
     }
 
-    .selection-item {
+    .item-check {
       background: #14141c;
       border: 1px solid #2a2a35;
-      padding: 8px;
-      margin-bottom: 8px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
       display: flex;
       align-items: center;
       gap: 10px;
-      cursor: grab;
+      cursor: pointer;
       transition: 0.1s;
     }
 
-    .selection-item:active {
-      cursor: grabbing;
+    .item-check:hover {
+      background: #1c1c26;
+      border-color: #8866cc;
     }
 
-    .selection-item.dragging {
-      opacity: 0.4;
+    .item-check input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #aa88ff;
     }
 
-    .selection-item img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-      background: #0a0a0e;
-      border: 1px solid #3a3a48;
-    }
-
-    .selection-info {
-      flex: 1;
-    }
-
-    .selection-name {
+    .item-check .item-name {
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 500;
       color: #d0d0e0;
+      flex: 1;
       text-transform: uppercase;
     }
 
-    .selection-category {
-      font-size: 9px;
-      color: #aa88ff;
-      text-transform: uppercase;
-    }
-
-    .clear-btn {
+    .clear-history-btn {
       background: #14141c;
       border: 1px solid #4a3a5a;
       color: #aa88aa;
@@ -406,7 +440,7 @@
       text-transform: uppercase;
     }
 
-    .clear-btn:hover {
+    .clear-history-btn:hover {
       background: #1c1c26;
       border-color: #ff8888;
     }
@@ -483,7 +517,7 @@
       color: #aa88ff;
     }
 
-    /* Animation picked */
+    /* Animation */
     @keyframes pop {
       0% { transform: scale(0.7); opacity: 0; }
       80% { transform: scale(1.05); }
@@ -494,13 +528,17 @@
     }
 
     /* Responsive */
-    @media (max-width: 900px) {
-      .roulettes-panel { width: 220px; }
-      .selections-panel { width: 240px; }
-      .player-card { min-width: 150px; }
+    @media (max-width: 1000px) {
+      .items-panel { width: 260px; }
       .reel-viewport { width: 220px; height: 260px; }
       .reel-item { height: 260px; }
       .reel-item img { max-width: 130px; max-height: 130px; }
+    }
+
+    @media (max-width: 900px) {
+      .roulettes-panel { width: 220px; }
+      .items-panel { width: 240px; }
+      .player-card { min-width: 150px; }
     }
 
     @media (max-width: 768px) {
@@ -508,7 +546,7 @@
       .roulettes-panel { width: 100%; max-height: 150px; flex-direction: row; overflow-x: auto; }
       .roulettes-list { flex-direction: row; overflow-x: auto; }
       .roulette-item { min-width: 120px; }
-      .selections-panel { width: 100%; max-height: 200px; }
+      .items-panel { width: 100%; max-height: 250px; }
       .players-banner { order: 2; }
       .main-content { order: 1; }
     }
@@ -543,15 +581,19 @@
       </div>
     </div>
 
-    <!-- PANEL DROIT - Historique -->
-    <div class="selections-panel">
-      <div class="selections-header">
-        <h3>HISTORIQUE (DRAG & DROP)</h3>
+    <!-- PANEL DROIT - Liste des éléments avec recherche -->
+    <div class="items-panel">
+      <div class="items-header">
+        <h3>LISTE DES ÉLÉMENTS</h3>
+        <input type="text" id="searchBar" class="search-bar" placeholder="RECHERCHER...">
+        <div class="list-controls">
+          <button id="checkAllBtn">TOUT COCHER</button>
+          <button id="uncheckAllBtn">TOUT DÉCOCHER</button>
+          <span class="count-selected" id="countSelected">0 sélectionné(s)</span>
+        </div>
       </div>
-      <div class="selections-list" id="selectionsList"></div>
-      <div style="padding: 12px;">
-        <button class="clear-btn" id="clearHistory">EFFACER L'HISTORIQUE</button>
-      </div>
+      <div class="items-list" id="itemsList"></div>
+      <button class="clear-history-btn" id="clearHistoryBtn">EFFACER L'HISTORIQUE</button>
     </div>
   </div>
 </div>
@@ -630,21 +672,27 @@
   let history = [];
   let currentCategory = null;
   let currentItems = [];
+  let selectedItems = []; // Items cochés pour la roulette
   let spinning = false;
   let nextPlayerId = 1;
   let draggedItem = null;
   let pendingConfirmCallback = null;
   let spinTimeout = null;
+  let searchQuery = "";
   
   // DOM Elements
   const playersListEl = document.getElementById('playersList');
   const categoriesListEl = document.getElementById('categoriesList');
-  const selectionsListEl = document.getElementById('selectionsList');
+  const itemsListEl = document.getElementById('itemsList');
   const weaponLabel = document.getElementById('weaponLabel');
   const reelStrip = document.getElementById('reelStrip');
   const reelViewport = document.getElementById('reelViewport');
   const spinBtn = document.getElementById('spinBtn');
-  const clearHistoryBtn = document.getElementById('clearHistory');
+  const searchBar = document.getElementById('searchBar');
+  const checkAllBtn = document.getElementById('checkAllBtn');
+  const uncheckAllBtn = document.getElementById('uncheckAllBtn');
+  const countSelectedEl = document.getElementById('countSelected');
+  const clearHistoryBtn = document.getElementById('clearHistoryBtn');
   const addPlayerBtn = document.getElementById('addPlayerBtn');
   
   // Modals
@@ -677,6 +725,18 @@
   function hideConfirm() {
     confirmDialog.classList.remove('active');
     pendingConfirmCallback = null;
+  }
+  
+  // Mettre à jour le compteur d'éléments sélectionnés
+  function updateCount() {
+    const selected = currentItems.filter(item => item.checked);
+    countSelectedEl.textContent = selected.length + ' sélectionné(s)';
+    spinBtn.disabled = selected.length === 0;
+  }
+  
+  // Obtenir les éléments sélectionnés
+  function getSelectedItems() {
+    return currentItems.filter(item => item.checked);
   }
   
   // ==================== GESTION DES JOUEURS ====================
@@ -816,72 +876,74 @@
       time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
     });
     if (history.length > 50) history.pop();
-    renderHistory();
     Storage.saveHistory(history);
   }
   
-  function clearHistory() {
-    showConfirm('Effacer tout l\'historique ?', (confirmed) => {
-      if (confirmed) {
-        history = [];
-        renderHistory();
-        Storage.saveHistory(history);
-      }
-    });
-  }
-  
-  function renderHistory() {
-    if (!selectionsListEl) return;
-    
-    if (history.length === 0) {
-      selectionsListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun tirage</div>';
+  // ==================== LISTE DES ÉLÉMENTS (avec recherche et sélection) ====================
+  function renderItemsList() {
+    if (!itemsListEl || !currentItems.length) {
+      if (itemsListEl) itemsListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun élément</div>';
       return;
     }
     
-    selectionsListEl.innerHTML = history.map((item, idx) => `
-      <div class="selection-item" draggable="true" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}">
-        <img src="${item.img || ''}" onerror="this.style.display='none'">
-        <div class="selection-info">
-          <div class="selection-name">${escapeHtml(item.name)}</div>
-          <div class="selection-category">${escapeHtml(item.category?.toUpperCase() || 'GÉNÉRAL')}</div>
-        </div>
+    const filtered = currentItems.filter(item => 
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
+    if (filtered.length === 0) {
+      itemsListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun résultat</div>';
+      return;
+    }
+    
+    itemsListEl.innerHTML = filtered.map(item => `
+      <div class="item-check" data-item-id="${item.id}">
+        <input type="checkbox" id="cb_${item.id}" ${item.checked ? 'checked' : ''}>
+        <label for="cb_${item.id}" class="item-name">${escapeHtml(item.name)}</label>
       </div>
     `).join('');
     
-    document.querySelectorAll('.selection-item').forEach(el => {
-      el.setAttribute('draggable', 'true');
-      el.removeEventListener('dragstart', el._dragStartHandler);
-      el.removeEventListener('dragend', el._dragEndHandler);
-      
-      el._dragStartHandler = (e) => {
-        const name = el.dataset.itemName;
-        const img = el.dataset.itemImg;
-        const cat = el.dataset.itemCat;
-        draggedItem = { name, img, category: cat };
-        e.dataTransfer.setData('text/plain', JSON.stringify(draggedItem));
-        el.classList.add('dragging');
-      };
-      el._dragEndHandler = () => {
-        el.classList.remove('dragging');
-        draggedItem = null;
-      };
-      
-      el.addEventListener('dragstart', el._dragStartHandler);
-      el.addEventListener('dragend', el._dragEndHandler);
+    // Ajouter les événements aux checkboxes
+    filtered.forEach(item => {
+      const cb = document.getElementById(`cb_${item.id}`);
+      if (cb) {
+        cb.addEventListener('change', () => {
+          item.checked = cb.checked;
+          updateCount();
+          renderReel();
+        });
+      }
     });
+    
+    updateCount();
+  }
+  
+  function checkAll() {
+    currentItems.forEach(item => item.checked = true);
+    renderItemsList();
+    renderReel();
+  }
+  
+  function uncheckAll() {
+    currentItems.forEach(item => item.checked = false);
+    renderItemsList();
+    renderReel();
   }
   
   // ==================== ROULETTE ====================
   function renderReel() {
-    if (!reelStrip || !currentItems.length) {
-      if (reelStrip) reelStrip.innerHTML = '<div class="reel-item"><div>Aucun élément</div></div>';
+    if (!reelStrip) return;
+    
+    const selected = getSelectedItems();
+    if (selected.length === 0) {
+      reelStrip.innerHTML = '<div class="reel-item"><div>Aucun élément sélectionné</div></div>';
+      spinBtn.disabled = true;
       return;
     }
     
     reelStrip.innerHTML = '';
     // 5 copies pour un effet plus fluide
     for (let i = 0; i < 5; i++) {
-      currentItems.forEach(item => {
+      selected.forEach(item => {
         const div = document.createElement('div');
         div.className = 'reel-item';
         div.innerHTML = `
@@ -892,18 +954,22 @@
       });
     }
     reelStrip.style.transform = 'translateY(0px)';
+    spinBtn.disabled = false;
   }
   
   function resetReel() {
     renderReel();
-    if (currentItems.length > 0 && weaponLabel && currentCategory) {
+    if (currentCategory && weaponLabel) {
       const catInfo = DESTINY_DATA.categories[currentCategory];
       weaponLabel.innerHTML = catInfo ? catInfo.title : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE';
     }
   }
   
   function spin() {
-    if (spinning || !currentItems.length) return;
+    if (spinning) return;
+    
+    const selected = getSelectedItems();
+    if (selected.length === 0) return;
     
     // Annuler un timeout précédent
     if (spinTimeout) clearTimeout(spinTimeout);
@@ -913,9 +979,9 @@
     spinBtn.innerHTML = 'SPINNING...';
     
     const stepHeight = 300;
-    const selectedIndex = Math.floor(Math.random() * currentItems.length);
+    const selectedIndex = Math.floor(Math.random() * selected.length);
     const cycles = 6 + Math.floor(Math.random() * 4);
-    const totalDistance = (cycles * currentItems.length + selectedIndex) * stepHeight;
+    const totalDistance = (cycles * selected.length + selectedIndex) * stepHeight;
     const duration = 2000;
     const startTime = performance.now();
     
@@ -938,15 +1004,11 @@
         const finalY = -selectedIndex * stepHeight;
         if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
         
-        const selectedItem = currentItems[selectedIndex];
+        const selectedItem = selected[selectedIndex];
         if (weaponLabel) weaponLabel.innerHTML = selectedItem.name;
         
         // Afficher le résultat
         if (reelViewport) {
-          // Sauvegarder le contenu original
-          const originalHTML = reelStrip?.innerHTML || '';
-          
-          // Afficher le résultat en grand
           reelViewport.innerHTML = `
             <div class="reel-item picked" style="height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
               <img src="${selectedItem.img || ''}" style="max-width:180px; max-height:180px; object-fit:contain;" onerror="this.style.display='none'">
@@ -1012,7 +1074,11 @@
     if (spinning) return;
     
     currentCategory = categoryKey;
-    currentItems = getItemsByCategory(categoryKey);
+    // Copier les items avec un état checked par défaut à true
+    currentItems = getItemsByCategory(categoryKey).map(item => ({
+      ...item,
+      checked: true
+    }));
     
     document.querySelectorAll('.roulette-item').forEach(el => {
       if (el.dataset.category === categoryKey) {
@@ -1022,8 +1088,8 @@
       }
     });
     
-    spinBtn.disabled = currentItems.length === 0;
-    resetReel();
+    renderItemsList();
+    renderReel();
   }
   
   // ==================== MODAL JOUEUR ====================
@@ -1052,6 +1118,15 @@
     closePlayerModal();
   }
   
+  function clearHistory() {
+    showConfirm('Effacer tout l\'historique des tirages ?', (confirmed) => {
+      if (confirmed) {
+        history = [];
+        Storage.saveHistory(history);
+      }
+    });
+  }
+  
   // ==================== INITIALISATION ====================
   function init() {
     if (typeof DESTINY_DATA === 'undefined') {
@@ -1063,7 +1138,6 @@
     players = Storage.loadPlayers();
     history = Storage.loadHistory();
     
-    // Plus de GUARDIAN_01/02 par défaut - liste vide
     if (players.length === 0) {
       players = [];
       nextPlayerId = 1;
@@ -1075,13 +1149,22 @@
     
     renderCategories();
     renderPlayers();
-    renderHistory();
     
+    // Événements
     if (spinBtn) spinBtn.addEventListener('click', spin);
     if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearHistory);
     if (addPlayerBtn) addPlayerBtn.addEventListener('click', openPlayerModal);
     if (cancelModalBtn) cancelModalBtn.addEventListener('click', closePlayerModal);
     if (confirmModalBtn) confirmModalBtn.addEventListener('click', addPlayer);
+    if (checkAllBtn) checkAllBtn.addEventListener('click', checkAll);
+    if (uncheckAllBtn) uncheckAllBtn.addEventListener('click', uncheckAll);
+    
+    if (searchBar) {
+      searchBar.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderItemsList();
+      });
+    }
     
     if (confirmYesBtn) {
       confirmYesBtn.addEventListener('click', () => {
@@ -1115,7 +1198,7 @@
       });
     }
     
-    console.log('Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
+    console.log('Application prête - ' + players.length + ' joueurs');
   }
   
   // Démarrer l'application quand le DOM est prêt

@@ -130,7 +130,7 @@
       font-style: italic;
     }
 
-    .add-player-btn {
+    .add-player-btn, .export-png-btn {
       background: #14141c;
       border: 1px solid #3a3a48;
       color: #aa88ff;
@@ -142,8 +142,13 @@
       white-space: nowrap;
     }
 
-    .add-player-btn:hover {
+    .add-player-btn:hover, .export-png-btn:hover {
       background: #1c1c26;
+      border-color: #8866cc;
+    }
+
+    .export-png-btn {
+      background: #1a1a2a;
       border-color: #8866cc;
     }
 
@@ -344,7 +349,6 @@
       animation: fadeInUp 0.5s ease-out 0.1s both;
     }
 
-    /* Nouvel effet de zoom explosif */
     @keyframes zoomExplosion {
       0% {
         transform: scale(0.2) rotate(-15deg);
@@ -705,6 +709,7 @@
   <div class="players-banner">
     <div class="players-list" id="playersList"></div>
     <button class="add-player-btn" id="addPlayerBtn">+ AJOUTER JOUEUR</button>
+    <button class="export-png-btn" id="exportPngBtn">📸 EXPORTER EN PNG</button>
   </div>
 
   <!-- CONTENU PRINCIPAL -->
@@ -856,6 +861,7 @@
   const countSelectedEl = document.getElementById('countSelected');
   const clearHistoryBtn = document.getElementById('clearHistoryBtn');
   const addPlayerBtn = document.getElementById('addPlayerBtn');
+  const exportPngBtn = document.getElementById('exportPngBtn');
   
   // Modals
   const playerModal = document.getElementById('playerModal');
@@ -897,6 +903,213 @@
   
   function getSelectedItems() {
     return currentItems.filter(item => item.checked);
+  }
+  
+  // ==================== EXPORT PNG ====================
+  async function exportToPNG() {
+    if (!players.length) {
+      showConfirm('Aucun joueur à exporter !', () => {});
+      return;
+    }
+    
+    // Créer un conteneur temporaire pour l'export
+    const exportContainer = document.createElement('div');
+    exportContainer.style.cssText = `
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      background: #0a0a0e;
+      padding: 20px;
+      border-radius: 0;
+      font-family: 'Segoe UI', 'Rajdhani', monospace;
+    `;
+    
+    // Créer l'en-tête
+    const header = document.createElement('div');
+    header.style.cssText = `
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #aa88ff;
+    `;
+    header.innerHTML = `
+      <div style="font-size: 24px; font-weight: bold; color: #aa88ff; letter-spacing: 3px;">DESTINY 2</div>
+      <div style="font-size: 14px; color: #c8c8d8; margin-top: 5px;">LOADOUT MANAGER</div>
+      <div style="font-size: 11px; color: #88889a; margin-top: 5px;">${new Date().toLocaleDateString('fr-FR')} - ${new Date().toLocaleTimeString('fr-FR')}</div>
+    `;
+    exportContainer.appendChild(header);
+    
+    // Créer la grille des joueurs
+    const playersGrid = document.createElement('div');
+    playersGrid.style.cssText = `
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    `;
+    
+    for (const player of players) {
+      const playerCard = document.createElement('div');
+      playerCard.style.cssText = `
+        background: #14141c;
+        border: 1px solid #3a3a48;
+        min-width: 220px;
+        padding: 12px;
+      `;
+      
+      // En-tête du joueur
+      const playerHeader = document.createElement('div');
+      playerHeader.style.cssText = `
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #2a2a35;
+      `;
+      playerHeader.innerHTML = `
+        <span style="font-weight: bold; color: #aa88ff; font-size: 14px; text-transform: uppercase;">${escapeHtml(player.name)}</span>
+        <span style="color: #88889a; font-size: 10px;">${player.items.length} équipement(s)</span>
+      `;
+      playerCard.appendChild(playerHeader);
+      
+      // Liste des items
+      const itemsContainer = document.createElement('div');
+      itemsContainer.style.cssText = `
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      `;
+      
+      if (player.items.length === 0) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.style.cssText = 'color: #6a6a7a; font-size: 11px; text-align: center; padding: 16px; font-style: italic;';
+        emptyDiv.textContent = 'Aucun équipement';
+        itemsContainer.appendChild(emptyDiv);
+      } else {
+        for (const item of player.items) {
+          const itemDiv = document.createElement('div');
+          itemDiv.style.cssText = `
+            background: #1a1a24;
+            border-left: 3px solid #aa88ff;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          `;
+          
+          // Image (si disponible)
+          if (item.img) {
+            const img = document.createElement('img');
+            img.src = item.img;
+            img.style.cssText = 'width: 32px; height: 32px; object-fit: contain; border-radius: 4px;';
+            img.onerror = () => { img.style.display = 'none'; };
+            itemDiv.appendChild(img);
+          } else {
+            const iconSpan = document.createElement('span');
+            iconSpan.style.cssText = 'width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 16px;';
+            iconSpan.textContent = '🎲';
+            itemDiv.appendChild(iconSpan);
+          }
+          
+          // Nom et catégorie
+          const infoDiv = document.createElement('div');
+          infoDiv.style.cssText = 'flex: 1;';
+          infoDiv.innerHTML = `
+            <div style="font-size: 11px; font-weight: 600; color: #d0d0e0; text-transform: uppercase;">${escapeHtml(item.name)}</div>
+            <div style="font-size: 9px; color: #aa88ff; text-transform: uppercase;">${escapeHtml(item.category || 'GÉNÉRAL')}</div>
+          `;
+          itemDiv.appendChild(infoDiv);
+          
+          itemsContainer.appendChild(itemDiv);
+        }
+      }
+      
+      playerCard.appendChild(itemsContainer);
+      playersGrid.appendChild(playerCard);
+    }
+    
+    exportContainer.appendChild(playersGrid);
+    
+    // Ajouter un pied de page
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #2a2a35;
+      text-align: center;
+      font-size: 9px;
+      color: #6a6a7a;
+    `;
+    footer.innerHTML = `Généré par Destiny 2 Loadout Manager - ${players.length} gardien(s)`;
+    exportContainer.appendChild(footer);
+    
+    document.body.appendChild(exportContainer);
+    
+    try {
+      // Utiliser html2canvas si disponible, sinon méthode alternative
+      if (typeof html2canvas !== 'undefined') {
+        const canvas = await html2canvas(exportContainer, {
+          scale: 2,
+          backgroundColor: '#0a0a0e',
+          logging: false
+        });
+        const link = document.createElement('a');
+        link.download = `destiny_loadout_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      } else {
+        // Méthode native (moins précise mais ne nécessite pas de librairie)
+        // Afficher un message pour informer l'utilisateur
+        showConfirm('Pour une exportation de meilleure qualité, vous pouvez ajouter la librairie html2canvas. Fonction limitée disponible.', () => {});
+        
+        // Capture simple avec l'API native (fonctionne partiellement)
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const width = exportContainer.offsetWidth;
+        const height = exportContainer.offsetHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Dessiner manuellement un aperçu
+        ctx.fillStyle = '#0a0a0e';
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = '#aa88ff';
+        ctx.font = 'bold 16px monospace';
+        ctx.fillText('Export Destiny Loadout', 20, 50);
+        ctx.fillStyle = '#c8c8d8';
+        ctx.font = '12px monospace';
+        ctx.fillText(`Joueurs: ${players.length}`, 20, 90);
+        
+        let y = 130;
+        for (const player of players) {
+          ctx.fillStyle = '#aa88ff';
+          ctx.fillText(player.name.toUpperCase(), 20, y);
+          y += 25;
+          for (const item of player.items.slice(0, 5)) {
+            ctx.fillStyle = '#88889a';
+            ctx.fillText(`  - ${item.name}`, 30, y);
+            y += 20;
+          }
+          if (player.items.length > 5) {
+            ctx.fillStyle = '#6a6a7a';
+            ctx.fillText(`  ... et ${player.items.length - 5} autre(s)`, 30, y);
+            y += 20;
+          }
+          y += 15;
+        }
+        
+        const link = document.createElement('a');
+        link.download = `destiny_loadout_${Date.now()}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      }
+    } catch (err) {
+      console.error('Erreur export:', err);
+      showConfirm('Erreur lors de l\'export PNG', () => {});
+    } finally {
+      document.body.removeChild(exportContainer);
+    }
   }
   
   // ==================== GESTION DES JOUEURS ====================
@@ -1153,7 +1366,6 @@
     }
     
     reelStrip.innerHTML = '';
-    // 8 copies pour un effet plus long et fluide
     for (let i = 0; i < 8; i++) {
       selected.forEach(item => {
         const div = document.createElement('div');
@@ -1169,7 +1381,6 @@
     spinBtn.disabled = false;
   }
   
-  // resetReel ne fait que cacher le résultat, sans reconstruire la roulette
   function resetReel() {
     if (resultDisplay) resultDisplay.classList.remove('active');
   }
@@ -1181,7 +1392,6 @@
     if (weaponLabel) weaponLabel.innerHTML = item.name;
   }
   
-  // EFFET ROULETTE ULTRA ANGOISSANT
   function spin() {
     if (spinning) return;
     
@@ -1195,73 +1405,48 @@
     spinBtn.disabled = true;
     spinBtn.innerHTML = 'SPINNING...';
     
-    // Cacher le résultat précédent
     if (resultDisplay) resultDisplay.classList.remove('active');
     
-    // RECONSTRUIRE LA ROULETTE AVANT DE LANCER L'ANIMATION
-    renderReel();
+    // Ne pas reconstruire la roulette, juste repositionner
+    if (reelStrip) reelStrip.style.transform = 'translateY(0px)';
     
-    // Petit délai pour laisser la roulette se repositionner
     setTimeout(() => {
       const stepHeight = 300;
       const selectedIndex = Math.floor(Math.random() * selected.length);
-      
-      // NOMBRE DE TOURS ÉNORME pour maximiser l'angoisse (15 à 25 tours)
       const fullTurns = 15 + Math.floor(Math.random() * 11);
       const totalDistance = (fullTurns * selected.length + selectedIndex) * stepHeight;
-      const duration = 4200; // 4.2 secondes d'angoisse pure !
+      const duration = 4200;
       const startTime = performance.now();
       
-      // Fonction d'easing ULTRA réaliste pour roulette de casino
       function casinoEase(t) {
-        if (t < 0.2) {
-          // Phase 1 (0-20%) : Accélération brutale (départ canon)
-          return Math.pow(t / 0.2, 2) * 0.15;
-        } else if (t < 0.6) {
-          // Phase 2 (20-60%) : Vitesse de croisière max (flou total)
-          return 0.15 + (t - 0.2) / 0.4 * 0.7;
-        } else if (t < 0.85) {
-          // Phase 3 (60-85%) : Premier ralentissement (on commence à distinguer)
-          return 0.85 + (t - 0.6) / 0.25 * 0.12;
-        } else {
-          // Phase 4 (85-100%) : Ralentissement EXTREME (angoisse maximale)
-          const slowPhase = (t - 0.85) / 0.15;
-          // Dernier mètre : ralentissement avec micro-rebonds
-          return 0.97 + slowPhase * 0.03 - Math.sin(slowPhase * Math.PI * 2) * 0.008;
-        }
+        if (t < 0.2) return Math.pow(t / 0.2, 2) * 0.15;
+        if (t < 0.6) return 0.15 + (t - 0.2) / 0.4 * 0.7;
+        if (t < 0.85) return 0.85 + (t - 0.6) / 0.25 * 0.12;
+        const slowPhase = (t - 0.85) / 0.15;
+        return 0.97 + slowPhase * 0.03 - Math.sin(slowPhase * Math.PI * 2) * 0.008;
       }
       
       function animate(now) {
         const elapsed = now - startTime;
         let progress = Math.min(1, elapsed / duration);
-        
-        // Appliquer l'easing de casino
         let eased = casinoEase(progress);
         eased = Math.min(0.999, eased);
-        
         const currentY = -eased * totalDistance;
-        
         if (reelStrip) reelStrip.style.transform = `translateY(${currentY}px)`;
         
         if (progress < 1) {
           animationFrame = requestAnimationFrame(animate);
         } else {
-          // Position finale parfaite
           const finalY = -selectedIndex * stepHeight;
           if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
-          
           const selectedItem = selected[selectedIndex];
-          
-          // PAUSE DRAMATIQUE DE 400ms avant d'annoncer le résultat
           setTimeout(() => {
             showResult(selectedItem);
             addToHistory(selectedItem);
-            
             spinning = false;
             spinBtn.disabled = false;
             spinBtn.innerHTML = 'SPIN';
           }, 400);
-          
           animationFrame = null;
         }
       }
@@ -1307,7 +1492,6 @@
       checked: true
     }));
     
-    // Cacher le résultat quand on change de catégorie
     if (resultDisplay) resultDisplay.classList.remove('active');
     
     console.log(`Catégorie: ${categoryKey} - ${currentItems.length} items`);
@@ -1386,6 +1570,7 @@
     if (confirmModalBtn) confirmModalBtn.addEventListener('click', addPlayer);
     if (checkAllBtn) checkAllBtn.addEventListener('click', checkAll);
     if (uncheckAllBtn) uncheckAllBtn.addEventListener('click', uncheckAll);
+    if (exportPngBtn) exportPngBtn.addEventListener('click', exportToPNG);
     
     if (searchBar) {
       searchBar.addEventListener('input', (e) => {

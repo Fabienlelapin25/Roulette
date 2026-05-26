@@ -130,6 +130,12 @@
       font-style: italic;
     }
 
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     .add-player-btn, .export-png-btn {
       background: #14141c;
       border: 1px solid #3a3a48;
@@ -708,8 +714,10 @@
   <!-- BANNIÈRE SUPÉRIEURE - PLAYERS -->
   <div class="players-banner">
     <div class="players-list" id="playersList"></div>
-    <button class="add-player-btn" id="addPlayerBtn">+ AJOUTER JOUEUR</button>
-    <button class="export-png-btn" id="exportPngBtn">📸 EXPORTER EN PNG</button>
+    <div class="button-group">
+      <button class="add-player-btn" id="addPlayerBtn">+ AJOUTER JOUEUR</button>
+      <button class="export-png-btn" id="exportPngBtn">📸 EXPORTER EN PNG</button>
+    </div>
   </div>
 
   <!-- CONTENU PRINCIPAL -->
@@ -912,7 +920,6 @@
       return;
     }
     
-    // Créer un conteneur temporaire pour l'export
     const exportContainer = document.createElement('div');
     exportContainer.style.cssText = `
       position: fixed;
@@ -924,7 +931,6 @@
       font-family: 'Segoe UI', 'Rajdhani', monospace;
     `;
     
-    // Créer l'en-tête
     const header = document.createElement('div');
     header.style.cssText = `
       text-align: center;
@@ -939,7 +945,6 @@
     `;
     exportContainer.appendChild(header);
     
-    // Créer la grille des joueurs
     const playersGrid = document.createElement('div');
     playersGrid.style.cssText = `
       display: flex;
@@ -957,7 +962,6 @@
         padding: 12px;
       `;
       
-      // En-tête du joueur
       const playerHeader = document.createElement('div');
       playerHeader.style.cssText = `
         display: flex;
@@ -973,7 +977,6 @@
       `;
       playerCard.appendChild(playerHeader);
       
-      // Liste des items
       const itemsContainer = document.createElement('div');
       itemsContainer.style.cssText = `
         display: flex;
@@ -998,7 +1001,6 @@
             gap: 10px;
           `;
           
-          // Image (si disponible)
           if (item.img) {
             const img = document.createElement('img');
             img.src = item.img;
@@ -1012,7 +1014,6 @@
             itemDiv.appendChild(iconSpan);
           }
           
-          // Nom et catégorie
           const infoDiv = document.createElement('div');
           infoDiv.style.cssText = 'flex: 1;';
           infoDiv.innerHTML = `
@@ -1031,7 +1032,6 @@
     
     exportContainer.appendChild(playersGrid);
     
-    // Ajouter un pied de page
     const footer = document.createElement('div');
     footer.style.cssText = `
       margin-top: 20px;
@@ -1047,63 +1047,15 @@
     document.body.appendChild(exportContainer);
     
     try {
-      // Utiliser html2canvas si disponible, sinon méthode alternative
-      if (typeof html2canvas !== 'undefined') {
-        const canvas = await html2canvas(exportContainer, {
-          scale: 2,
-          backgroundColor: '#0a0a0e',
-          logging: false
-        });
-        const link = document.createElement('a');
-        link.download = `destiny_loadout_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-      } else {
-        // Méthode native (moins précise mais ne nécessite pas de librairie)
-        // Afficher un message pour informer l'utilisateur
-        showConfirm('Pour une exportation de meilleure qualité, vous pouvez ajouter la librairie html2canvas. Fonction limitée disponible.', () => {});
-        
-        // Capture simple avec l'API native (fonctionne partiellement)
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const width = exportContainer.offsetWidth;
-        const height = exportContainer.offsetHeight;
-        canvas.width = width;
-        canvas.height = height;
-        
-        // Dessiner manuellement un aperçu
-        ctx.fillStyle = '#0a0a0e';
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = '#aa88ff';
-        ctx.font = 'bold 16px monospace';
-        ctx.fillText('Export Destiny Loadout', 20, 50);
-        ctx.fillStyle = '#c8c8d8';
-        ctx.font = '12px monospace';
-        ctx.fillText(`Joueurs: ${players.length}`, 20, 90);
-        
-        let y = 130;
-        for (const player of players) {
-          ctx.fillStyle = '#aa88ff';
-          ctx.fillText(player.name.toUpperCase(), 20, y);
-          y += 25;
-          for (const item of player.items.slice(0, 5)) {
-            ctx.fillStyle = '#88889a';
-            ctx.fillText(`  - ${item.name}`, 30, y);
-            y += 20;
-          }
-          if (player.items.length > 5) {
-            ctx.fillStyle = '#6a6a7a';
-            ctx.fillText(`  ... et ${player.items.length - 5} autre(s)`, 30, y);
-            y += 20;
-          }
-          y += 15;
-        }
-        
-        const link = document.createElement('a');
-        link.download = `destiny_loadout_${Date.now()}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-      }
+      const canvas = await html2canvas(exportContainer, {
+        scale: 2,
+        backgroundColor: '#0a0a0e',
+        logging: false
+      });
+      const link = document.createElement('a');
+      link.download = `destiny_loadout_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
     } catch (err) {
       console.error('Erreur export:', err);
       showConfirm('Erreur lors de l\'export PNG', () => {});
@@ -1366,7 +1318,8 @@
     }
     
     reelStrip.innerHTML = '';
-    for (let i = 0; i < 8; i++) {
+    // Seulement 3 copies pour mieux voir ce qui se passe
+    for (let i = 0; i < 3; i++) {
       selected.forEach(item => {
         const div = document.createElement('div');
         div.className = 'reel-item';
@@ -1392,6 +1345,7 @@
     if (weaponLabel) weaponLabel.innerHTML = item.name;
   }
   
+  // VERSION LENTE POUR DÉBOGUER
   function spin() {
     if (spinning) return;
     
@@ -1407,32 +1361,40 @@
     
     if (resultDisplay) resultDisplay.classList.remove('active');
     
-    // Ne pas reconstruire la roulette, juste repositionner
+    // Positionner la roulette au début
     if (reelStrip) reelStrip.style.transform = 'translateY(0px)';
     
     setTimeout(() => {
       const stepHeight = 300;
       const selectedIndex = Math.floor(Math.random() * selected.length);
-      const fullTurns = 15 + Math.floor(Math.random() * 11);
+      
+      // VERSION LENTE : 3 tours seulement, durée plus longue
+      const fullTurns = 2 + Math.floor(Math.random() * 2); // 2 à 3 tours seulement
       const totalDistance = (fullTurns * selected.length + selectedIndex) * stepHeight;
-      const duration = 4200;
+      const duration = 4000; // 4 secondes pour bien voir
       const startTime = performance.now();
       
-      function casinoEase(t) {
-        if (t < 0.2) return Math.pow(t / 0.2, 2) * 0.15;
-        if (t < 0.6) return 0.15 + (t - 0.2) / 0.4 * 0.7;
-        if (t < 0.85) return 0.85 + (t - 0.6) / 0.25 * 0.12;
-        const slowPhase = (t - 0.85) / 0.15;
-        return 0.97 + slowPhase * 0.03 - Math.sin(slowPhase * Math.PI * 2) * 0.008;
+      // Easing simple pour mieux voir le mouvement
+      function linearEase(t) {
+        return t;
       }
       
       function animate(now) {
         const elapsed = now - startTime;
         let progress = Math.min(1, elapsed / duration);
-        let eased = casinoEase(progress);
+        
+        // Mouvement linéaire pour mieux voir
+        let eased = linearEase(progress);
         eased = Math.min(0.999, eased);
+        
         const currentY = -eased * totalDistance;
+        
         if (reelStrip) reelStrip.style.transform = `translateY(${currentY}px)`;
+        
+        // Log pour déboguer
+        if (Math.floor(progress * 100) % 10 === 0) {
+          console.log(`Progress: ${Math.floor(progress * 100)}%, Y: ${Math.floor(currentY)}`);
+        }
         
         if (progress < 1) {
           animationFrame = requestAnimationFrame(animate);
@@ -1440,6 +1402,7 @@
           const finalY = -selectedIndex * stepHeight;
           if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
           const selectedItem = selected[selectedIndex];
+          
           setTimeout(() => {
             showResult(selectedItem);
             addToHistory(selectedItem);
@@ -1447,6 +1410,7 @@
             spinBtn.disabled = false;
             spinBtn.innerHTML = 'SPIN';
           }, 400);
+          
           animationFrame = null;
         }
       }

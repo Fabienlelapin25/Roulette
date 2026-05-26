@@ -206,7 +206,6 @@
     }
 
     .item-icon {
-      font-size: 24px;
       width: 38px;
       height: 38px;
       display: flex;
@@ -255,11 +254,13 @@
       padding: 10px 20px;
       border: 1px solid #2a2a35;
       font-family: monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .reel-viewport {
-      width: 220px;
-      height: 220px;
+      width: 260px;
+      height: 300px;
       margin: 0 auto;
       overflow: hidden;
       background: #0f0f14;
@@ -272,30 +273,43 @@
     }
 
     .reel-item {
-      height: 220px;
+      height: 300px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       background: #14141c;
+      gap: 12px;
     }
 
     .reel-item img {
-      max-width: 140px;
-      max-height: 140px;
+      max-width: 160px;
+      max-height: 160px;
       object-fit: contain;
     }
 
+    .reel-item .reel-name {
+      font-size: 13px;
+      font-weight: bold;
+      color: #d0d0e0;
+      text-align: center;
+      padding: 0 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
     .btn-spin {
-      margin-top: 20px;
+      margin-top: 24px;
       background: #14141c;
       border: 2px solid #3a3a48;
-      padding: 10px 28px;
-      font-size: 14px;
+      padding: 12px 32px;
+      font-size: 15px;
       font-weight: bold;
       color: #aa88ff;
       cursor: pointer;
       font-family: monospace;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
+      transition: 0.15s;
     }
 
     .btn-spin:hover {
@@ -356,8 +370,8 @@
     }
 
     .selection-item img {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       object-fit: contain;
       background: #0a0a0e;
       border: 1px solid #3a3a48;
@@ -371,11 +385,13 @@
       font-size: 11px;
       font-weight: 600;
       color: #d0d0e0;
+      text-transform: uppercase;
     }
 
     .selection-category {
       font-size: 9px;
       color: #aa88ff;
+      text-transform: uppercase;
     }
 
     .clear-btn {
@@ -387,6 +403,7 @@
       font-size: 10px;
       width: calc(100% - 24px);
       margin: 0 12px 12px 12px;
+      text-transform: uppercase;
     }
 
     .clear-btn:hover {
@@ -433,6 +450,7 @@
     .modal-content h3 {
       color: #aa88ff;
       margin-bottom: 16px;
+      text-transform: uppercase;
     }
 
     .modal-content input {
@@ -457,6 +475,7 @@
       color: #c8c8d8;
       padding: 6px 16px;
       cursor: pointer;
+      text-transform: uppercase;
     }
 
     .modal-buttons button.confirm {
@@ -464,13 +483,14 @@
       color: #aa88ff;
     }
 
-    /* Animations */
+    /* Animation picked */
     @keyframes pop {
-      0% { transform: scale(0.8); opacity: 0; }
+      0% { transform: scale(0.7); opacity: 0; }
+      80% { transform: scale(1.05); }
       100% { transform: scale(1); opacity: 1; }
     }
     .picked {
-      animation: pop 0.3s ease;
+      animation: pop 0.4s ease-out;
     }
 
     /* Responsive */
@@ -478,6 +498,9 @@
       .roulettes-panel { width: 220px; }
       .selections-panel { width: 240px; }
       .player-card { min-width: 150px; }
+      .reel-viewport { width: 220px; height: 260px; }
+      .reel-item { height: 260px; }
+      .reel-item img { max-width: 130px; max-height: 130px; }
     }
 
     @media (max-width: 768px) {
@@ -504,7 +527,7 @@
     <!-- PANEL GAUCHE - Catégories -->
     <div class="roulettes-panel">
       <div class="panel-header">
-        <h2>◈ CATÉGORIES ◈</h2>
+        <h2>CATÉGORIES</h2>
       </div>
       <div class="roulettes-list" id="categoriesList"></div>
     </div>
@@ -516,14 +539,14 @@
         <div class="reel-viewport" id="reelViewport">
           <div class="reel-strip" id="reelStrip"></div>
         </div>
-        <button class="btn-spin" id="spinBtn" disabled>◈ SPIN ◈</button>
+        <button class="btn-spin" id="spinBtn" disabled>SPIN</button>
       </div>
     </div>
 
     <!-- PANEL DROIT - Historique -->
     <div class="selections-panel">
       <div class="selections-header">
-        <h3>◈ HISTORIQUE (DRAG & DROP) ◈</h3>
+        <h3>HISTORIQUE (DRAG & DROP)</h3>
       </div>
       <div class="selections-list" id="selectionsList"></div>
       <div style="padding: 12px;">
@@ -557,22 +580,16 @@
   </div>
 </div>
 
-<!-- ===== CHARGEMENT DES DONNÉES ===== -->
+<!-- CHARGEMENT DES DONNÉES -->
 <script src="data.js"></script>
 
-<!-- ===== SCRIPT PRINCIPAL ===== -->
+<!-- SCRIPT PRINCIPAL -->
 <script>
   // Vérification que les données sont chargées
   if (typeof DESTINY_DATA === 'undefined') {
-    console.error('❌ data.js non chargé ! Vérifie que le fichier existe à côté de index.html');
+    console.error('data.js non chargé ! Vérifie que le fichier existe à côté de index.html');
   } else {
-    console.log('✅ Données chargées avec succès !');
-    console.log('📦 Catégories :', Object.keys(DESTINY_DATA.categories));
-    console.log('🔫 Armes :', DESTINY_DATA.items.armes.length);
-    console.log('🏹 Chasseur :', DESTINY_DATA.items.chasseur.length);
-    console.log('🔮 Arcaniste :', DESTINY_DATA.items.arcaniste.length);
-    console.log('🛡️ Titan :', DESTINY_DATA.items.titan.length);
-    console.log('🏆 Raids :', DESTINY_DATA.items.raid.length);
+    console.log('Données chargées :', Object.keys(DESTINY_DATA.categories));
   }
 
   // ==================== STORAGE ====================
@@ -617,6 +634,7 @@
   let nextPlayerId = 1;
   let draggedItem = null;
   let pendingConfirmCallback = null;
+  let spinTimeout = null;
   
   // DOM Elements
   const playersListEl = document.getElementById('playersList');
@@ -680,7 +698,7 @@
           ${player.items.length === 0 ? '<div class="empty-player">Déposez ici ▼</div>' : 
             player.items.map((item, idx) => `
               <div class="player-item" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}" draggable="true">
-                <span>🎲 ${escapeHtml(item.name)}</span>
+                <span>${escapeHtml(item.name)}</span>
                 <button class="remove-item" data-player-id="${player.id}" data-item-idx="${idx}">✕</button>
               </div>
             `).join('')}
@@ -856,16 +874,20 @@
   // ==================== ROULETTE ====================
   function renderReel() {
     if (!reelStrip || !currentItems.length) {
-      if (reelStrip) reelStrip.innerHTML = '<div class="reel-item">Aucun élément</div>';
+      if (reelStrip) reelStrip.innerHTML = '<div class="reel-item"><div>Aucun élément</div></div>';
       return;
     }
     
     reelStrip.innerHTML = '';
-    for (let i = 0; i < 3; i++) {
+    // 5 copies pour un effet plus fluide
+    for (let i = 0; i < 5; i++) {
       currentItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'reel-item';
-        div.innerHTML = `<img src="${item.img || ''}" alt="${escapeHtml(item.name)}" onerror="this.style.display='none'"><div style="font-size: 11px; margin-top: 8px;">${escapeHtml(item.name)}</div>`;
+        div.innerHTML = `
+          <img src="${item.img || ''}" alt="${escapeHtml(item.name)}" onerror="this.style.display='none'">
+          <div class="reel-name">${escapeHtml(item.name)}</div>
+        `;
         reelStrip.appendChild(div);
       });
     }
@@ -874,24 +896,27 @@
   
   function resetReel() {
     renderReel();
-    if (currentItems.length > 0 && weaponLabel) {
+    if (currentItems.length > 0 && weaponLabel && currentCategory) {
       const catInfo = DESTINY_DATA.categories[currentCategory];
-      weaponLabel.innerHTML = catInfo ? `${catInfo.icon} ${catInfo.title}` : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE';
+      weaponLabel.innerHTML = catInfo ? catInfo.title : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE';
     }
   }
   
   function spin() {
     if (spinning || !currentItems.length) return;
     
+    // Annuler un timeout précédent
+    if (spinTimeout) clearTimeout(spinTimeout);
+    
     spinning = true;
     spinBtn.disabled = true;
-    spinBtn.innerHTML = '◈ SPINNING... ◈';
+    spinBtn.innerHTML = 'SPINNING...';
     
-    const stepHeight = 220;
+    const stepHeight = 300;
     const selectedIndex = Math.floor(Math.random() * currentItems.length);
-    const cycles = 5 + Math.floor(Math.random() * 3);
+    const cycles = 6 + Math.floor(Math.random() * 4);
     const totalDistance = (cycles * currentItems.length + selectedIndex) * stepHeight;
-    const duration = 1800;
+    const duration = 2000;
     const startTime = performance.now();
     
     function easeOutCubic(t) {
@@ -909,18 +934,31 @@
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
+        // Position finale exacte
         const finalY = -selectedIndex * stepHeight;
         if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
         
         const selectedItem = currentItems[selectedIndex];
-        if (weaponLabel) weaponLabel.innerHTML = `✦ ${selectedItem.name} ✦`;
+        if (weaponLabel) weaponLabel.innerHTML = selectedItem.name;
         
+        // Afficher le résultat
         if (reelViewport) {
-          const catIcon = DESTINY_DATA.categories[currentCategory]?.icon || '🎲';
-          reelViewport.innerHTML = `<div class="reel-item picked" style="height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center;"><div style="font-size: 64px;">${catIcon}</div><div style="margin-top: 12px; font-size: 14px; font-weight: bold;">${escapeHtml(selectedItem.name)}</div></div>`;
+          // Sauvegarder le contenu original
+          const originalHTML = reelStrip?.innerHTML || '';
+          
+          // Afficher le résultat en grand
+          reelViewport.innerHTML = `
+            <div class="reel-item picked" style="height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
+              <img src="${selectedItem.img || ''}" style="max-width:180px; max-height:180px; object-fit:contain;" onerror="this.style.display='none'">
+              <div style="font-size:16px; font-weight:bold; color:#aa88ff; text-transform:uppercase; letter-spacing:1px;">${escapeHtml(selectedItem.name)}</div>
+            </div>
+          `;
+          
+          // Ajouter à l'historique
           addToHistory(selectedItem);
           
-          setTimeout(() => {
+          // Remettre la roulette après 2.5 secondes
+          spinTimeout = setTimeout(() => {
             if (reelViewport && reelStrip) {
               reelViewport.innerHTML = '';
               reelViewport.appendChild(reelStrip);
@@ -928,12 +966,13 @@
             }
             spinning = false;
             spinBtn.disabled = false;
-            spinBtn.innerHTML = '◈ SPIN ◈';
-          }, 1200);
+            spinBtn.innerHTML = 'SPIN';
+            spinTimeout = null;
+          }, 2500);
         } else {
           spinning = false;
           spinBtn.disabled = false;
-          spinBtn.innerHTML = '◈ SPIN ◈';
+          spinBtn.innerHTML = 'SPIN';
         }
       }
     }
@@ -949,7 +988,7 @@
     const categories = DESTINY_DATA.categories;
     categoriesListEl.innerHTML = Object.keys(categories).map(key => `
       <div class="roulette-item" data-category="${key}">
-        <div class="item-icon">${categories[key].logo ? `<img src="${categories[key].logo}" alt="${categories[key].title}">` : categories[key].icon}</div>
+        <div class="item-icon">${categories[key].logo ? `<img src="${categories[key].logo}" alt="${categories[key].title}">` : ''}</div>
         <div class="item-info">
           <div class="item-title">${categories[key].title}</div>
           <div class="item-sub">${getItemsByCategory(key).length} items</div>
@@ -970,6 +1009,8 @@
   }
   
   function selectCategory(categoryKey) {
+    if (spinning) return;
+    
     currentCategory = categoryKey;
     currentItems = getItemsByCategory(categoryKey);
     
@@ -1014,19 +1055,18 @@
   // ==================== INITIALISATION ====================
   function init() {
     if (typeof DESTINY_DATA === 'undefined') {
-      console.error('❌ Impossible de démarrer : data.js non chargé !');
-      weaponLabel.innerHTML = '⚠️ ERREUR : data.js manquant ⚠️';
+      console.error('Impossible de démarrer : data.js non chargé !');
+      if (weaponLabel) weaponLabel.innerHTML = 'ERREUR : data.js manquant';
       return;
     }
     
     players = Storage.loadPlayers();
     history = Storage.loadHistory();
     
+    // Plus de GUARDIAN_01/02 par défaut - liste vide
     if (players.length === 0) {
-      players = [
-        { id: nextPlayerId++, name: 'GUARDIAN_01', items: [] },
-        { id: nextPlayerId++, name: 'GUARDIAN_02', items: [] }
-      ];
+      players = [];
+      nextPlayerId = 1;
     }
     
     if (players.length > 0) {
@@ -1075,7 +1115,7 @@
       });
     }
     
-    console.log('✅ Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
+    console.log('Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
   }
   
   // Démarrer l'application quand le DOM est prêt

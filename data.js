@@ -181,35 +181,62 @@ const DESTINY_DATA = {
       {"id":"armes_134","name":"Maître du tonnerre","img":"https://www.bungie.net/common/destiny2_content/icons/4a08027f7b5752f84d183ecc61682c3e.jpg","category":"armes"},
       {"id":"armes_135","name":"Empereur des rats","img":"https://www.bungie.net/common/destiny2_content/icons/b86c24934b3ec9954218ecfa0992aeb2.jpg","category":"armes"},
       {"id":"armes_136","name":"Lame praxique","img":"https://www.bungie.net/common/destiny2_content/icons/d63292c9248c5e3ae823605307140199.jpg","category":"armes"},
-      {"id":"armes_137","name":"Service de Luzaku","img":"https://www.bungie.net/common/destiny2_content/icons/e7d4497fbdd8339eaf9da4b9151c9559.jpg","category":"armes"}
+      {"id":"armes_137","name":"Service de Luzaku","img":"https://www.bungie.net/common/destiny2_content/icons/e7d4497fbdd8339eaf9da4b9151c9559.jpg","category":"armes"},
+      {"id":"armes_138","name":"Hoirie","img":"https://www.bungie.net/common/destiny2_content/icons/95e57b924511a206cee9fb6b8bab8ce2.jpg","category":"armes"}
     ],
 
     // ==================== CHASSEUR ====================
-chasseur: [
-  {"id":"chasseur_001","name":"Omnioculus","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
-  {"id":"chasseur_002","name":"Masque de Bakris","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
-  {"id":"chasseur_003","name":"Écailles du mangeur d'étoiles","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
-  {"id":"chasseur_004","name":"Main de Caliban","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
-  {"id":"chasseur_005","name":"Haubert du gerfaut","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
-  {"id":"chasseur_006","name":"Poings du renouveau","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
-  {"id":"chasseur_007","name":"Le Sixième Coyote","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
-  {"id":"chasseur_008","name":"Éclats de Galanor","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
-  {"id":"chasseur_009","name":"Poignée de main des menteurs","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
-  {"id":"chasseur_010","name":"Combinaison d'Orphée","img":"https://www.bungie.net/common/destiny2_content/icons/4abdc33a8ff869fc7bdcbdc83fbaba01.jpg","category":"chasseur"},
-  {"id":"chasseur_011","name":"Rapière des chanceux","img":"https://www.bungie.net/common/destiny2_content/icons/8ccf49029d3c36bbdf3fb697163dcc53.jpg","category":"chasseur"},
-  {"id":"chasseur_012","name":"Flux Raiden","img":"https://www.bungie.net/common/destiny2_content/icons/af16bd8628430cc43cfcb161074a1706.jpg","category":"chasseur"},
-  {"id":"chasseur_013","name":"Bouffon gémeau","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
-  {"id":"chasseur_014","name":"Serment de Shinobu","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
-  {"id":"chasseur_015","name":"Graviton Forfeit","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
-  {"id":"chasseur_016","name":"Fr0st-EE5","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
-  {"id":"chasseur_017","name":"Spathe ophidienne","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
-  {"id":"chasseur_018","name":"Young Ahamkara's Spine","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
-  {"id":"chasseur_019","name":"Raiju's Harness","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
-  {"id":"chasseur_020","name":"Athrys's Embrace","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"}
-],
+    chasseur: [
+      {"id":"chasseur_001","name":"P1étin-EU5E5","img":"https://www.bungie.net/common/destiny2_content/icons/24e61da37158d8c105650edb74ae2bac.jpg","category":"chasseur"},
+      {"id":"chasseur_002","name":"Combinaison Orpheus","img":"https://www.bungie.net/common/destiny2_content/icons/4abdc33a8ff869fc7bdcbdc83fbaba01.jpg","category":"chasseur"},
+      {"id":"chasseur_003","name":"Pantalon porte-bonheur","img":"https://www.bungie.net/common/destiny2_content/icons/fa501bf3740c6b0cdc91f2cafd0547a3.jpg","category":"chasseur"},
+      {"id":"chasseur_004","name":"Ombre du dragon","img":"https://www.bungie.net/common/destiny2_content/icons/560933bda212e02475df32cb7faefd5e.jpg","category":"chasseur"},
+      {"id":"chasseur_005","name":"Rapière des chanceux","img":"https://www.bungie.net/common/destiny2_content/icons/8ccf49029d3c36bbdf3fb697163dcc53.jpg","category":"chasseur"},
+      {"id":"chasseur_006","name":"Flux Raiden","img":"https://www.bungie.net/common/destiny2_content/icons/af16bd8628430cc43cfcb161074a1706.jpg","category":"chasseur"},
+      {"id":"chasseur_007","name":"Manches des mécaniseurs","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_008","name":"Échine du jeune Ahamkara","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_009","name":"Traqueur d'ennemi","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_010","name":"Forfait du graviton","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_011","name":"Poings du renouveau","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_012","name":"Rôdeur nocturne","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_013","name":"Radar à décérébrés","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_014","name":"Bouffon gémeau","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_015","name":"Serment de Shinobu","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_016","name":"Vélocité des Éons","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_017","name":"G1vr-EE5","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_018","name":"Spathe ophidienne","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_019","name":"Poings d'Ahamkara hermétiques","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_020","name":"Couronne de l'écaille de ver","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_021","name":"Veste de gwishin","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_022","name":"Le Sixième Coyote","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_023","name":"Allégeance au serment","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_024","name":"Éclats de Galanor","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_025","name":"Poignée de main des menteurs","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_026","name":"Dard de Khépri","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_027","name":"Capuche d'assassin","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_028","name":"Les Bombardiers","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_029","name":"Harnais de Raiju","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_030","name":"Étreinte d'Athrys","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_031","name":"Masque de Bakris","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_032","name":"Omnioculus","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_033","name":"Écailles du mangeur d'étoiles","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_034","name":"Saltimbanque radieux","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_035","name":"Infection réfléchie","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_036","name":"Main de Caliban","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"chasseur"},
+      {"id":"chasseur_037","name":"Haubert du gerfaut","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"chasseur"},
+      {"id":"chasseur_038","name":"Pantalon de chargeur rapide","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_039","name":"Façade de Cyrtarachne","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_040","name":"Étau de Triton","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_041","name":"Poignes du garde-mite","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_042","name":"Équilibre des forces","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_043","name":"Conviction donnée","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_044","name":"Masque d'allégeance","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_045","name":"Moirai","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"},
+      {"id":"chasseur_046","name":"Chance souriante","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"chasseur"}
+    ],
 
     // ==================== ARCANISTE ====================
-    arcaniste: [
+       arcaniste: [
       {"id":"arcaniste_001","name":"Bottes de lunafaction","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"arcaniste"},
       {"id":"arcaniste_002","name":"Pas transversifs","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"arcaniste"},
       {"id":"arcaniste_003","name":"Ailes de l'aube sacrée","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"arcaniste"},
@@ -259,7 +286,7 @@ chasseur: [
     ],
 
     // ==================== TITAN ====================
-    titan: [
+        titan: [
       {"id":"titan_001","name":"Jambarts des dunes","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"titan"},
       {"id":"titan_002","name":"Protecteurs de paix","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"titan"},
       {"id":"titan_003","name":"Lion rampant","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"titan"},
@@ -308,13 +335,18 @@ chasseur: [
       {"id":"titan_046","name":"Gantelets du vent incandescent","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"titan"}
     ],
 
-    // ==================== RAIDS (5 exemples - modifiables) ====================
+    // ==================== RAIDS ====================
     raid: [
-      {"id":"raid_001","name":"LE DERNIER SOUHAIT","img":"https://www.bungie.net/common/destiny2_content/icons/51c53df606cca474dce3cadbf7d5ce28.jpg","category":"raid"},
-      {"id":"raid_002","name":"LA CRYPTE DU CRÉPUSCULE","img":"https://www.bungie.net/common/destiny2_content/icons/b62083eed6a4708e581fc9a061bcc8e9.jpg","category":"raid"},
-      {"id":"raid_003","name":"LE ROI DES CORROMPUS","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
-      {"id":"raid_004","name":"LA VOUTE DE VERRE","img":"https://www.bungie.net/common/destiny2_content/icons/f6844ca3eb572c546e97a340c24531d5.jpg","category":"raid"},
-      {"id":"raid_005","name":"LE JARDIN DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"raid"}
+      {"id":"raid_001","name":"CAVEAU DE VERRE","img":"https://www.bungie.net/common/destiny2_content/icons/51c53df606cca474dce3cadbf7d5ce28.jpg","category":"raid"},
+      {"id":"raid_002","name":"LA FIN DE CROPTA","img":"https://www.bungie.net/common/destiny2_content/icons/b62083eed6a4708e581fc9a061bcc8e9.jpg","category":"raid"},
+      {"id":"raid_003","name":"LA CHUTE DU ROI","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
+      {"id":"raid_004","name":"DERNIER VOEUX","img":"https://www.bungie.net/common/destiny2_content/icons/51c53df606cca474dce3cadbf7d5ce28.jpg","category":"raid"},
+      {"id":"raid_005","name":"JARDIN DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/b62083eed6a4708e581fc9a061bcc8e9.jpg","category":"raid"},
+      {"id":"raid_006","name":"CRYPTE DE LA PIERRE","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
+      {"id":"raid_007","name":"SERMENT DU DISCIPLE","img":"https://www.bungie.net/common/destiny2_content/icons/b62083eed6a4708e581fc9a061bcc8e9.jpg","category":"raid"},
+      {"id":"raid_008","name":"ORIGINE DES CAUCHEMARS","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
+      {"id":"raid_009","name":"OREE DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/f6844ca3eb572c546e97a340c24531d5.jpg","category":"raid"},
+      {"id":"raid_010","name":"DESERT PERPETUEL","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"raid"}
     ]
   }
 };

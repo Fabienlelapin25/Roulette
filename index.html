@@ -2,519 +2,1113 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Machine à Sous Destiny 2 - avec sélection</title>
-  <meta name="viewport" content="width=400, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Destiny 2 - Loadout Manager</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      min-height: 100vh;
-      background: none;
-      font-family: 'Segoe UI', 'Arial', sans-serif;
-      color: #00000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      box-sizing: border-box;
     }
-    .container { display: flex; gap: 32px; align-items: flex-start; }
-    .slot-machine {
-      position: relative;
-      border-radius: 28px;
-      box-shadow: 0 8px 40px 10px #0004;
-      padding: 36px 26px 32px 26px;
-      width: 330px;
+
+    body {
+      background: #0a0a0e;
+      font-family: 'Segoe UI', 'Rajdhani', monospace;
+      height: 100vh;
+      overflow: hidden;
+      color: #c8c8d8;
+    }
+
+    .app {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      border: 4px solid #fff;
-      overflow: hidden;
-      background: transparent;
+      height: 100vh;
     }
-    .slot-machine::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 28px;
-      z-index: 0;
-      pointer-events: none;
-      background: linear-gradient(135deg, #9038a3cc 0%, #7b2ff2cc 60%, #00c6ffcc 100%);
-      opacity: 0.55;
-    }
-    .slot-machine > * {
-      position: relative;
-      z-index: 1;
-    }
-    .slot-machine::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 28px;
-      pointer-events: none;
-      border: 2px solid rgba(255,255,255,0.18);
-      z-index: 2;
-    }
-    .weapon-label {
-      margin-bottom: 18px;
-      font-size: 1.18em;
-      letter-spacing: 1.5px;
-      font-weight: bold;
-      color: #fff;
-      text-shadow: 0 2px 8px #7b2ff280, 0 1px 5px #0008;
-      text-align: center;
-      min-height: 1.4em;
-    }
-    .reel-viewport {
-      width: 170px;
-      height: 170px;
-      overflow: hidden;
-      border-radius: 16px;
-      margin-bottom: 20px;
-      border: 4px solid #fff;
-      background: none;
-      box-shadow: 0 0 40px 0 #a282e0a0;
-      position: relative;
+
+    /* ===== BANNIÈRE SUPÉRIEURE ===== */
+    .players-banner {
+      background: #0c0c10;
+      border-bottom: 1px solid #2a2a35;
+      padding: 16px 20px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      transition: all 0.4s;
+      gap: 16px;
+      flex-wrap: wrap;
+      min-height: 90px;
     }
+
+    .players-list {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .player-card {
+      background: #14141c;
+      border: 1px solid #3a3a48;
+      min-width: 180px;
+      padding: 8px 12px;
+      position: relative;
+      transition: 0.15s;
+    }
+
+    .player-card.drag-over {
+      border-color: #aa88ff;
+      background: #1c1c28;
+      box-shadow: 0 0 10px rgba(170, 136, 255, 0.2);
+    }
+
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #2a2a35;
+    }
+
+    .player-name {
+      font-weight: bold;
+      color: #aa88ff;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .remove-player {
+      background: none;
+      border: none;
+      color: #6a6a7a;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0 4px;
+    }
+
+    .remove-player:hover {
+      color: #ff8888;
+    }
+
+    .player-items {
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .player-item {
+      background: #1a1a24;
+      border-left: 2px solid #aa88ff;
+      padding: 4px 8px;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: grab;
+    }
+
+    .player-item:active {
+      cursor: grabbing;
+    }
+
+    .remove-item {
+      background: none;
+      border: none;
+      color: #6a6a7a;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .remove-item:hover {
+      color: #ff8888;
+    }
+
+    .empty-player {
+      color: #6a6a7a;
+      font-size: 10px;
+      text-align: center;
+      padding: 12px;
+      font-style: italic;
+    }
+
+    .add-player-btn {
+      background: #14141c;
+      border: 1px solid #3a3a48;
+      color: #aa88ff;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 12px;
+      transition: 0.15s;
+      white-space: nowrap;
+    }
+
+    .add-player-btn:hover {
+      background: #1c1c26;
+      border-color: #8866cc;
+    }
+
+    /* ===== CONTENU PRINCIPAL ===== */
+    .main-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* PANEL GAUCHE */
+    .roulettes-panel {
+      width: 260px;
+      background: #0f0f14;
+      border-right: 1px solid #2a2a35;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      padding: 16px;
+      border-bottom: 1px solid #2a2a35;
+      background: #0c0c10;
+    }
+
+    .panel-header h2 {
+      font-size: 12px;
+      color: #aa88ff;
+      letter-spacing: 2px;
+    }
+
+    .roulettes-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .roulette-item {
+      background: #14141c;
+      border: 1px solid #2a2a35;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .roulette-item:hover {
+      background: #1c1c26;
+      border-color: #8866cc;
+    }
+
+    .roulette-item.active {
+      background: #1a1a24;
+      border-left: 3px solid #aa77ff;
+    }
+
+    .item-icon {
+      font-size: 24px;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a0e;
+      border: 1px solid #3a3a48;
+    }
+
+    .item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #d0d0e0;
+    }
+
+    .item-sub {
+      font-size: 10px;
+      color: #88889a;
+    }
+
+    /* PANEL CENTRAL */
+    .roulette-panel {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a0e;
+    }
+
+    .slot-machine {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .weapon-label {
+      font-size: 14px;
+      margin-bottom: 16px;
+      color: #aa88ff;
+      background: #0f0f14;
+      padding: 10px 20px;
+      border: 1px solid #2a2a35;
+      font-family: monospace;
+    }
+
+    .reel-viewport {
+      width: 220px;
+      height: 220px;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #0f0f14;
+      border: 2px solid #3a3a48;
+    }
+
     .reel-strip {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      will-change: transform;
     }
+
     .reel-item {
-      height: 170px;
-      width: 170px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #14141c;
+    }
+
+    .reel-item img {
+      max-width: 140px;
+      max-height: 140px;
+      object-fit: contain;
+    }
+
+    .btn-spin {
+      margin-top: 20px;
+      background: #14141c;
+      border: 2px solid #3a3a48;
+      padding: 10px 28px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #aa88ff;
+      cursor: pointer;
+      font-family: monospace;
+      letter-spacing: 3px;
+    }
+
+    .btn-spin:hover {
+      background: #1c1c26;
+      border-color: #8866cc;
+    }
+
+    .btn-spin:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* PANEL DROIT */
+    .selections-panel {
+      width: 280px;
+      background: #0f0f14;
+      border-left: 1px solid #2a2a35;
       display: flex;
       flex-direction: column;
+    }
+
+    .selections-header {
+      padding: 16px;
+      border-bottom: 1px solid #2a2a35;
+      background: #0c0c10;
+    }
+
+    .selections-header h3 {
+      color: #aa88ff;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .selections-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .selection-item {
+      background: #14141c;
+      border: 1px solid #2a2a35;
+      padding: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: grab;
+      transition: 0.1s;
+    }
+
+    .selection-item:active {
+      cursor: grabbing;
+    }
+
+    .selection-item.dragging {
+      opacity: 0.4;
+    }
+
+    .selection-item img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      background: #0a0a0e;
+      border: 1px solid #3a3a48;
+    }
+
+    .selection-info {
+      flex: 1;
+    }
+
+    .selection-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #d0d0e0;
+    }
+
+    .selection-category {
+      font-size: 9px;
+      color: #aa88ff;
+    }
+
+    .clear-btn {
+      background: #14141c;
+      border: 1px solid #4a3a5a;
+      color: #aa88aa;
+      padding: 8px;
+      cursor: pointer;
+      font-size: 10px;
+      width: calc(100% - 24px);
+      margin: 0 12px 12px 12px;
+    }
+
+    .clear-btn:hover {
+      background: #1c1c26;
+      border-color: #ff8888;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f0f14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3a3a48;
+    }
+
+    /* Modals */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
       align-items: center;
       justify-content: center;
     }
-    .reel-item img {
-      max-width: 120px;
-      max-height: 120px;
-      width: 120px;
-      height: 120px;
-      border-radius: 12px;
-      padding: 4px;
-      box-shadow: 0 2px 18px #a282e080;
-      display: block;
-      margin: 0 auto;
-      background: #e3e3ff;
-      object-fit: contain;
-      border: 2px solid #8888aa;
+
+    .modal.active {
+      display: flex;
     }
-    .reel-item .reel-name { display: none !important; }
-    .reel-item.selected .reel-name { display: none !important; }
-    .btn-spin {
-      background: linear-gradient(90deg, #fff 0%, #e3aaff 100%);
-      color: #7b2ff2;
-      font-size: 1.25em;
-      border: none;
-      border-radius: 12px;
-      padding: 15px 55px;
+
+    .modal-content {
+      background: #14141c;
+      border: 1px solid #8866cc;
+      padding: 24px;
+      min-width: 300px;
+    }
+
+    .modal-content h3 {
+      color: #aa88ff;
+      margin-bottom: 16px;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      background: #0a0a0e;
+      border: 1px solid #3a3a48;
+      color: #c8c8d8;
+      margin-bottom: 16px;
+      font-family: monospace;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .modal-buttons button {
+      background: #1c1c26;
+      border: 1px solid #3a3a48;
+      color: #c8c8d8;
+      padding: 6px 16px;
       cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-      margin-top: 20px;
-      box-shadow: 0 3px 16px #fff4, 0 1.5px 8px #9038a340;
-      letter-spacing: 2px;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
     }
-    .btn-spin:active {
-      background: linear-gradient(90deg, #e3aaff 0%, #fff 100%);
-      color: #4c33a3;
-      box-shadow: 0 0 0 transparent;
+
+    .modal-buttons button.confirm {
+      border-color: #aa88ff;
+      color: #aa88ff;
     }
-    .btn-spin:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+
+    /* Animations */
+    @keyframes pop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
     .picked {
-      animation: pop 0.4s;
+      animation: pop 0.3s ease;
     }
-    @keyframes pop {
-      0% { transform: scale(0.6); opacity: 0; }
-      60% { transform: scale(1.08); opacity: 1; }
-      100% { transform: scale(1); }
-    }
-    /* Panel sélection */
-    .panel {
-      width: 290px;
-      background: linear-gradient(180deg, #fff, #fbfbfb);
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-      max-height: 560px;
-      overflow-y: auto;
-    }
-    .panel h3 { margin: 0 0 12px 0; font-size: 16px; }
-    .list-controls { display: flex; gap: 8px; margin-bottom: 12px; }
-    .list-controls button { padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.06); background: #fff; cursor: pointer; font-weight: 600; font-size: 12px; }
-    .list-controls button:hover { background: #f5f5f5; }
-    #countSelected { margin-left: auto; color: #6b6b76; font-weight: 600; }
-    .weapons-list { list-style: none; padding: 0; margin: 0; }
-    .weapons-list li { display: flex; align-items: center; gap: 10px; padding: 8px; border-bottom: 1px solid rgba(0,0,0,0.04); }
-    .weapons-list li:hover { background: rgba(0,0,0,0.02); }
-    .weapons-list input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
-    .weapons-list .name { font-weight: 700; font-size: 13px; cursor: pointer; }
 
+    /* Responsive */
     @media (max-width: 900px) {
-      body { flex-direction: column; }
-      .container { flex-direction: column; }
-      .panel { width: 100%; max-height: 400px; }
+      .roulettes-panel { width: 220px; }
+      .selections-panel { width: 240px; }
+      .player-card { min-width: 150px; }
     }
-    @media (max-width: 430px) {
-      .slot-machine { width: 99vw; padding: 16vw 2vw 10vw 2vw; }
-      .weapon-label { font-size: 1em; }
-      .reel-viewport, .reel-item { width: 40vw; height: 40vw; min-width: 110px; min-height: 110px; }
-      .reel-item img { max-width: 80vw; max-height: 80vw; }
-      .panel { max-height: 300px;}
+
+    @media (max-width: 768px) {
+      .main-content { flex-direction: column; }
+      .roulettes-panel { width: 100%; max-height: 150px; flex-direction: row; overflow-x: auto; }
+      .roulettes-list { flex-direction: row; overflow-x: auto; }
+      .roulette-item { min-width: 120px; }
+      .selections-panel { width: 100%; max-height: 200px; }
+      .players-banner { order: 2; }
+      .main-content { order: 1; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="slot-machine">
-      <div class="weapon-label" id="weapon-label"></div>
-      <div class="reel-viewport" id="reel-viewport">
-        <div class="reel-strip" id="reel-strip"></div>
+<div class="app">
+  <!-- BANNIÈRE SUPÉRIEURE - PLAYERS -->
+  <div class="players-banner">
+    <div class="players-list" id="playersList"></div>
+    <button class="add-player-btn" id="addPlayerBtn">+ AJOUTER JOUEUR</button>
+  </div>
+
+  <!-- CONTENU PRINCIPAL -->
+  <div class="main-content">
+    <!-- PANEL GAUCHE - Catégories -->
+    <div class="roulettes-panel">
+      <div class="panel-header">
+        <h2>◈ CATÉGORIES ◈</h2>
       </div>
-      <button class="btn-spin" id="spin-btn">SPIN</button>
+      <div class="roulettes-list" id="categoriesList"></div>
     </div>
 
-    <div class="panel">
-      <h3>Liste des armes</h3>
-      <div class="list-controls">
-        <button id="checkAll">Tout cocher</button>
-        <button id="uncheckAll">Tout décocher</button>
-        <span id="countSelected">0</span>
+    <!-- PANEL CENTRAL - Roulette -->
+    <div class="roulette-panel">
+      <div class="slot-machine">
+        <div class="weapon-label" id="weaponLabel">SÉLECTIONNE UNE CATÉGORIE</div>
+        <div class="reel-viewport" id="reelViewport">
+          <div class="reel-strip" id="reelStrip"></div>
+        </div>
+        <button class="btn-spin" id="spinBtn" disabled>◈ SPIN ◈</button>
       </div>
+    </div>
 
-      <!-- 🔍 Barre de recherche -->
-      <input type="text" id="searchBar" placeholder="Rechercher une arme..." 
-             style="width:100%;padding:8px;margin-bottom:12px;border-radius:8px;border:1px solid #ccc;">
-
-      <!-- 🎲 Sélection aléatoire -->
-      <div class="random-select" style="margin-bottom:12px; display:flex; gap:8px;">
-        <input type="number" id="randomCount" min="1" placeholder="Nombre aléatoire" 
-               style="flex:1; padding:8px; border-radius:8px; border:1px solid #ccc;">
-        <button id="randomBtn">Sélection aléatoire</button>
+    <!-- PANEL DROIT - Historique -->
+    <div class="selections-panel">
+      <div class="selections-header">
+        <h3>◈ HISTORIQUE (DRAG & DROP) ◈</h3>
       </div>
-  
-      <ul id="weapons-list" class="weapons-list"></ul>
+      <div class="selections-list" id="selectionsList"></div>
+      <div style="padding: 12px;">
+        <button class="clear-btn" id="clearHistory">EFFACER L'HISTORIQUE</button>
+      </div>
     </div>
   </div>
-  <script>
+</div>
 
-    // ======== DATA ========
-    const weapons = [
-{"name":"Nouveau Malpais","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg"},
-{"name":"Neo Finis Terrae","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png"},
-{"name":"Tumulus Dyadique","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg"},
-{"name":"Aléthonyme","img":"https://www.bungie.net/common/destiny2_content/icons/09da11cd4fc285affeb6922f09b431ee.jpg"},
-{"name":"Khvostov 7G-0X","img":"https://www.bungie.net/common/destiny2_content/icons/23aac6d8454ee1bcd2234e303bd2d6bf.jpg"},
-{"name":"Euphonie","img":"https://www.bungie.net/common/destiny2_content/icons/661c84a377389a3b8a1fc38b44189b41.png"},
-{"name":"Garde-Souhaits","img":"https://www.bungie.net/common/destiny2_content/icons/6b47d872840188bc913d6307fa537c3c.jpg"},
-{"name":"Gouffre nécrotique","img":"https://www.bungie.net/common/destiny2_content/icons/52e8bb636771f4731da3f73f06fcad04.jpg"},
-{"name":"Outil de folie","img":"https://www.bungie.net/common/destiny2_content/icons/0b506106c2cc195aaad59280be3b1fcc.jpg"},
-{"name":"Le Navigateur","img":"https://www.bungie.net/common/destiny2_content/icons/4984c634a7d2eca3baafc000a121263d.jpg"},
-{"name":"Dernier avertissement","img":"https://www.bungie.net/common/destiny2_content/icons/e8030d75835eaf1c9014f2d63338d518.jpg"},
-{"name":"Finalité conditionnelle","img":"https://www.bungie.net/common/destiny2_content/icons/c9b4d65adcdfcadde871e5961ce912fb.jpg"},
-{"name":"Courbe verglacée","img":"https://www.bungie.net/common/destiny2_content/icons/48e2499dca00610a3349aed19256651a.jpg"},
-{"name":"Révision zéro","img":"https://www.bungie.net/common/destiny2_content/icons/41d05b7cb5cc0a384af07ee9b7d36dd2.png"},
-{"name":"Once de méchanceté","img":"https://www.bungie.net/common/destiny2_content/icons/7d815c943977fe71bbf00caf1bd9c514.png"},
-{"name":"Tempête de vif-argent","img":"https://www.bungie.net/common/destiny2_content/icons/06ec3d22c69944f6755bf75f07cd83bd.jpg"},
-{"name":"Osteo Striga","img":"https://www.bungie.net/common/destiny2_content/icons/2752ee2761149f004df20e78749c1bab.jpg"},
-{"name":"Sceptre d'Ager","img":"https://www.bungie.net/common/destiny2_content/icons/252db75c7ea885016f17895e2a154503.jpg"},
-{"name":"Prédecesseur","img":"https://www.bungie.net/common/destiny2_content/icons/50d67833eda8bb60a81803de7d901457.jpg"},
-{"name":"Cryosthésie 77K","img":"https://www.bungie.net/common/destiny2_content/icons/285bb2a7a6f016c151624b12a4681cca.jpg"},
-{"name":"Récit d'un homme mort","img":"https://www.bungie.net/common/destiny2_content/icons/cfc2c246cfd404d749fffbfe3ae3dfec.jpg"},
-{"name":"Rapace noir","img":"https://www.bungie.net/common/destiny2_content/icons/cef1290d58a2d94d1437e1e569fa7996.jpg"},
-{"name":"Trop long à expliquer","img":"https://www.bungie.net/common/destiny2_content/icons/8a79a43912129240ee9f70e8e6bcfd6d.jpg"},
-{"name":"Trésor asséché","img":"https://www.bungie.net/common/destiny2_content/icons/d105aa342f2d0c53a90a28477552f61f.png"},
-{"name":"Élu du voyageur","img":"https://www.bungie.net/common/destiny2_content/icons/6f0f3ab28d86316feb7fe27c5855ab4c.jpg"},
-{"name":"Bastion","img":"https://www.bungie.net/common/destiny2_content/icons/805009e0c67a2dcf4f4f7bffb2dba493.jpg"},
-{"name":"Monte-Carlo","img":"https://www.bungie.net/common/destiny2_content/icons/d123aaf47eed3de479aac4492577f7e9.jpg"},
-{"name":"Lumina","img":"https://www.bungie.net/common/destiny2_content/icons/65735eb5048ba941145e35224014e479.jpg"},
-{"name":"Poupé vaudou","img":"https://www.bungie.net/common/destiny2_content/icons/a7cc8a658f8196f13cdde9d72ca9945d.jpg"},
-{"name":"Arbalète","img":"https://www.bungie.net/common/destiny2_content/icons/c95ea75fe09d9f090a88d5322923d07a.jpg"},
-{"name":"Chardon","img":"https://www.bungie.net/common/destiny2_content/icons/d9fdb6774ff70cccd4161c13885d1258.jpg"},
-{"name":"Infection parfaite","img":"https://www.bungie.net/common/destiny2_content/icons/a1b6a5f3e52878610397249986300b23.jpg"},
-{"name":"Fardeau D'izanagi","img":"https://www.bungie.net/common/destiny2_content/icons/8763caf9bfb147a41f3e34ec7eaf876b.jpg"},
-{"name":"Dernières paroles","img":"https://www.bungie.net/common/destiny2_content/icons/a10719f1f2180e473ea9a0957e3b9fe4.jpg"},
-{"name":"Cerberus+1","img":"https://www.bungie.net/common/destiny2_content/icons/161a3f06196563345afeacb46e9df88d.jpg"},
-{"name":"Tueur de souhaits","img":"https://www.bungie.net/common/destiny2_content/icons/8e5d7a68305a0d1e53ccade9398c7e8b.jpg"},
-{"name":"Malveillance","img":"https://www.bungie.net/common/destiny2_content/icons/5564a17ddf52e36f56e7256ad9946a17.jpg"},
-{"name":"As de pique","img":"https://www.bungie.net/common/destiny2_content/icons/cdfbfd3f098329a367294f191070f8c4.jpg"},
-{"name":"La Gouvernante","img":"https://www.bungie.net/common/destiny2_content/icons/aeb95eb1abe8e45e1fe2573d6b3ab3c5.png"},
-{"name":"L'opportun","img":"https://www.bungie.net/common/destiny2_content/icons/da5f961ef97b78293cc498978c10e178.png"},
-{"name":"Règne de SUROS","img":"https://www.bungie.net/common/destiny2_content/icons/42120a6f2e1f43dd7f67bedffc42d0d2.jpg"},
-{"name":"Garance","img":"https://www.bungie.net/common/destiny2_content/icons/5a7cb122bf2e8968a68cee59ef93b23d.jpg"},
-{"name":"Le Lapin de jade","img":"https://www.bungie.net/common/destiny2_content/icons/f513e68c68d76392cffd52d94cc1410a.jpg"},
-{"name":"Belle affaire","img":"https://www.bungie.net/common/destiny2_content/icons/c674b162b08bb96e7f549ceb45060b6d.jpg"},
-{"name":"Sturm","img":"https://www.bungie.net/common/destiny2_content/icons/bb7af8675b1aed2eb4f4eb14aaec9946.jpg"},
-{"name":"Aile de vigilance","img":"https://www.bungie.net/common/destiny2_content/icons/f33eed8e9c72f0e326d60691ec6e0f81.jpg"},
-{"name":"Outil multifonction MIDA","img":"https://www.bungie.net/common/destiny2_content/icons/eb279fe06dcd9199fccda5120e244a63.jpg"},
-{"name":"Troisieme itération","img":"https://www.bungie.net/common/destiny2_content/icons/8d3b7dcc3635e3526efa32cb119b3adf.jpg"},
-{"name":"Pique du graviton","img":"https://www.bungie.net/common/destiny2_content/icons/ac56ad66eb1ebb8a371f9d3d3c768c5a.jpg"},
-{"name":"Guide stellaire","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png"},
-{"name":"Brise-glace","img":"https://www.bungie.net/common/destiny2_content/icons/5f3f44c8ec720f4ece9a8903ae29df60.jpg"},
-{"name":"Croc du Bourreau","img":"https://www.bungie.net/common/destiny2_content/icons/2401d52b8266057a1359e74c762a86ef.png"},
-{"name":"Chorale solitaire","img":"https://www.bungie.net/common/destiny2_content/icons/80cc90861aa83c63de2273457a6c9345.jpg"},
-{"name":"Mort rouge reformée","img":"https://www.bungie.net/common/destiny2_content/icons/262f0ef4547ca75c86d8eb5599b3eb60.jpg"},
-{"name":"Chasse à l'affût","img":"https://www.bungie.net/common/destiny2_content/icons/b995885ef6216361e63a093896f75735.jpg"},
-{"name":"Ergo Sum","img":"https://www.bungie.net/common/destiny2_content/icons/39a94c98eba4b9e007a76bbc067752f7.jpg"},
-{"name":"Lignée enterrée","img":"https://www.bungie.net/common/destiny2_content/icons/fcae8edcd35227d35fca0a108d831840.jpg"},
-{"name":"Dallage","img":"https://www.bungie.net/common/destiny2_content/icons/1c2e9282803d516be01561423a0ea282.jpg"},
-{"name":"Ex-Diris","img":"https://www.bungie.net/common/destiny2_content/icons/8bf07148479f8894c483db879ed46c4a.jpg"},
-{"name":"Centrifuse","img":"https://www.bungie.net/common/destiny2_content/icons/8c1a4a500934d67ecdb02455820c9b67.jpg"},
-{"name":"Vexcalibur","img":"https://www.bungie.net/common/destiny2_content/icons/735baec8c23ff1416ae6a8c72c729432.jpg"},
-{"name":"La Manticore","img":"https://www.bungie.net/common/destiny2_content/icons/b52c06c2497831876503dbbe795b1e59.jpg"},
-{"name":"Hiérarchie des besoins","img":"https://www.bungie.net/common/destiny2_content/icons/8c32410000243e6024130f755b23fbe6.jpg"},
-{"name":"Tombe délicate","img":"https://www.bungie.net/common/destiny2_content/icons/8a626d617f8e503df45142835bb5b659.jpg"},
-{"name":"L'Intrus","img":"https://www.bungie.net/common/destiny2_content/icons/75adde12e4e9c9fb237e492d8258eb73.png"},
-{"name":"Lame de compétition","img":"https://www.bungie.net/common/destiny2_content/icons/6301bf4e6d9d9728aaf5f9bea06c6a1a.jpg"},
-{"name":"Lame d'action","img":"https://www.bungie.net/common/destiny2_content/icons/add494c1e1fbdb062b7f6dc4c179c35b.jpg"},
-{"name":"Lame d'intention","img":"https://www.bungie.net/common/destiny2_content/icons/beec2a35b2cffd3fac488e0fb8cf25a5.jpg"},
-{"name":"Messager mort","img":"https://www.bungie.net/common/destiny2_content/icons/0824b34bb37e0bb7c32b91adf6dcb79e.jpg"},
-{"name":"Obligation collective","img":"https://www.bungie.net/common/destiny2_content/icons/238ab90ba2f858ebb8a5a1797a13fdd4.jpg"},
-{"name":"Impulsion Lorentz","img":"https://www.bungie.net/common/destiny2_content/icons/4d6d145ff3a33a0a30407cc60d7e9e3b.jpg"},
-{"name":"Exégèse du Vex","img":"https://www.bungie.net/common/destiny2_content/icons/111a10b59029fc6a9ca5e821267e6f6c.jpg"},
-{"name":"Divination de Ticuu","img":"https://www.bungie.net/common/destiny2_content/icons/39ef1673136f2f463879a83a44f11b0d.jpg"},
-{"name":"Dualité","img":"https://www.bungie.net/common/destiny2_content/icons/084c8f65d56ce5d74718d49b17874315.jpg"},
-{"name":"Frappe nuageuse","img":"https://www.bungie.net/common/destiny2_content/icons/ce45921edb8e35a249f2c6f5b3abaab5.jpg"},
-{"name":"Effigie désastreuse","img":"https://www.bungie.net/common/destiny2_content/icons/8787b1c97fe674d51a0450ba546ddb4b.jpg"},
-{"name":"Pochette d'allumettes de Tommy","img":"https://www.bungie.net/common/destiny2_content/icons/251630147cd942ade9414781e96237ec.jpg"},
-{"name":"Le Quatrième Cavalier","img":"https://www.bungie.net/common/destiny2_content/icons/247715dd42abef457b52ef37280c0e42.png"},
-{"name":"Symétrie","img":"https://www.bungie.net/common/destiny2_content/icons/55f9629f4674c351e3a2efd9ab9ca6e9.jpg"},
-{"name":"Ruines du Diable","img":"https://www.bungie.net/common/destiny2_content/icons/5fed5e618423591a8cf4bd66a4f69c97.png"},
-{"name":"Serment d'Ériana","img":"https://www.bungie.net/common/destiny2_content/icons/588133859fa98c801d8a9d66ea6aae2f.jpg"},
-{"name":"Divinité","img":"https://www.bungie.net/common/destiny2_content/icons/c6aa03536fd68b5fca5ad6b83ea0cf1e.jpg"},
-{"name":"Tarrabah","img":"https://www.bungie.net/common/destiny2_content/icons/88ea7e35e14f29c4cda6588cb258333b.jpg"},
-{"name":"Le Monarque","img":"https://www.bungie.net/common/destiny2_content/icons/5f858cb4661c605d18e3dc0b62cc4aaa.jpg"},
-{"name":"Jötunn","img":"https://www.bungie.net/common/destiny2_content/icons/ec202c839348294926428ecb5a7423eb.jpg"},
-{"name":"Goule trinitaire","img":"https://www.bungie.net/common/destiny2_content/icons/ab33a7c7024299b28d8c6410d63e5bb5.jpg"},
-{"name":"Diviseur d'ondes","img":"https://www.bungie.net/common/destiny2_content/icons/ba5b1654cbc06d0ce057f5d99b315b7e.jpg"},
-{"name":"Seigneur des Loups","img":"https://www.bungie.net/common/destiny2_content/icons/6bd65ae8981e4cac3c00825abedd3fbb.jpg9"},
-{"name":"Lance de Polaris","img":"https://www.bungie.net/common/destiny2_content/icons/a22adf5ee0096e1cb9a6e212ee591b70.jpg"},
-{"name":"Cristal de Prométhée","img":"https://www.bungie.net/common/destiny2_content/icons/76817c6b9ad482a19a180819fbe85def.jpg"},
-{"name":"Télesto","img":"https://www.bungie.net/common/destiny2_content/icons/44cffedea1b6bc9800da018f2bd431dd.jpg"},
-{"name":"Cœur de glace","img":"https://www.bungie.net/common/destiny2_content/icons/2a2a95b819312fc6fef728911cfd6fa2.jpg"},
-{"name":"Impitoyable","img":"https://www.bungie.net/common/destiny2_content/icons/4f28dc0f39238fe25d298a894ea71389.png"},
-{"name":"Lion de guerre","img":"https://www.bungie.net/common/destiny2_content/icons/836a2f75cfa67de87a8a73f3c61f7f78.jpg"},
-{"name":"Rayon de soleil","img":"https://www.bungie.net/common/destiny2_content/icons/4f28dc0f39238fe25d298a894ea71389.png"},
-{"name":"Lance du graviton","img":"https://www.bungie.net/common/destiny2_content/icons/b7c66ccc849867c9be6f24a183fa70e3.png"},
-{"name":"Serment des Embraseurs","img":"https://www.bungie.net/common/destiny2_content/icons/4f28dc0f39238fe25d298a894ea71389.png"},
-{"name":"Borealis","img":"https://www.bungie.net/common/destiny2_content/icons/5d7ff61746d3ce613b3bb3d4667e6d2a.jpg"},
-{"name":"Casse-cou","img":"https://www.bungie.net/common/destiny2_content/icons/0b7fa10956ee9f16899ce1838c3c0e31.jpg"},
-{"name":"Ombres et lumière","img":"https://www.bungie.net/common/destiny2_content/icons/94e6e474b4488d5a198b5dcbad534c3e.jpg"},
-{"name":"Ovation tourbillonnante","img":"https://www.bungie.net/common/destiny2_content/icons/b91ed8db52e1a3c52e0f9bd69b290b9f.jpg"},
-{"name":"Aconit","img":"https://www.bungie.net/common/destiny2_content/icons/6acdff9af5ae274c70055f816aab2389.jpg"},
-{"name":"Foreuse finale","img":"https://www.bungie.net/common/destiny2_content/icons/22f0588bf5ce837fc5f4f89e86693c1f.jpg"},
-{"name":"Microcosme","img":"https://www.bungie.net/common/destiny2_content/icons/8fc373a11adc417aab9a3ef4bab3bbe3.jpg"},
-{"name":"Souffle du dragon","img":"https://www.bungie.net/common/destiny2_content/icons/49197babe16ed546cec94b26b44f3447.jpg"},
-{"name":"Chaos déterministe","img":"https://www.bungie.net/common/destiny2_content/icons/d657cc9dae47ecaec19038f18f335c18.jpg"},
-{"name":"Morsure hivernale","img":"https://www.bungie.net/common/destiny2_content/icons/fdc14f2b28c77f9627f0629fdb540b76.jpg"},
-{"name":"Cardiombre","img":"https://www.bungie.net/common/destiny2_content/icons/94c6933727fa885fb2002a8c7aee5e42.jpg"},
-{"name":"Parasite","img":"https://www.bungie.net/common/destiny2_content/icons/0a71a14d8614d619a40649f09b28b466.jpg"},
-{"name":"Grande ouverture","img":"https://www.bungie.net/common/destiny2_content/icons/bc76e54c9cd266c09d8e08036ebcfd42.jpg"},
-{"name":"Gjallarhorn","img":"https://www.bungie.net/common/destiny2_content/icons/b62083eed6a4708e581fc9a061bcc8e9.jpg"},
-{"name":"Poigne du Salut","img":"https://www.bungie.net/common/destiny2_content/icons/f7a37e909fe6f923501f2175dc3784b6.jpg"},
-{"name":"Regard du lendemain","img":"https://www.bungie.net/common/destiny2_content/icons/9caeff89015f02ad52e6fefe95398b01.jpg"},
-{"name":"Lamentation","img":"https://www.bungie.net/common/destiny2_content/icons/f6844ca3eb572c546e97a340c24531d5.jpg"},
-{"name":"Héritage évident","img":"https://www.bungie.net/common/destiny2_content/icons/273379dd44efda777c53b3902a3a1eee.jpg"},
-{"name":"Souffle du Léviathan","img":"https://www.bungie.net/common/destiny2_content/icons/fd892bb713040300ad944590892b0e50.jpg"},
-{"name":"Xénophage","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg"},
-{"name":"La Faucheuse","img":"https://www.bungie.net/common/destiny2_content/icons/5cb4c8ec3cabaaa6a29ac7513ee30ca0.jpg"},
-{"name":"Vérité","img":"https://www.bungie.net/common/destiny2_content/icons/b5021df721b66b6ab71e73b23e7b5392.jpg"},
-{"name":"Anarchie","img":"https://www.bungie.net/common/destiny2_content/icons/f24e3336a1142847d6bf47b56b492eea.jpg"},
-{"name":"Mille voix","img":"https://www.bungie.net/common/destiny2_content/icons/51c53df606cca474dce3cadbf7d5ce28.jpg"},
-{"name":"Renard à deux queues","img":"https://www.bungie.net/common/destiny2_content/icons/c065e1c0d03d9648fcad7762031eede9.jpg"},
-{"name":"Griffe noire","img":"https://www.bungie.net/common/destiny2_content/icons/b40fd2d06867196af70a4bce290f15fc.jpg"},
-{"name":"Le Parjure","img":"https://www.bungie.net/common/destiny2_content/icons/cc919daae4f005e9da7f2065fe8e29c4.jpg"},
-{"name":"Ligne d'univers zéro","img":"https://www.bungie.net/common/destiny2_content/icons/b1f0b22d4c7ffa680f84381b5a4a2e02.jpg"},
-{"name":"Image de l'Esprit dormant","img":"https://www.bungie.net/common/destiny2_content/icons/af232d6f94c12a4cf1080e659264294f.jpg"},
-{"name":"Murmure du Ver","img":"https://www.bungie.net/common/destiny2_content/icons/e47c31826843f6fd0aa863eac6fd093e.jpg"},
-{"name":"La Colonie","img":"https://www.bungie.net/common/destiny2_content/icons/3ae064e4a93ea26a394ff35171193eed.jpg"},
-{"name":"Le Prospecteur","img":"https://www.bungie.net/common/destiny2_content/icons/09e0e23b932b8b713549ce8d8f4c5f4d.jpg"},
-{"name":"Bobine de Wardcliff","img":"https://www.bungie.net/common/destiny2_content/icons/06d12929d1866159aca5cdb60282f908.jpg"},
-{"name":"Canon tracteur","img":"https://www.bungie.net/common/destiny2_content/icons/6afd31f787ff68d32e1f574686494606.jpg"},
-{"name":"Légende d'Acrius","img":"https://www.bungie.net/common/destiny2_content/icons/6de5f786f39bf827de8490e97b672ddb.jpg"},
-{"name":"D.A.R.C.I.","img":"https://www.bungie.net/common/destiny2_content/icons/eec16138c9fe69ff0b5d6c213e5cabb6.jpg"},
-{"name":"Maître du tonnerre","img":"https://www.bungie.net/common/destiny2_content/icons/4a08027f7b5752f84d183ecc61682c3e.jpg"},
-{"name":"Empereur des rats","img":"https://www.bungie.net/common/destiny2_content/icons/b86c24934b3ec9954218ecfa0992aeb2.jpg"},
-{"name":"Lame praxique","img":"https://www.bungie.net/common/destiny2_content/icons/d63292c9248c5e3ae823605307140199.jpg"},
-{"name":"Service de Luzaku","img":"https://www.bungie.net/common/destiny2_content/icons/e7d4497fbdd8339eaf9da4b9151c9559.jpg"},
-];
-    weapons.forEach((w,i)=>{ w.id = 'w'+(i+1); w.checked = true; });
+<!-- MODAL pour ajouter un joueur -->
+<div class="modal" id="playerModal">
+  <div class="modal-content">
+    <h3>AJOUTER UN JOUEUR</h3>
+    <input type="text" id="playerNameInput" placeholder="Pseudo du gardien" autocomplete="off">
+    <div class="modal-buttons">
+      <button id="cancelModal">ANNULER</button>
+      <button id="confirmModal" class="confirm">AJOUTER</button>
+    </div>
+  </div>
+</div>
 
-      // ======== DOM ========
-    const reelStrip = document.getElementById('reel-strip');
-    const weaponLabel = document.getElementById('weapon-label');
-    const spinBtn = document.getElementById('spin-btn');
-    const reelViewport = document.getElementById('reel-viewport');
+<!-- MODAL pour confirmation -->
+<div class="modal" id="confirmModalDialog">
+  <div class="modal-content" style="max-width: 300px;">
+    <h3>CONFIRMER</h3>
+    <p id="confirmMessage">Voulez-vous continuer ?</p>
+    <div class="modal-buttons">
+      <button id="confirmNo">NON</button>
+      <button id="confirmYes" class="confirm">OUI</button>
+    </div>
+  </div>
+</div>
 
-    const weaponsListEl = document.getElementById('weapons-list');
-    const checkAllBtn = document.getElementById('checkAll');
-    const uncheckAllBtn = document.getElementById('uncheckAll');
-    const countSelectedEl = document.getElementById('countSelected');
-
-    // 🔍 Barre de recherche
-    const searchBar = document.getElementById('searchBar');
-    let searchQuery = "";
-
-    // 🎲 Sélection aléatoire
-    const randomCountInput = document.getElementById('randomCount');
-    const randomBtn = document.getElementById('randomBtn');
-
-    let spinning = false;
-
-    // ======== PANEL SELECTION ========
-    function getSelected() { return weapons.filter(w => w.checked); }
-    function renderWeaponsList() {
-      weaponsListEl.innerHTML = '';
-      const sorted = weapons.slice().sort((a,b) => a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
-      sorted
-        .filter(w => w.name.toLowerCase().includes(searchQuery.toLowerCase())) // filtre par recherche
-        .forEach(w => {
-          const li = document.createElement('li');
-          const cb = document.createElement('input');
-          cb.type = 'checkbox'; cb.id = 'cb-'+w.id; cb.checked=w.checked;
-          cb.addEventListener('change',()=>{ w.checked=cb.checked; renderStrip(); updateCount(); });
-          const label = document.createElement('label');
-          label.htmlFor = cb.id;
-          label.className = 'name';
-          label.textContent = w.name;
-          label.style.cursor = 'pointer';
-          li.appendChild(cb); li.appendChild(label); weaponsListEl.appendChild(li);
-        });
-      updateCount();
+<script>
+  // ==================== DONNÉES ====================
+  const DESTINY_DATA = {
+    version: "1.0",
+    
+    categories: {
+      armes: { id: "armes", title: "ARMES EXOTIQUES", icon: "🔫", color: "#aa88ff" },
+      chasseur: { id: "chasseur", title: "CHASSEUR", icon: "🏹", color: "#88ff88" },
+      arcaniste: { id: "arcaniste", title: "ARCANISTE", icon: "🔮", color: "#88aaff" },
+      titan: { id: "titan", title: "TITAN", icon: "🛡️", color: "#ffaa88" },
+      raid: { id: "raid", title: "RAIDS", icon: "🏆", color: "#ff88ff" }
+    },
+    
+    items: {
+      armes: [
+        { id: "gjallarhorn", name: "GJALLARHORN", img: "", category: "armes" },
+        { id: "le_monarque", name: "LE MONARQUE", img: "", category: "armes" },
+        { id: "xenophage", name: "XÉNOPHAGE", img: "", category: "armes" },
+        { id: "lamentation", name: "LAMENTATION", img: "", category: "armes" },
+        { id: "osteo_striga", name: "OSTEO STRIGA", img: "", category: "armes" },
+        { id: "navigateur", name: "LE NAVIGATEUR", img: "", category: "armes" },
+        { id: "conditionnelle", name: "FINALITÉ CONDITIONNELLE", img: "", category: "armes" },
+        { id: "divinite", name: "DIVINITÉ", img: "", category: "armes" },
+        { id: "telesto", name: "TÉLESTO", img: "", category: "armes" },
+        { id: "vigilance", name: "AILE DE VIGILANCE", img: "", category: "armes" }
+      ],
+      chasseur: [
+        { id: "omnioculus", name: "OMNIOCULUS", img: "", category: "chasseur" },
+        { id: "bakris", name: "MASQUE DE BAKRIS", img: "", category: "chasseur" },
+        { id: "etoiles", name: "ÉCAILLES MANGEUR D'ÉTOILES", img: "", category: "chasseur" },
+        { id: "caliban", name: "MAIN DE CALIBAN", img: "", category: "chasseur" },
+        { id: "orpheus", name: "COMBINAISON D'ORPHÉE", img: "", category: "chasseur" }
+      ],
+      arcaniste: [
+        { id: "necrotique", name: "POIGNÉE NÉCROTIQUE", img: "", category: "arcaniste" },
+        { id: "ophidien", name: "ASPECT OPHIDIEN", img: "", category: "arcaniste" },
+        { id: "nezarec", name: "PÉCHÉ DE NEZAREC", img: "", category: "arcaniste" },
+        { id: "orage", name: "COURONNE DES TEMPÊTES", img: "", category: "arcaniste" },
+        { id: "fenix", name: "PROTOCOLE DU PHÉNIX", img: "", category: "arcaniste" }
+      ],
+      titan: [
+        { id: "synthoceps", name: "SYNTHOCEPS", img: "", category: "titan" },
+        { id: "coeur_flamme", name: "COEUR DES FLAMMES", img: "", category: "titan" },
+        { id: "filante", name: "CUIRASSE DE L'ÉTOILE FILANTE", img: "", category: "titan" },
+        { id: "dunes", name: "JAMBARTS DES DUNES", img: "", category: "titan" },
+        { id: "saint14", name: "CASQUE DE SAINT-14", img: "", category: "titan" }
+      ],
+      raid: [
+        { id: "dernier_souhait", name: "LE DERNIER SOUHAIT", img: "", category: "raid" },
+        { id: "crypte", name: "CRYPTE DU CRÉPUSCULE", img: "", category: "raid" },
+        { id: "corrompus", name: "ROI DES CORROMPUS", img: "", category: "raid" },
+        { id: "verre", name: "VOUTE DE VERRE", img: "", category: "raid" },
+        { id: "salut", name: "JARDIN DU SALUT", img: "", category: "raid" }
+      ]
     }
-    checkAllBtn.addEventListener('click',()=>{ weapons.forEach(w=>w.checked=true); renderWeaponsList(); renderStrip(); });
-    uncheckAllBtn.addEventListener('click',()=>{ weapons.forEach(w=>w.checked=false); renderWeaponsList(); renderStrip(); });
-    function updateCount(){ countSelectedEl.textContent=getSelected().length; spinBtn.disabled=(getSelected().length===0); }
+  };
 
-    // 🔍 Écoute la saisie dans la barre de recherche
-    searchBar.addEventListener('input', () => {
-      searchQuery = searchBar.value;
-      renderWeaponsList();
+  function getItemsByCategory(categoryId) {
+    return DESTINY_DATA.items[categoryId] || [];
+  }
+
+  // ==================== STORAGE ====================
+  const STORAGE_KEYS = {
+    PLAYERS: 'destiny_players',
+    HISTORY: 'destiny_history'
+  };
+
+  const Storage = {
+    savePlayers(players) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.PLAYERS, JSON.stringify(players));
+        return true;
+      } catch(e) { return false; }
+    },
+    loadPlayers() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEYS.PLAYERS);
+        return data ? JSON.parse(data) : [];
+      } catch(e) { return []; }
+    },
+    saveHistory(history) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(history.slice(0, 50)));
+        return true;
+      } catch(e) { return false; }
+    },
+    loadHistory() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEYS.HISTORY);
+        return data ? JSON.parse(data) : [];
+      } catch(e) { return []; }
+    }
+  };
+
+  // ==================== ÉTAT GLOBAL ====================
+  let players = [];
+  let history = [];
+  let currentCategory = null;
+  let currentItems = [];
+  let spinning = false;
+  let nextPlayerId = 1;
+  let draggedItem = null;
+  let pendingConfirmCallback = null;
+  
+  // DOM Elements
+  const playersListEl = document.getElementById('playersList');
+  const categoriesListEl = document.getElementById('categoriesList');
+  const selectionsListEl = document.getElementById('selectionsList');
+  const weaponLabel = document.getElementById('weaponLabel');
+  const reelStrip = document.getElementById('reelStrip');
+  const reelViewport = document.getElementById('reelViewport');
+  const spinBtn = document.getElementById('spinBtn');
+  const clearHistoryBtn = document.getElementById('clearHistory');
+  const addPlayerBtn = document.getElementById('addPlayerBtn');
+  
+  // Modals
+  const playerModal = document.getElementById('playerModal');
+  const confirmDialog = document.getElementById('confirmModalDialog');
+  const playerNameInput = document.getElementById('playerNameInput');
+  const cancelModalBtn = document.getElementById('cancelModal');
+  const confirmModalBtn = document.getElementById('confirmModal');
+  const confirmYesBtn = document.getElementById('confirmYes');
+  const confirmNoBtn = document.getElementById('confirmNo');
+  const confirmMessage = document.getElementById('confirmMessage');
+  
+  // ==================== FONCTIONS UTILITAIRES ====================
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
     });
-
-    // 🎲 Sélection aléatoire d’un nombre d’armes
-    randomBtn.addEventListener('click', () => {
-      let n = parseInt(randomCountInput.value);
-      if (isNaN(n) || n <= 0) return;
-
-      // Réinitialiser toutes les cases
-      weapons.forEach(w => w.checked = false);
-
-      // Mélanger les armes
-      const shuffled = weapons.slice().sort(() => Math.random() - 0.5);
-
-      // Cocher les n premières
-      shuffled.slice(0, n).forEach(w => w.checked = true);
-
-      // Rafraîchir l’affichage
-      renderWeaponsList();
-      renderStrip();
-    });
-
-    // ======== ROULETTE ========
-    function renderStrip(repeat=2) {
-      const selected=getSelected();
-      if(selected.length===0){
-        reelStrip.innerHTML='<div class="reel-item"><div style="color:#fff;font-weight:700">Aucune arme sélectionnée</div></div>';
-        spinBtn.disabled=true;
-        weaponLabel.textContent='';
-        return;
-      }
-      reelStrip.innerHTML='';
-      for(let r=0;r<repeat;r++){
-        selected.forEach(w=>{
-          const div=document.createElement('div');
-          div.className='reel-item';
-          div.innerHTML=`<img src="${w.img}" alt="${w.name}"><div class="reel-name"></div>`;
-          reelStrip.appendChild(div);
+  }
+  
+  function showConfirm(message, callback) {
+    confirmMessage.textContent = message;
+    confirmDialog.classList.add('active');
+    pendingConfirmCallback = callback;
+  }
+  
+  function hideConfirm() {
+    confirmDialog.classList.remove('active');
+    pendingConfirmCallback = null;
+  }
+  
+  // ==================== GESTION DES JOUEURS ====================
+  function renderPlayers() {
+    if (!playersListEl) return;
+    
+    if (players.length === 0) {
+      playersListEl.innerHTML = '<div style="color: #6a6a7a; font-size: 12px; padding: 8px;">Aucun joueur - cliquez sur "Ajouter joueur"</div>';
+      return;
+    }
+    
+    playersListEl.innerHTML = players.map(player => `
+      <div class="player-card" data-player-id="${player.id}">
+        <div class="player-header">
+          <span class="player-name">${escapeHtml(player.name)}</span>
+          <button class="remove-player" data-id="${player.id}">✕</button>
+        </div>
+        <div class="player-items" data-player-id="${player.id}">
+          ${player.items.length === 0 ? '<div class="empty-player">Déposez ici ▼</div>' : 
+            player.items.map((item, idx) => `
+              <div class="player-item" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}" draggable="true">
+                <span>🎲 ${escapeHtml(item.name)}</span>
+                <button class="remove-item" data-player-id="${player.id}" data-item-idx="${idx}">✕</button>
+              </div>
+            `).join('')}
+        </div>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.remove-player').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = parseInt(btn.dataset.id);
+        showConfirm(`Supprimer le joueur ?`, (confirmed) => {
+          if (confirmed) {
+            players = players.filter(p => p.id !== id);
+            renderPlayers();
+            Storage.savePlayers(players);
+          }
         });
+      });
+    });
+    
+    document.querySelectorAll('.remove-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const playerId = parseInt(btn.dataset.playerId);
+        const itemIdx = parseInt(btn.dataset.itemIdx);
+        const player = players.find(p => p.id === playerId);
+        if (player && player.items[itemIdx]) {
+          showConfirm(`Retirer "${player.items[itemIdx].name}" de ${player.name} ?`, (confirmed) => {
+            if (confirmed) {
+              player.items.splice(itemIdx, 1);
+              renderPlayers();
+              Storage.savePlayers(players);
+            }
+          });
+        }
+      });
+    });
+    
+    setupDropZones();
+    setupPlayerItemDrag();
+    Storage.savePlayers(players);
+  }
+  
+  function addItemToPlayer(playerId, item) {
+    const player = players.find(p => p.id === playerId);
+    if (player) {
+      player.items.push({ ...item });
+      renderPlayers();
+      Storage.savePlayers(players);
+    }
+  }
+  
+  // ==================== DRAG & DROP ====================
+  function setupDropZones() {
+    const dropZones = document.querySelectorAll('.player-items');
+    dropZones.forEach(zone => {
+      zone.removeEventListener('dragover', zone._dragOverHandler);
+      zone.removeEventListener('dragleave', zone._dragLeaveHandler);
+      zone.removeEventListener('drop', zone._dropHandler);
+      
+      zone._dragOverHandler = (e) => {
+        e.preventDefault();
+        zone.closest('.player-card')?.classList.add('drag-over');
+      };
+      zone._dragLeaveHandler = () => {
+        zone.closest('.player-card')?.classList.remove('drag-over');
+      };
+      zone._dropHandler = (e) => {
+        e.preventDefault();
+        zone.closest('.player-card')?.classList.remove('drag-over');
+        const playerId = parseInt(zone.dataset.playerId);
+        if (draggedItem && playerId) {
+          addItemToPlayer(playerId, draggedItem);
+          draggedItem = null;
+        }
+      };
+      
+      zone.addEventListener('dragover', zone._dragOverHandler);
+      zone.addEventListener('dragleave', zone._dragLeaveHandler);
+      zone.addEventListener('drop', zone._dropHandler);
+    });
+  }
+  
+  function setupPlayerItemDrag() {
+    document.querySelectorAll('.player-item').forEach(item => {
+      item.setAttribute('draggable', 'true');
+      item.removeEventListener('dragstart', item._dragStartHandler);
+      item.removeEventListener('dragend', item._dragEndHandler);
+      
+      item._dragStartHandler = (e) => {
+        const playerCard = item.closest('.player-card');
+        const playerId = parseInt(playerCard?.dataset.playerId);
+        const itemIdx = parseInt(item.dataset.itemIdx);
+        const player = players.find(p => p.id === playerId);
+        if (player && player.items[itemIdx]) {
+          draggedItem = player.items[itemIdx];
+          e.dataTransfer.setData('text/plain', JSON.stringify(draggedItem));
+        }
+      };
+      item._dragEndHandler = () => {
+        draggedItem = null;
+      };
+      
+      item.addEventListener('dragstart', item._dragStartHandler);
+      item.addEventListener('dragend', item._dragEndHandler);
+    });
+  }
+  
+  // ==================== HISTORIQUE ====================
+  function addToHistory(item) {
+    history.unshift({
+      ...item,
+      id: item.id || Date.now(),
+      time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    });
+    if (history.length > 50) history.pop();
+    renderHistory();
+    Storage.saveHistory(history);
+  }
+  
+  function clearHistory() {
+    showConfirm('Effacer tout l\'historique ?', (confirmed) => {
+      if (confirmed) {
+        history = [];
+        renderHistory();
+        Storage.saveHistory(history);
       }
-      spinBtn.disabled=false;
+    });
+  }
+  
+  function renderHistory() {
+    if (!selectionsListEl) return;
+    
+    if (history.length === 0) {
+      selectionsListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun tirage</div>';
+      return;
     }
-    function setLabelFromStrip(pos) {
-      const selected=getSelected();
-      if(selected.length===0){ weaponLabel.textContent=''; return 0;}
-      let idx=Math.round(pos/170)%selected.length;
-      if(idx<0) idx+=selected.length;
-      weaponLabel.textContent=selected[idx].name;
-      document.querySelectorAll('.reel-item').forEach(e => e.classList.remove('selected'));
-      const items=document.querySelectorAll('.reel-item');
-      for(let i=0;i<items.length;i++){
-        if(i%selected.length===idx){ items[i].classList.add('selected'); break;}
-      }
-      return idx;
+    
+    selectionsListEl.innerHTML = history.map((item, idx) => `
+      <div class="selection-item" draggable="true" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}">
+        <div class="selection-info">
+          <div class="selection-name">${escapeHtml(item.name)}</div>
+          <div class="selection-category">${escapeHtml(item.category || 'GÉNÉRAL')}</div>
+        </div>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.selection-item').forEach(el => {
+      el.setAttribute('draggable', 'true');
+      el.removeEventListener('dragstart', el._dragStartHandler);
+      el.removeEventListener('dragend', el._dragEndHandler);
+      
+      el._dragStartHandler = (e) => {
+        const name = el.dataset.itemName;
+        const img = el.dataset.itemImg;
+        const cat = el.dataset.itemCat;
+        draggedItem = { name, img, category: cat };
+        e.dataTransfer.setData('text/plain', JSON.stringify(draggedItem));
+        el.classList.add('dragging');
+      };
+      el._dragEndHandler = () => {
+        el.classList.remove('dragging');
+        draggedItem = null;
+      };
+      
+      el.addEventListener('dragstart', el._dragStartHandler);
+      el.addEventListener('dragend', el._dragEndHandler);
+    });
+  }
+  
+  // ==================== ROULETTE ====================
+  function renderReel() {
+    if (!reelStrip || !currentItems.length) {
+      if (reelStrip) reelStrip.innerHTML = '<div class="reel-item">Aucun élément</div>';
+      return;
     }
-    function resetReel() {
-      renderStrip();
-      reelStrip.style.transform=`translateY(0px)`;
-      setLabelFromStrip(0);
+    
+    reelStrip.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      currentItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'reel-item';
+        div.innerHTML = `<div style="font-size: 48px;">${DESTINY_DATA.categories[currentCategory]?.icon || '🎲'}</div><div style="font-size: 11px; margin-top: 8px;">${escapeHtml(item.name)}</div>`;
+        reelStrip.appendChild(div);
+      });
     }
-    function showPickedWeapon(idx){
-      const selected=getSelected();
-      reelViewport.innerHTML='';
-      const picked=document.createElement('div');
-      picked.className='reel-item picked';
-      picked.innerHTML=`<img src="${selected[idx].img}" alt="${selected[idx].name}">`;
-      reelViewport.appendChild(picked);
+    reelStrip.style.transform = 'translateY(0px)';
+  }
+  
+  function resetReel() {
+    renderReel();
+    if (currentItems.length > 0 && weaponLabel) {
+      const catInfo = DESTINY_DATA.categories[currentCategory];
+      weaponLabel.innerHTML = catInfo ? `${catInfo.icon} ${catInfo.title}` : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE';
     }
-    function spin() {
-      if(spinning) return;
-      const selected=getSelected(); if(selected.length===0) return;
-      spinning=true;
-      spinBtn.disabled=true; spinBtn.style.opacity="0.65";
-      const finalIdx=Math.floor(Math.random()*selected.length);
-      let stepHeight=170;
-      let nCycles=7+Math.floor(Math.random()*3);
-      let totalMoves=(nCycles*selected.length+finalIdx)*stepHeight;
-      let duration=2200; let start=null;
-
-      function easeOutCubic(t){return 1-Math.pow(1-t,3);}
-      function animate(ts){
-        if(!start) start=ts;
-        let elapsed=ts-start;
-        let progress=Math.min(elapsed/duration,1);
-        let eased=easeOutCubic(progress);
-        let pos=-eased*totalMoves;
-        let visualPos=(pos%(selected.length*stepHeight));
-        if(visualPos>0) visualPos-=selected.length*stepHeight;
-        reelStrip.style.transform=`translateY(${visualPos}px)`;
-        setLabelFromStrip(-visualPos);
-        if(progress<1){ requestAnimationFrame(animate);}
-        else {
-          let finalPos=-finalIdx*stepHeight;
-          reelStrip.style.transform=`translateY(${finalPos}px)`;
-          setLabelFromStrip(finalIdx*stepHeight);
-          setTimeout(()=>{
-            showPickedWeapon(finalIdx);
-            weaponLabel.textContent=getSelected()[finalIdx].name;
-            spinBtn.disabled=false;
-            spinBtn.style.opacity="1";
-            spinning=false;
-          },100);
+  }
+  
+  function spin() {
+    if (spinning || !currentItems.length) return;
+    
+    spinning = true;
+    spinBtn.disabled = true;
+    spinBtn.innerHTML = '◈ SPINNING... ◈';
+    
+    const stepHeight = 220;
+    const selectedIndex = Math.floor(Math.random() * currentItems.length);
+    const cycles = 5 + Math.floor(Math.random() * 3);
+    const totalDistance = (cycles * currentItems.length + selectedIndex) * stepHeight;
+    const duration = 1800;
+    const startTime = performance.now();
+    
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+    
+    function animate(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      const ease = easeOutCubic(progress);
+      const currentY = -ease * totalDistance;
+      
+      if (reelStrip) reelStrip.style.transform = `translateY(${currentY}px)`;
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        const finalY = -selectedIndex * stepHeight;
+        if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
+        
+        const selectedItem = currentItems[selectedIndex];
+        if (weaponLabel) weaponLabel.innerHTML = `✦ ${selectedItem.name} ✦`;
+        
+        if (reelViewport) {
+          const catIcon = DESTINY_DATA.categories[currentCategory]?.icon || '🎲';
+          reelViewport.innerHTML = `<div class="reel-item picked" style="height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center;"><div style="font-size: 64px;">${catIcon}</div><div style="margin-top: 12px; font-size: 14px; font-weight: bold;">${escapeHtml(selectedItem.name)}</div></div>`;
+          addToHistory(selectedItem);
+          
+          setTimeout(() => {
+            if (reelViewport && reelStrip) {
+              reelViewport.innerHTML = '';
+              reelViewport.appendChild(reelStrip);
+              resetReel();
+            }
+            spinning = false;
+            spinBtn.disabled = false;
+            spinBtn.innerHTML = '◈ SPIN ◈';
+          }, 1200);
+        } else {
+          spinning = false;
+          spinBtn.disabled = false;
+          spinBtn.innerHTML = '◈ SPIN ◈';
         }
       }
-      resetReel();
-      reelViewport.innerHTML = `<div class="reel-strip" id="reel-strip"></div>`;
-      document.getElementById('reel-strip').replaceWith(reelStrip);
-      requestAnimationFrame(animate);
     }
-    spinBtn.addEventListener('click',spin);
-
-    // ======== INIT ========
+    
     resetReel();
-    renderWeaponsList();
-  </script>
+    requestAnimationFrame(animate);
+  }
+  
+  // ==================== CATÉGORIES ====================
+  function renderCategories() {
+    if (!categoriesListEl) return;
+    
+    const categories = DESTINY_DATA.categories;
+    categoriesListEl.innerHTML = Object.keys(categories).map(key => `
+      <div class="roulette-item" data-category="${key}">
+        <div class="item-icon">${categories[key].icon}</div>
+        <div class="item-info">
+          <div class="item-title">${categories[key].title}</div>
+          <div class="item-sub">${getItemsByCategory(key).length} items</div>
+        </div>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.roulette-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const category = el.dataset.category;
+        selectCategory(category);
+      });
+    });
+    
+    if (Object.keys(categories).length > 0 && !currentCategory) {
+      selectCategory(Object.keys(categories)[0]);
+    }
+  }
+  
+  function selectCategory(categoryKey) {
+    currentCategory = categoryKey;
+    currentItems = getItemsByCategory(categoryKey);
+    
+    document.querySelectorAll('.roulette-item').forEach(el => {
+      if (el.dataset.category === categoryKey) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+    
+    spinBtn.disabled = currentItems.length === 0;
+    resetReel();
+  }
+  
+  // ==================== MODAL JOUEUR ====================
+  function openPlayerModal() {
+    if (playerModal) {
+      playerModal.classList.add('active');
+      if (playerNameInput) playerNameInput.focus();
+    }
+  }
+  
+  function closePlayerModal() {
+    if (playerModal) playerModal.classList.remove('active');
+    if (playerNameInput) playerNameInput.value = '';
+  }
+  
+  function addPlayer() {
+    const name = playerNameInput?.value.trim();
+    if (!name) return;
+    
+    players.push({
+      id: nextPlayerId++,
+      name: name,
+      items: []
+    });
+    renderPlayers();
+    closePlayerModal();
+  }
+  
+  // ==================== INITIALISATION ====================
+  function init() {
+    players = Storage.loadPlayers();
+    history = Storage.loadHistory();
+    
+    if (players.length === 0) {
+      players = [
+        { id: nextPlayerId++, name: 'GUARDIAN_01', items: [] },
+        { id: nextPlayerId++, name: 'GUARDIAN_02', items: [] }
+      ];
+    }
+    
+    if (players.length > 0) {
+      nextPlayerId = Math.max(...players.map(p => p.id)) + 1;
+    }
+    
+    renderCategories();
+    renderPlayers();
+    renderHistory();
+    
+    if (spinBtn) spinBtn.addEventListener('click', spin);
+    if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearHistory);
+    if (addPlayerBtn) addPlayerBtn.addEventListener('click', openPlayerModal);
+    if (cancelModalBtn) cancelModalBtn.addEventListener('click', closePlayerModal);
+    if (confirmModalBtn) confirmModalBtn.addEventListener('click', addPlayer);
+    
+    if (confirmYesBtn) {
+      confirmYesBtn.addEventListener('click', () => {
+        if (pendingConfirmCallback) pendingConfirmCallback(true);
+        hideConfirm();
+      });
+    }
+    
+    if (confirmNoBtn) {
+      confirmNoBtn.addEventListener('click', () => {
+        if (pendingConfirmCallback) pendingConfirmCallback(false);
+        hideConfirm();
+      });
+    }
+    
+    if (playerModal) {
+      playerModal.addEventListener('click', (e) => {
+        if (e.target === playerModal) closePlayerModal();
+      });
+    }
+    
+    if (confirmDialog) {
+      confirmDialog.addEventListener('click', (e) => {
+        if (e.target === confirmDialog) hideConfirm();
+      });
+    }
+    
+    if (playerNameInput) {
+      playerNameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addPlayer();
+      });
+    }
+    
+    console.log('Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
+  }
+  
+  init();
+</script>
 </body>
 </html>
-

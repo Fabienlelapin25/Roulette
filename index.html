@@ -320,7 +320,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: #14141c;
+      background: rgba(20, 20, 28, 0.92);
+      backdrop-filter: blur(4px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -330,6 +331,7 @@
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.4s ease;
+      pointer-events: none;
     }
 
     .result-display.active {
@@ -1318,8 +1320,8 @@
     }
     
     reelStrip.innerHTML = '';
-    // Seulement 3 copies pour mieux voir ce qui se passe
-    for (let i = 0; i < 3; i++) {
+    // 5 copies pour un effet fluide
+    for (let i = 0; i < 5; i++) {
       selected.forEach(item => {
         const div = document.createElement('div');
         div.className = 'reel-item';
@@ -1343,9 +1345,14 @@
     if (resultName) resultName.textContent = item.name;
     if (resultDisplay) resultDisplay.classList.add('active');
     if (weaponLabel) weaponLabel.innerHTML = item.name;
+    
+    // Le résultat reste affiché 3 secondes puis se cache
+    setTimeout(() => {
+      if (resultDisplay) resultDisplay.classList.remove('active');
+    }, 3000);
   }
   
-  // VERSION LENTE POUR DÉBOGUER
+  // VERSION CORRIGÉE - Plus d'images qui disparaissent
   function spin() {
     if (spinning) return;
     
@@ -1364,37 +1371,43 @@
     // Positionner la roulette au début
     if (reelStrip) reelStrip.style.transform = 'translateY(0px)';
     
+    // Petit délai pour stabiliser
     setTimeout(() => {
       const stepHeight = 300;
       const selectedIndex = Math.floor(Math.random() * selected.length);
       
-      // VERSION LENTE : 3 tours seulement, durée plus longue
-      const fullTurns = 2 + Math.floor(Math.random() * 2); // 2 à 3 tours seulement
+      // Tours plus réalistes (5 à 8 tours)
+      const fullTurns = 5 + Math.floor(Math.random() * 4);
       const totalDistance = (fullTurns * selected.length + selectedIndex) * stepHeight;
-      const duration = 8000; // 4 secondes pour bien voir
+      const duration = 3500; // 3.5 secondes
       const startTime = performance.now();
       
-      // Easing simple pour mieux voir le mouvement
-      function linearEase(t) {
-        return t;
+      // Easing avec ralentissement progressif
+      function casinoEase(t) {
+        if (t < 0.2) {
+          // Départ rapide
+          return Math.pow(t / 0.2, 1.5) * 0.15;
+        } else if (t < 0.6) {
+          // Vitesse de croisière
+          return 0.15 + (t - 0.2) / 0.4 * 0.65;
+        } else if (t < 0.85) {
+          // Premier ralentissement
+          return 0.8 + (t - 0.6) / 0.25 * 0.15;
+        } else {
+          // Ralentissement final
+          const slowPhase = (t - 0.85) / 0.15;
+          return 0.95 + slowPhase * 0.05;
+        }
       }
       
       function animate(now) {
         const elapsed = now - startTime;
         let progress = Math.min(1, elapsed / duration);
-        
-        // Mouvement linéaire pour mieux voir
-        let eased = linearEase(progress);
+        let eased = casinoEase(progress);
         eased = Math.min(0.999, eased);
-        
         const currentY = -eased * totalDistance;
         
         if (reelStrip) reelStrip.style.transform = `translateY(${currentY}px)`;
-        
-        // Log pour déboguer
-        if (Math.floor(progress * 100) % 10 === 0) {
-          console.log(`Progress: ${Math.floor(progress * 100)}%, Y: ${Math.floor(currentY)}`);
-        }
         
         if (progress < 1) {
           animationFrame = requestAnimationFrame(animate);
@@ -1403,20 +1416,21 @@
           if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
           const selectedItem = selected[selectedIndex];
           
+          // Pause puis affichage du résultat (sans toucher à la roulette)
           setTimeout(() => {
             showResult(selectedItem);
             addToHistory(selectedItem);
             spinning = false;
             spinBtn.disabled = false;
             spinBtn.innerHTML = 'SPIN';
-          }, 400);
+          }, 300);
           
           animationFrame = null;
         }
       }
       
       animationFrame = requestAnimationFrame(animate);
-    }, 30);
+    }, 50);
   }
   
   // ==================== CATÉGORIES ====================

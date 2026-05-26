@@ -216,6 +216,12 @@
       border: 1px solid #3a3a48;
     }
 
+    .item-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
     .item-title {
       font-size: 13px;
       font-weight: 600;
@@ -551,65 +557,22 @@
   </div>
 </div>
 
-<script>
-  // ==================== DONNÉES ====================
-  const DESTINY_DATA = {
-    version: "1.0",
-    
-    categories: {
-      armes: { id: "armes", title: "ARMES EXOTIQUES", icon: "🔫", color: "#aa88ff" },
-      chasseur: { id: "chasseur", title: "CHASSEUR", icon: "🏹", color: "#88ff88" },
-      arcaniste: { id: "arcaniste", title: "ARCANISTE", icon: "🔮", color: "#88aaff" },
-      titan: { id: "titan", title: "TITAN", icon: "🛡️", color: "#ffaa88" },
-      raid: { id: "raid", title: "RAIDS", icon: "🏆", color: "#ff88ff" }
-    },
-    
-    items: {
-      armes: [
-        { id: "gjallarhorn", name: "GJALLARHORN", img: "", category: "armes" },
-        { id: "le_monarque", name: "LE MONARQUE", img: "", category: "armes" },
-        { id: "xenophage", name: "XÉNOPHAGE", img: "", category: "armes" },
-        { id: "lamentation", name: "LAMENTATION", img: "", category: "armes" },
-        { id: "osteo_striga", name: "OSTEO STRIGA", img: "", category: "armes" },
-        { id: "navigateur", name: "LE NAVIGATEUR", img: "", category: "armes" },
-        { id: "conditionnelle", name: "FINALITÉ CONDITIONNELLE", img: "", category: "armes" },
-        { id: "divinite", name: "DIVINITÉ", img: "", category: "armes" },
-        { id: "telesto", name: "TÉLESTO", img: "", category: "armes" },
-        { id: "vigilance", name: "AILE DE VIGILANCE", img: "", category: "armes" }
-      ],
-      chasseur: [
-        { id: "omnioculus", name: "OMNIOCULUS", img: "", category: "chasseur" },
-        { id: "bakris", name: "MASQUE DE BAKRIS", img: "", category: "chasseur" },
-        { id: "etoiles", name: "ÉCAILLES MANGEUR D'ÉTOILES", img: "", category: "chasseur" },
-        { id: "caliban", name: "MAIN DE CALIBAN", img: "", category: "chasseur" },
-        { id: "orpheus", name: "COMBINAISON D'ORPHÉE", img: "", category: "chasseur" }
-      ],
-      arcaniste: [
-        { id: "necrotique", name: "POIGNÉE NÉCROTIQUE", img: "", category: "arcaniste" },
-        { id: "ophidien", name: "ASPECT OPHIDIEN", img: "", category: "arcaniste" },
-        { id: "nezarec", name: "PÉCHÉ DE NEZAREC", img: "", category: "arcaniste" },
-        { id: "orage", name: "COURONNE DES TEMPÊTES", img: "", category: "arcaniste" },
-        { id: "fenix", name: "PROTOCOLE DU PHÉNIX", img: "", category: "arcaniste" }
-      ],
-      titan: [
-        { id: "synthoceps", name: "SYNTHOCEPS", img: "", category: "titan" },
-        { id: "coeur_flamme", name: "COEUR DES FLAMMES", img: "", category: "titan" },
-        { id: "filante", name: "CUIRASSE DE L'ÉTOILE FILANTE", img: "", category: "titan" },
-        { id: "dunes", name: "JAMBARTS DES DUNES", img: "", category: "titan" },
-        { id: "saint14", name: "CASQUE DE SAINT-14", img: "", category: "titan" }
-      ],
-      raid: [
-        { id: "dernier_souhait", name: "LE DERNIER SOUHAIT", img: "", category: "raid" },
-        { id: "crypte", name: "CRYPTE DU CRÉPUSCULE", img: "", category: "raid" },
-        { id: "corrompus", name: "ROI DES CORROMPUS", img: "", category: "raid" },
-        { id: "verre", name: "VOUTE DE VERRE", img: "", category: "raid" },
-        { id: "salut", name: "JARDIN DU SALUT", img: "", category: "raid" }
-      ]
-    }
-  };
+<!-- ===== CHARGEMENT DES DONNÉES ===== -->
+<script src="data.js"></script>
 
-  function getItemsByCategory(categoryId) {
-    return DESTINY_DATA.items[categoryId] || [];
+<!-- ===== SCRIPT PRINCIPAL ===== -->
+<script>
+  // Vérification que les données sont chargées
+  if (typeof DESTINY_DATA === 'undefined') {
+    console.error('❌ data.js non chargé ! Vérifie que le fichier existe à côté de index.html');
+  } else {
+    console.log('✅ Données chargées avec succès !');
+    console.log('📦 Catégories :', Object.keys(DESTINY_DATA.categories));
+    console.log('🔫 Armes :', DESTINY_DATA.items.armes.length);
+    console.log('🏹 Chasseur :', DESTINY_DATA.items.chasseur.length);
+    console.log('🔮 Arcaniste :', DESTINY_DATA.items.arcaniste.length);
+    console.log('🛡️ Titan :', DESTINY_DATA.items.titan.length);
+    console.log('🏆 Raids :', DESTINY_DATA.items.raid.length);
   }
 
   // ==================== STORAGE ====================
@@ -859,9 +822,10 @@
     
     selectionsListEl.innerHTML = history.map((item, idx) => `
       <div class="selection-item" draggable="true" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}">
+        <img src="${item.img || ''}" onerror="this.style.display='none'">
         <div class="selection-info">
           <div class="selection-name">${escapeHtml(item.name)}</div>
-          <div class="selection-category">${escapeHtml(item.category || 'GÉNÉRAL')}</div>
+          <div class="selection-category">${escapeHtml(item.category?.toUpperCase() || 'GÉNÉRAL')}</div>
         </div>
       </div>
     `).join('');
@@ -901,7 +865,7 @@
       currentItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'reel-item';
-        div.innerHTML = `<div style="font-size: 48px;">${DESTINY_DATA.categories[currentCategory]?.icon || '🎲'}</div><div style="font-size: 11px; margin-top: 8px;">${escapeHtml(item.name)}</div>`;
+        div.innerHTML = `<img src="${item.img || ''}" alt="${escapeHtml(item.name)}" onerror="this.style.display='none'"><div style="font-size: 11px; margin-top: 8px;">${escapeHtml(item.name)}</div>`;
         reelStrip.appendChild(div);
       });
     }
@@ -980,12 +944,12 @@
   
   // ==================== CATÉGORIES ====================
   function renderCategories() {
-    if (!categoriesListEl) return;
+    if (!categoriesListEl || typeof DESTINY_DATA === 'undefined') return;
     
     const categories = DESTINY_DATA.categories;
     categoriesListEl.innerHTML = Object.keys(categories).map(key => `
       <div class="roulette-item" data-category="${key}">
-        <div class="item-icon">${categories[key].icon}</div>
+        <div class="item-icon">${categories[key].logo ? `<img src="${categories[key].logo}" alt="${categories[key].title}">` : categories[key].icon}</div>
         <div class="item-info">
           <div class="item-title">${categories[key].title}</div>
           <div class="item-sub">${getItemsByCategory(key).length} items</div>
@@ -1049,6 +1013,12 @@
   
   // ==================== INITIALISATION ====================
   function init() {
+    if (typeof DESTINY_DATA === 'undefined') {
+      console.error('❌ Impossible de démarrer : data.js non chargé !');
+      weaponLabel.innerHTML = '⚠️ ERREUR : data.js manquant ⚠️';
+      return;
+    }
+    
     players = Storage.loadPlayers();
     history = Storage.loadHistory();
     
@@ -1105,10 +1075,15 @@
       });
     }
     
-    console.log('Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
+    console.log('✅ Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
   }
   
-  init();
+  // Démarrer l'application quand le DOM est prêt
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 </body>
 </html>

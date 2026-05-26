@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Destiny 2 - Loadout Manager</title>
+  <title>Destiny 2 - Loadout Manager | Roulette Ultime</title>
   <style>
     * {
       margin: 0;
@@ -273,7 +273,8 @@
     .reel-strip {
       display: flex;
       flex-direction: column;
-      transition: transform 0.1s linear;
+      transition: transform 0.05s linear;
+      will-change: transform;
     }
 
     .reel-item {
@@ -317,7 +318,7 @@
       z-index: 10;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease;
     }
 
     .result-display.active {
@@ -329,6 +330,7 @@
       max-width: 180px;
       max-height: 180px;
       object-fit: contain;
+      animation: pulse 1s ease-out;
     }
 
     .result-display .result-name {
@@ -339,6 +341,18 @@
       letter-spacing: 1px;
       text-align: center;
       padding: 0 16px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      0% { transform: translateY(20px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
     }
 
     .btn-spin {
@@ -749,9 +763,8 @@
 
 <!-- SCRIPT PRINCIPAL -->
 <script>
-  // Vérification que les données sont chargées
   if (typeof DESTINY_DATA === 'undefined') {
-    console.error('data.js non chargé ! Vérifie que le fichier existe à côté de index.html');
+    console.error('data.js non chargé !');
   } else {
     console.log('Données chargées :', Object.keys(DESTINY_DATA.categories));
   }
@@ -801,6 +814,7 @@
   let spinTimeout = null;
   let searchQuery = "";
   let animationFrame = null;
+  let spinStartTime = null;
   
   // DOM Elements
   const playersListEl = document.getElementById('playersList');
@@ -1117,8 +1131,8 @@
     }
     
     reelStrip.innerHTML = '';
-    // 5 copies pour un effet plus fluide
-    for (let i = 0; i < 5; i++) {
+    // 8 copies pour un effet plus long et fluide
+    for (let i = 0; i < 8; i++) {
       selected.forEach(item => {
         const div = document.createElement('div');
         div.className = 'reel-item';
@@ -1136,10 +1150,6 @@
   function resetReel() {
     if (resultDisplay) resultDisplay.classList.remove('active');
     renderReel();
-    if (currentCategory && weaponLabel) {
-      const catInfo = DESTINY_DATA.categories[currentCategory];
-      weaponLabel.innerHTML = catInfo ? catInfo.title : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE';
-    }
   }
   
   function showResult(item) {
@@ -1149,6 +1159,7 @@
     if (weaponLabel) weaponLabel.innerHTML = item.name;
   }
   
+  // EFFET ROULETTE ULTRA ANGOISSANT
   function spin() {
     if (spinning) return;
     
@@ -1163,50 +1174,75 @@
     spinBtn.innerHTML = 'SPINNING...';
     
     if (resultDisplay) resultDisplay.classList.remove('active');
-    
-    const stepHeight = 300;
-    const selectedIndex = Math.floor(Math.random() * selected.length);
-    const cycles = 6 + Math.floor(Math.random() * 4);
-    const totalDistance = (cycles * selected.length + selectedIndex) * stepHeight;
-    const duration = 2000;
-    const startTime = performance.now();
-    
-    function easeOutCubic(t) {
-      return 1 - Math.pow(1 - t, 3);
-    }
-    
-    function animate(now) {
-      const elapsed = now - startTime;
-      const progress = Math.min(1, elapsed / duration);
-      const ease = easeOutCubic(progress);
-      const currentY = -ease * totalDistance;
-      
-      if (reelStrip) reelStrip.style.transform = `translateY(${currentY}px)`;
-      
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      } else {
-        const finalY = -selectedIndex * stepHeight;
-        if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
-        
-        const selectedItem = selected[selectedIndex];
-        showResult(selectedItem);
-        addToHistory(selectedItem);
-        
-        spinTimeout = setTimeout(() => {
-          resetReel();
-          spinning = false;
-          spinBtn.disabled = false;
-          spinBtn.innerHTML = 'SPIN';
-          spinTimeout = null;
-        }, 2500);
-        
-        animationFrame = null;
-      }
-    }
-    
     resetReel();
-    animationFrame = requestAnimationFrame(animate);
+    
+    // Petit délai pour laisser la roulette se repositionner
+    setTimeout(() => {
+      const stepHeight = 300;
+      const selectedIndex = Math.floor(Math.random() * selected.length);
+      
+      // NOMBRE DE TOURS ÉNORME pour maximiser l'angoisse (15 à 25 tours)
+      const fullTurns = 15 + Math.floor(Math.random() * 11);
+      const totalDistance = (fullTurns * selected.length + selectedIndex) * stepHeight;
+      const duration = 4200; // 4.2 secondes d'angoisse pure !
+      const startTime = performance.now();
+      
+      // Fonction d'easing ULTRA réaliste pour roulette de casino
+      function casinoEase(t) {
+        if (t < 0.2) {
+          // Phase 1 (0-20%) : Accélération brutale (départ canon)
+          return Math.pow(t / 0.2, 2) * 0.15;
+        } else if (t < 0.6) {
+          // Phase 2 (20-60%) : Vitesse de croisière max (flou total)
+          return 0.15 + (t - 0.2) / 0.4 * 0.7;
+        } else if (t < 0.85) {
+          // Phase 3 (60-85%) : Premier ralentissement (on commence à distinguer)
+          return 0.85 + (t - 0.6) / 0.25 * 0.12;
+        } else {
+          // Phase 4 (85-100%) : Ralentissement EXTREME (angoisse maximale)
+          const slowPhase = (t - 0.85) / 0.15;
+          // Dernier mètre : ralentissement avec micro-rebonds
+          return 0.97 + slowPhase * 0.03 - Math.sin(slowPhase * Math.PI * 2) * 0.008;
+        }
+      }
+      
+      function animate(now) {
+        const elapsed = now - startTime;
+        let progress = Math.min(1, elapsed / duration);
+        
+        // Appliquer l'easing de casino
+        let eased = casinoEase(progress);
+        eased = Math.min(0.999, eased);
+        
+        const currentY = -eased * totalDistance;
+        
+        if (reelStrip) reelStrip.style.transform = `translateY(${currentY}px)`;
+        
+        if (progress < 1) {
+          animationFrame = requestAnimationFrame(animate);
+        } else {
+          // Position finale parfaite
+          const finalY = -selectedIndex * stepHeight;
+          if (reelStrip) reelStrip.style.transform = `translateY(${finalY}px)`;
+          
+          const selectedItem = selected[selectedIndex];
+          
+          // PAUSE DRAMATIQUE DE 400ms avant d'annoncer le résultat
+          setTimeout(() => {
+            showResult(selectedItem);
+            addToHistory(selectedItem);
+            
+            spinning = false;
+            spinBtn.disabled = false;
+            spinBtn.innerHTML = 'SPIN';
+          }, 400);
+          
+          animationFrame = null;
+        }
+      }
+      
+      animationFrame = requestAnimationFrame(animate);
+    }, 30);
   }
   
   // ==================== CATÉGORIES ====================
@@ -1246,6 +1282,8 @@
       checked: true
     }));
     
+    if (resultDisplay) resultDisplay.classList.remove('active');
+    
     console.log(`Catégorie: ${categoryKey} - ${currentItems.length} items`);
     
     document.querySelectorAll('.roulette-item').forEach(el => {
@@ -1258,6 +1296,11 @@
     
     renderItemsList();
     renderReel();
+    
+    if (weaponLabel) {
+      const catInfo = DESTINY_DATA.categories[currentCategory];
+      weaponLabel.innerHTML = catInfo ? catInfo.title : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE';
+    }
   }
   
   // ==================== MODAL JOUEUR ====================

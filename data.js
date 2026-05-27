@@ -122,7 +122,7 @@ const DESTINY_DATA = {
       {"id":"armes_075","name":"Frappe nuageuse","img":"https://www.bungie.net/common/destiny2_content/icons/ce45921edb8e35a249f2c6f5b3abaab5.jpg","category":"armes"},
       {"id":"armes_076","name":"Effigie désastreuse","img":"https://www.bungie.net/common/destiny2_content/icons/8787b1c97fe674d51a0450ba546ddb4b.jpg","category":"armes"},
       {"id":"armes_077","name":"Pochette d'allumettes de Tommy","img":"https://www.bungie.net/common/destiny2_content/icons/251630147cd942ade9414781e96237ec.jpg","category":"armes"},
-      {"id":"armes_078","name":"Le Quatrième Cavalier","img":"https://www.bungie.net/common/destiny2_content/icons/247715dd42abef457b52ef37280c0e42.png","category":"armes"},
+      {"id":"armes_078","name":"Le Quatrième Cavalier","img":"https://www.bungie.net/common/destiny2_content/icons/74e1434dd585c5c305f4d331d05895c6.jpg","category":"armes"},
       {"id":"armes_079","name":"Symétrie","img":"https://www.bungie.net/common/destiny2_content/icons/55f9629f4674c351e3a2efd9ab9ca6e9.jpg","category":"armes"},
       {"id":"armes_080","name":"Ruines du Diable","img":"https://www.bungie.net/common/destiny2_content/icons/5fed5e618423591a8cf4bd66a4f69c97.png","category":"armes"},
       {"id":"armes_081","name":"Serment d'Ériana","img":"https://www.bungie.net/common/destiny2_content/icons/588133859fa98c801d8a9d66ea6aae2f.jpg","category":"armes"},

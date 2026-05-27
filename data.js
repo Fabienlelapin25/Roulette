@@ -340,7 +340,7 @@ const DESTINY_DATA = {
       {"id":"raid_001","name":"CAVEAU DE VERRE","img":"https://www.bungie.net/common/destiny2_content/icons/0a59f5a322e2e6e36d03aa6eafaf60c3.jpg","category":"raid"},
       {"id":"raid_002","name":"LA FIN DE CROPTA","img":"https://www.bungie.net/common/destiny2_content/icons/7fb53db4f4074e73b790c9277d75a75c.jpg","category":"raid"},
       {"id":"raid_003","name":"LA CHUTE DU ROI","img":"https://www.bungie.net/common/destiny2_content/icons/2ecd3b7e3ad6e64e80464b618a2409e4.jpg","category":"raid"},
-      {"id":"raid_004","name":"DERNIER VOEUX","img":"https://www.bungie.net/common/destiny2_content/icons/51c53df606cca474dce3cadbf7d5ce28.jpg","category":"raid"},
+      {"id":"raid_004","name":"DERNIER VOEUX","img":"https://www.bungie.net/common/destiny2_content/icons/bd3acbaa5da9cb8a6d8ea3d4a6ff9aaf.jpg","category":"raid"},
       {"id":"raid_005","name":"JARDIN DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/8c6409c6afcba42c2afb4dd4ccb28311.jpg","category":"raid"},
       {"id":"raid_006","name":"CRYPTE DE LA PIERRE","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
       {"id":"raid_007","name":"SERMENT DU DISCIPLE","img":"https://www.bungie.net/common/destiny2_content/icons/1b66639f98fa5936210ad1a1a2103ebf.jpg","category":"raid"},

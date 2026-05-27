@@ -236,7 +236,6 @@
       border: 2px solid #3a3a48;
       position: relative;
     }
-    /* Ligne centrale fixe (repère visuel) */
     .reel-viewport::before {
       content: '';
       position: absolute;
@@ -679,7 +678,6 @@
   // ==================== ÉTAT GLOBAL ====================
   let players = [], history = [], currentCategory = null, currentItems = [], nextPlayerId = 1, draggedItem = null, pendingConfirmCallback = null, searchQuery = "";
   let spinning = false, animFrame = null, stopTimeout = null, revealTimeout = null, currentY = 0, velocity = 0, lastTimestamp = 0, deceleration = 0;
-  // Tableau des items du ruban actuel (pour récupérer l'objet gagnant directement)
   let currentStripItems = [];
 
   const playersListEl = document.getElementById('playersList'), categoriesListEl = document.getElementById('categoriesList'), itemsListEl = document.getElementById('itemsList');
@@ -741,7 +739,7 @@
     });
   }
 
-  // ==================== HISTORIQUE (sans heure) ====================
+  // ==================== HISTORIQUE ====================
   function addToHistory(item) { history.unshift({ ...item, id: item.id || Date.now(), date: new Date().toLocaleDateString('fr-FR') }); if (history.length > 50) history.pop(); renderHistory(); Storage.saveHistory(history); }
   function renderHistory() {
     if (!historyListEl) return;
@@ -769,14 +767,23 @@
   function checkAll() { currentItems.forEach(i => i.checked = true); renderItemsList(); renderReel(); }
   function uncheckAll() { currentItems.forEach(i => i.checked = false); renderItemsList(); renderReel(); }
 
-  // ==================== ROULETTE AVEC STOCKAGE DES ITEMS DU RUBAN ====================
-  const CARD_H = 135, REPETITIONS = 20;
+  // ==================== ROULETTE AVEC RUBAN ADAPTATIF ====================
+  const CARD_H = 135;
+  // Détermine le nombre de répétitions pour garantir un ruban d'au moins 60000px de hauteur
+  function getRequiredRepetitions(selectedCount) {
+    const minTotalHeight = 60000; // hauteur minimale en pixels pour éviter le vide
+    const cycleHeight = selectedCount * CARD_H;
+    let reps = Math.ceil(minTotalHeight / cycleHeight);
+    return Math.max(reps, 25); // au moins 25 répétitions pour la fluidité
+  }
+
   function generateBalancedShuffledStrip(selected) {
     if (selected.length === 0) return [];
+    const repetitions = getRequiredRepetitions(selected.length);
     const shuffled = [...selected];
     for (let i = shuffled.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
     let flat = [];
-    for (let i=0; i<shuffled.length; i++) for (let r=0; r<REPETITIONS; r++) flat.push({ ...shuffled[i] });
+    for (let i=0; i<shuffled.length; i++) for (let r=0; r<repetitions; r++) flat.push({ ...shuffled[i] });
     for (let i=flat.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [flat[i], flat[j]] = [flat[j], flat[i]]; }
     for (let i=0; i<flat.length-1; i++) {
       if (flat[i].name === flat[i+1].name) {
@@ -817,7 +824,6 @@
     revealTimeout = setTimeout(() => {
       const all = reelStrip.children;
       for (let i=0; i<all.length; i++) all[i].classList.remove('winner-glow','near-center');
-      // Détection par bounding client (précise)
       const viewRect = reelViewport.getBoundingClientRect();
       const viewCenterY = viewRect.top + viewRect.height / 2;
       let bestIdx = 0, bestDist = Infinity;
@@ -825,10 +831,7 @@
         const rect = all[i].getBoundingClientRect();
         const cardCenterY = rect.top + rect.height / 2;
         const dist = Math.abs(cardCenterY - viewCenterY);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestIdx = i;
-        }
+        if (dist < bestDist) { bestDist = dist; bestIdx = i; }
       }
       if (all[bestIdx]) all[bestIdx].classList.add('winner-glow');
       if (weaponLabel) weaponLabel.innerHTML = winnerItem.name;
@@ -848,16 +851,20 @@
     if (selected.length === 0) return;
     const freshStrip = generateBalancedShuffledStrip(selected);
     if (freshStrip.length === 0) return;
-    // Stocker les items du ruban pour une récupération directe du gagnant
     currentStripItems = freshStrip;
     buildStripFromItems(freshStrip);
     const totalHeight = freshStrip.length * CARD_H;
     currentY = getRandomSafeStartPosition(totalHeight);
     reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
+    // Ajustement dynamique de la vitesse en fonction de la taille du ruban pour ne jamais sortir
+    const maxSafeDistance = totalHeight * 0.8; // on ne dépasse pas 80% du ruban
+    const maxVelocity = Math.min(3500, maxSafeDistance / 1.5);
     const direction = Math.random() > 0.5 ? -1 : 1;
-    const baseSpeed = 1200 + Math.random() * 1800;
+    const baseSpeed = 1200 + Math.random() * Math.min(1800, maxVelocity - 1200);
     velocity = direction * baseSpeed;
-    deceleration = 50 + Math.random() * 80;
+    // Décélération plus forte pour les petits rubans
+    const decelBase = Math.min(120, Math.max(50, totalHeight / 800));
+    deceleration = decelBase + Math.random() * 40;
     lastTimestamp = performance.now();
     spinning = true;
     spinBtn.disabled = true;
@@ -885,7 +892,6 @@
         spinBtn.disabled = false;
         spinBtn.innerHTML = 'SPIN';
         reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-        // Détection du gagnant par bounding client puis récupération via currentStripItems
         const viewRect = reelViewport.getBoundingClientRect();
         const viewCenterY = viewRect.top + viewRect.height / 2;
         let bestIdx = 0, bestDist = Infinity;
@@ -894,12 +900,8 @@
           const rect = cards[i].getBoundingClientRect();
           const cardCenterY = rect.top + rect.height / 2;
           const dist = Math.abs(cardCenterY - viewCenterY);
-          if (dist < bestDist) {
-            bestDist = dist;
-            bestIdx = i;
-          }
+          if (dist < bestDist) { bestDist = dist; bestIdx = i; }
         }
-        // Récupérer l'item gagnant directement depuis currentStripItems
         let winnerItem = currentStripItems[bestIdx] || selected[0];
         if (stopTimeout) clearTimeout(stopTimeout);
         stopTimeout = setTimeout(() => { revealWinnerWithDelay(winnerItem); stopTimeout = null; }, 400);

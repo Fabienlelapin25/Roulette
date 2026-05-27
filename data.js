@@ -342,7 +342,7 @@ const DESTINY_DATA = {
       {"id":"raid_003","name":"LA CHUTE DU ROI","img":"https://www.bungie.net/common/destiny2_content/icons/2ecd3b7e3ad6e64e80464b618a2409e4.jpg","category":"raid"},
       {"id":"raid_004","name":"DERNIER VOEUX","img":"https://www.bungie.net/common/destiny2_content/icons/bd3acbaa5da9cb8a6d8ea3d4a6ff9aaf.jpg","category":"raid"},
       {"id":"raid_005","name":"JARDIN DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/8c6409c6afcba42c2afb4dd4ccb28311.jpg","category":"raid"},
-      {"id":"raid_006","name":"CRYPTE DE LA PIERRE","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
+      {"id":"raid_006","name":"CRYPTE DE LA PIERRE","img":"https://www.bungie.net/common/destiny2_content/icons/0a44354edea097bdca9b0681fd4b33d1.jpg","category":"raid"},
       {"id":"raid_007","name":"SERMENT DU DISCIPLE","img":"https://www.bungie.net/common/destiny2_content/icons/1b66639f98fa5936210ad1a1a2103ebf.jpg","category":"raid"},
       {"id":"raid_008","name":"ORIGINE DES CAUCHEMARS","img":"https://www.bungie.net/common/destiny2_content/icons/9f121959eafcbbef4796bdea398f8e48.jpg","category":"raid"},
       {"id":"raid_009","name":"OREE DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/c36f1f9e05dce8df3bf9e38cd813d696.jpg","category":"raid"},

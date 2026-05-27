@@ -337,16 +337,16 @@ const DESTINY_DATA = {
 
     // ==================== RAIDS ====================
     raid: [
-      {"id":"raid_001","name":"CAVEAU DE VERRE","img":"https://www.bungie.net/common/destiny2_content/icons/51c53df606cca474dce3cadbf7d5ce28.jpg","category":"raid"},
-      {"id":"raid_002","name":"LA FIN DE CROPTA","img":"https://www.bungie.net/common/destiny2_content/icons/b62083eed6a4708e581fc9a061bcc8e9.jpg","category":"raid"},
-      {"id":"raid_003","name":"LA CHUTE DU ROI","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
+      {"id":"raid_001","name":"CAVEAU DE VERRE","img":"https://www.bungie.net/common/destiny2_content/icons/0a59f5a322e2e6e36d03aa6eafaf60c3.jpg","category":"raid"},
+      {"id":"raid_002","name":"LA FIN DE CROPTA","img":"https://www.bungie.net/common/destiny2_content/icons/7fb53db4f4074e73b790c9277d75a75c.jpg","category":"raid"},
+      {"id":"raid_003","name":"LA CHUTE DU ROI","img":"https://www.bungie.net/common/destiny2_content/icons/2ecd3b7e3ad6e64e80464b618a2409e4.jpg","category":"raid"},
       {"id":"raid_004","name":"DERNIER VOEUX","img":"https://www.bungie.net/common/destiny2_content/icons/51c53df606cca474dce3cadbf7d5ce28.jpg","category":"raid"},
-      {"id":"raid_005","name":"JARDIN DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/b62083eed6a4708e581fc9a061bcc8e9.jpg","category":"raid"},
+      {"id":"raid_005","name":"JARDIN DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/8c6409c6afcba42c2afb4dd4ccb28311.jpg","category":"raid"},
       {"id":"raid_006","name":"CRYPTE DE LA PIERRE","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
-      {"id":"raid_007","name":"SERMENT DU DISCIPLE","img":"https://www.bungie.net/common/destiny2_content/icons/b62083eed6a4708e581fc9a061bcc8e9.jpg","category":"raid"},
-      {"id":"raid_008","name":"ORIGINE DES CAUCHEMARS","img":"https://www.bungie.net/common/destiny2_content/icons/de34570a93281dc201690cfd146e6d24.jpg","category":"raid"},
-      {"id":"raid_009","name":"OREE DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/f6844ca3eb572c546e97a340c24531d5.jpg","category":"raid"},
-      {"id":"raid_010","name":"DESERT PERPETUEL","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"raid"}
+      {"id":"raid_007","name":"SERMENT DU DISCIPLE","img":"https://www.bungie.net/common/destiny2_content/icons/1b66639f98fa5936210ad1a1a2103ebf.jpg","category":"raid"},
+      {"id":"raid_008","name":"ORIGINE DES CAUCHEMARS","img":"https://www.bungie.net/common/destiny2_content/icons/9f121959eafcbbef4796bdea398f8e48.jpg","category":"raid"},
+      {"id":"raid_009","name":"OREE DU SALUT","img":"https://www.bungie.net/common/destiny2_content/icons/c36f1f9e05dce8df3bf9e38cd813d696.jpg","category":"raid"},
+      {"id":"raid_010","name":"DESERT PERPETUEL","img":"https://www.bungie.net/common/destiny2_content/icons/1ea55ee3b7a2a984f98c80356e3ada03.jpg","category":"raid"}
     ]
   }
 };

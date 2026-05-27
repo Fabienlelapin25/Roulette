@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Destiny 2 - Loadout Manager | Roulette Ultime</title>
+  <!-- Librairie pour l'export PNG -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -279,6 +281,21 @@
       background: #0f0f14;
       border: 2px solid #3a3a48;
       position: relative;
+    }
+
+    /* Ligne centrale fixe (repère visuel) */
+    .reel-viewport::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: #ffcc44;
+      transform: translateY(-50%);
+      z-index: 5;
+      pointer-events: none;
+      box-shadow: 0 0 8px #ffcc44;
     }
 
     .reel-strip {
@@ -791,7 +808,7 @@
   </div>
 </div>
 
-<!-- CHARGEMENT DES DONNÉES -->
+<!-- CHARGEMENT DES DONNÉES (data.js à côté) -->
 <script src="data.js"></script>
 
 <script>
@@ -816,8 +833,8 @@
   let draggedItem = null;
   let pendingConfirmCallback = null;
   let searchQuery = "";
-  
-  // Nouveaux flags pour la roulette
+
+  // État de la roulette
   let spinning = false;
   let animFrame = null;
   let stopTimeout = null;
@@ -827,7 +844,7 @@
   let lastTimestamp = 0;
   let deceleration = 0;
 
-  // DOM Elements (inchangés)
+  // DOM Elements
   const playersListEl = document.getElementById('playersList');
   const categoriesListEl = document.getElementById('categoriesList');
   const itemsListEl = document.getElementById('itemsList');
@@ -846,7 +863,7 @@
   const clearHistoryBtn = document.getElementById('clearHistoryBtn');
   const addPlayerBtn = document.getElementById('addPlayerBtn');
   const exportPngBtn = document.getElementById('exportPngBtn');
-  
+
   // Modals
   const playerModal = document.getElementById('playerModal');
   const confirmDialog = document.getElementById('confirmModalDialog');
@@ -856,16 +873,16 @@
   const confirmYesBtn = document.getElementById('confirmYes');
   const confirmNoBtn = document.getElementById('confirmNo');
   const confirmMessage = document.getElementById('confirmMessage');
-  
-  // ==================== FONCTIONS UTILITAIRES (inchangées) ====================
+
+  // ==================== FONCTIONS UTILITAIRES ====================
   function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
   function showConfirm(message, callback) { confirmMessage.textContent = message; confirmDialog.classList.add('active'); pendingConfirmCallback = callback; }
   function hideConfirm() { confirmDialog.classList.remove('active'); pendingConfirmCallback = null; }
   function updateCount() { const selected = currentItems.filter(item => item.checked); countSelectedEl.textContent = selected.length + ' sélectionné(s)'; spinBtn.disabled = selected.length === 0; }
   function getSelectedItems() { return currentItems.filter(item => item.checked); }
-  
-  // ==================== EXPORT PNG (inchangé) ====================
-  async function exportToPNG() { /* identique à l'original, gardé tel quel */ 
+
+  // ==================== EXPORT PNG (avec html2canvas) ====================
+  async function exportToPNG() {
     if (!players.length) { showConfirm('Aucun joueur à exporter !', () => {}); return; }
     const exportContainer = document.createElement('div');
     exportContainer.style.cssText = `position: fixed; top: -9999px; left: -9999px; background: #0a0a0e; padding: 20px; border-radius: 0; font-family: 'Segoe UI', 'Rajdhani', monospace;`;
@@ -902,7 +919,7 @@
     exportContainer.appendChild(footer); document.body.appendChild(exportContainer);
     try { const canvas = await html2canvas(exportContainer, { scale: 2, backgroundColor: '#0a0a0e', logging: false }); const link = document.createElement('a'); link.download = `destiny_loadout_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`; link.href = canvas.toDataURL(); link.click(); } catch (err) { console.error('Erreur export:', err); showConfirm('Erreur lors de l\'export PNG', () => {}); } finally { document.body.removeChild(exportContainer); }
   }
-  
+
   // ==================== GESTION DES JOUEURS (inchangée) ====================
   function renderPlayers() {
     if (!playersListEl) return;
@@ -932,8 +949,8 @@
       item.addEventListener('dragstart', item._dragStartHandler); item.addEventListener('dragend', item._dragEndHandler);
     });
   }
-  
-  // ==================== HISTORIQUE (inchangé) ====================
+
+  // ==================== HISTORIQUE ====================
   function addToHistory(item) { history.unshift({ ...item, id: item.id || Date.now(), time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) }); if (history.length > 50) history.pop(); renderHistory(); Storage.saveHistory(history); }
   function renderHistory() {
     if (!historyListEl) return;
@@ -948,8 +965,8 @@
     });
   }
   function clearHistory() { showConfirm('Effacer tout l\'historique des tirages ?', (confirmed) => { if (confirmed) { history = []; renderHistory(); Storage.saveHistory(history); } }); }
-  
-  // ==================== LISTE DES ÉLÉMENTS (inchangée) ====================
+
+  // ==================== LISTE DES ÉLÉMENTS ====================
   function renderItemsList() {
     if (!itemsListEl || !currentItems.length) { if (itemsListEl) itemsListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun élément</div>'; return; }
     const filtered = currentItems.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -960,26 +977,32 @@
   }
   function checkAll() { currentItems.forEach(item => item.checked = true); renderItemsList(); renderReel(); }
   function uncheckAll() { currentItems.forEach(item => item.checked = false); renderItemsList(); renderReel(); }
-  
-  // ==================== NOUVELLE ROULETTE INFINIE ====================
-  const CARD_H = 135;            // hauteur d'une carte (px) – doit correspondre au CSS
-  const REPETITIONS = 20;        // chaque item sélectionné apparaîtra 20 fois (ruban équitable)
-  
-  // Génère un ruban équitable et mélangé à partir des items sélectionnés
+
+  // ==================== ROULETTE (version finale avec repère, sélection correcte) ====================
+  const CARD_H = 135;
+  const REPETITIONS = 20;   // nombre de répétitions de chaque item sélectionné dans le ruban
+
+  // Génération d'un ruban équitable et mélangé à partir des items sélectionnés
   function generateBalancedShuffledStrip(selectedItems) {
     if (selectedItems.length === 0) return [];
+    // Mélanger les items sélectionnés pour éviter un biais
+    const shuffledSelected = [...selectedItems];
+    for (let i = shuffledSelected.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledSelected[i], shuffledSelected[j]] = [shuffledSelected[j], shuffledSelected[i]];
+    }
     let flat = [];
-    for (let i = 0; i < selectedItems.length; i++) {
+    for (let i = 0; i < shuffledSelected.length; i++) {
       for (let r = 0; r < REPETITIONS; r++) {
-        flat.push({ ...selectedItems[i] });
+        flat.push({ ...shuffledSelected[i] });
       }
     }
-    // Fisher-Yates shuffle
+    // Mélange final Fisher-Yates
     for (let i = flat.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [flat[i], flat[j]] = [flat[j], flat[i]];
     }
-    // Éviter les doublons consécutifs (simple correction)
+    // Éviter les doublons consécutifs si possible
     for (let i = 0; i < flat.length - 1; i++) {
       if (flat[i].name === flat[i+1].name) {
         let swapIdx = i+2;
@@ -991,23 +1014,18 @@
     }
     return flat;
   }
-  
-  // Construit le DOM à partir d'un tableau d'items
+
   function buildStripFromItems(items) {
     reelStrip.innerHTML = '';
     for (let i = 0; i < items.length; i++) {
       const card = document.createElement('div');
       card.className = 'reel-item';
       card.style.height = CARD_H + 'px';
-      card.innerHTML = `
-        <img src="${items[i].img || ''}" alt="${escapeHtml(items[i].name)}" onerror="this.style.display='none'">
-        <div class="reel-name">${escapeHtml(items[i].name)}</div>
-      `;
+      card.innerHTML = `<img src="${items[i].img || ''}" alt="${escapeHtml(items[i].name)}" onerror="this.style.display='none'"><div class="reel-name">${escapeHtml(items[i].name)}</div>`;
       reelStrip.appendChild(card);
     }
   }
-  
-  // Retourne une position Y aléatoire sécurisée (loin des bords)
+
   function getRandomSafeStartPosition(totalHeight) {
     const viewHeight = reelViewport.offsetHeight;
     const maxY = 0;
@@ -1016,27 +1034,20 @@
     const offset = (maxY - minY - safeRange) / 2;
     return minY + offset + Math.random() * safeRange;
   }
-  
-  // Trouve l'index de la carte la plus proche du centre visuel
-  function getClosestCardIndex() {
+
+  // Calcule mathématiquement l'index de la carte gagnante (celle dont le centre est le plus proche du centre de l'écran)
+  function getWinnerIndexFromPosition() {
     const viewHeight = reelViewport.offsetHeight;
     const centerY = viewHeight / 2;
-    let bestIdx = 0;
-    let bestDist = Infinity;
-    const cards = reelStrip.children;
-    for (let i = 0; i < cards.length; i++) {
-      const cardTop = currentY + i * CARD_H;
-      const cardCenter = cardTop + CARD_H / 2;
-      const dist = Math.abs(cardCenter - centerY);
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestIdx = i;
-      }
-    }
-    return bestIdx;
+    // Position absolue du centre de l'écran dans le repère du ruban
+    const absoluteCenter = -currentY + centerY;
+    let cardIndex = Math.floor(absoluteCenter / CARD_H);
+    const totalCards = reelStrip.children.length;
+    if (cardIndex < 0) cardIndex = 0;
+    if (cardIndex >= totalCards) cardIndex = totalCards - 1;
+    return cardIndex;
   }
-  
-  // Highlight visuel des cartes proches du centre (pendant le ralentissement)
+
   function updateNearCenterHighlight() {
     const viewHeight = reelViewport.offsetHeight;
     const centerY = viewHeight / 2;
@@ -1046,76 +1057,61 @@
       const cardTop = currentY + i * CARD_H;
       const cardCenter = cardTop + CARD_H / 2;
       const dist = Math.abs(cardCenter - centerY);
-      if (dist < CARD_H * 0.7) {
-        card.classList.add('near-center');
-      } else {
-        card.classList.remove('near-center');
-      }
+      if (dist < CARD_H * 0.7) card.classList.add('near-center');
+      else card.classList.remove('near-center');
     }
   }
-  
-  // Effet final sur la carte gagnante et révélation du résultat
+
   function revealWinnerWithDelay(winnerItem) {
     if (revealTimeout) clearTimeout(revealTimeout);
     revealTimeout = setTimeout(() => {
-      // Enlever tous les highlights et winner-glow précédents
       const allCards = reelStrip.children;
-      for (let i = 0; i < allCards.length; i++) {
-        allCards[i].classList.remove('winner-glow', 'near-center');
-      }
-      const winnerIdx = getClosestCardIndex();
+      for (let i = 0; i < allCards.length; i++) allCards[i].classList.remove('winner-glow', 'near-center');
+      const winnerIdx = getWinnerIndexFromPosition();
       if (allCards[winnerIdx]) allCards[winnerIdx].classList.add('winner-glow');
-      // Afficher le résultat dans le label et le panneau flottant
       if (weaponLabel) weaponLabel.innerHTML = winnerItem.name;
       if (resultImg) resultImg.src = winnerItem.img || '';
       if (resultName) resultName.textContent = winnerItem.name;
       if (resultDisplay) resultDisplay.classList.add('active');
-      // Ajouter à l'historique
       addToHistory(winnerItem);
-      // Effacer le résultat flottant après 3 secondes
       setTimeout(() => { if (resultDisplay) resultDisplay.classList.remove('active'); }, 3000);
       revealTimeout = null;
-    }, 700); // délai pour renforcer la tension
+    }, 700);
   }
-  
-  // Spin principal avec physique réaliste
+
   function startSpin() {
     if (spinning) return;
     if (stopTimeout) clearTimeout(stopTimeout);
     if (revealTimeout) clearTimeout(revealTimeout);
-    
+
     const selected = getSelectedItems();
     if (selected.length === 0) return;
-    
-    // Générer un nouveau ruban équitable à partir des items sélectionnés
+
+    // Générer un nouveau ruban à partir des items sélectionnés
     const freshStrip = generateBalancedShuffledStrip(selected);
     if (freshStrip.length === 0) return;
     buildStripFromItems(freshStrip);
-    
-    // Position initiale aléatoire sécurisée
+
     const totalHeight = freshStrip.length * CARD_H;
     const startY = getRandomSafeStartPosition(totalHeight);
     currentY = startY;
     reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-    
-    // Paramètres physiques aléatoires
+
+    // Paramètres physiques (vitesse modérée, décélération pour un stop progressif)
     const direction = Math.random() > 0.5 ? -1 : 1;
-    const baseSpeed = 1200 + Math.random() * 1800;   // vitesse modérée pour garder le suspense
+    const baseSpeed = 1200 + Math.random() * 1800;
     velocity = direction * baseSpeed;
-    deceleration = 50 + Math.random() * 80;          // décélération pour un stop progressif
+    deceleration = 50 + Math.random() * 80;
     lastTimestamp = performance.now();
     spinning = true;
     spinBtn.disabled = true;
     spinBtn.innerHTML = 'SPINNING...';
     weaponLabel.innerHTML = '🌀 SPIN EN COURS... 🌀';
     if (resultDisplay) resultDisplay.classList.remove('active');
-    
-    // Supprimer les effets visuels précédents
+
     const allCards = reelStrip.children;
-    for (let i = 0; i < allCards.length; i++) {
-      allCards[i].classList.remove('winner-glow', 'near-center');
-    }
-    
+    for (let i = 0; i < allCards.length; i++) allCards[i].classList.remove('winner-glow', 'near-center');
+
     function physicsStep(now) {
       const dt = Math.min(0.033, (now - lastTimestamp) / 1000);
       if (dt <= 0) {
@@ -1123,8 +1119,6 @@
         animFrame = requestAnimationFrame(physicsStep);
         return;
       }
-      
-      // Appliquer la décélération
       let velAbs = Math.abs(velocity);
       velAbs -= deceleration * dt;
       if (velAbs < 0) velAbs = 0;
@@ -1132,13 +1126,8 @@
       const displacement = velocity * dt;
       currentY += displacement;
       reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-      
-      // Mise à jour du highlight pendant le ralentissement
       updateNearCenterHighlight();
-      
       lastTimestamp = now;
-      
-      // Condition d'arrêt
       const almostStopped = (Math.abs(velocity) < 5 && Math.abs(displacement) < 0.5);
       if (almostStopped) {
         cancelAnimationFrame(animFrame);
@@ -1146,14 +1135,10 @@
         spinning = false;
         spinBtn.disabled = false;
         spinBtn.innerHTML = 'SPIN';
-        
-        // Dernier ajustement de la position (pas de snap, juste stabilisation)
         reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-        
-        // Déterminer l'item gagnant (celui le plus proche du centre)
-        const winnerIdx = getClosestCardIndex();
-        const winnerCard = reelStrip.children[winnerIdx];
+        const winnerIdx = getWinnerIndexFromPosition();
         let winnerItem = selected[0];
+        const winnerCard = reelStrip.children[winnerIdx];
         if (winnerCard) {
           const nameDiv = winnerCard.querySelector('.reel-name');
           if (nameDiv) {
@@ -1162,23 +1147,17 @@
             if (found) winnerItem = found;
           }
         }
-        // Attendre un court instant avant de révéler le résultat (pour l'effet de tension)
         if (stopTimeout) clearTimeout(stopTimeout);
-        stopTimeout = setTimeout(() => {
-          revealWinnerWithDelay(winnerItem);
-          stopTimeout = null;
-        }, 400);
+        stopTimeout = setTimeout(() => { revealWinnerWithDelay(winnerItem); stopTimeout = null; }, 400);
         return;
       }
-      
       animFrame = requestAnimationFrame(physicsStep);
     }
-    
     animFrame = requestAnimationFrame(physicsStep);
   }
-  
-  // Réinitialisation visuelle (appelée lors du changement de catégorie)
-  function resetReel() {
+
+  // Affichage statique de la roulette (aperçu)
+  function renderReel() {
     if (spinning) return;
     const selected = getSelectedItems();
     if (selected.length === 0) {
@@ -1186,36 +1165,25 @@
       spinBtn.disabled = true;
       return;
     }
-    // Construire un aperçu statique (non animé) pour la catégorie sélectionnée
-    const previewItems = [...selected];
-    // On peut afficher simplement quelques copies pour l'aperçu
+    // Aperçu statique : 3 cycles pour montrer les items
+    let preview = [];
+    for (let i = 0; i < 3; i++) {
+      preview.push(...selected);
+    }
     reelStrip.innerHTML = '';
-    for (let i = 0; i < 5; i++) {
-      previewItems.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'reel-item';
-        div.style.height = CARD_H + 'px';
-        div.innerHTML = `
-          <img src="${item.img || ''}" alt="${escapeHtml(item.name)}" onerror="this.style.display='none'">
-          <div class="reel-name">${escapeHtml(item.name)}</div>
-        `;
-        reelStrip.appendChild(div);
-      });
+    for (let i = 0; i < preview.length; i++) {
+      const card = document.createElement('div');
+      card.className = 'reel-item';
+      card.style.height = CARD_H + 'px';
+      card.innerHTML = `<img src="${preview[i].img || ''}" alt="${escapeHtml(preview[i].name)}" onerror="this.style.display='none'"><div class="reel-name">${escapeHtml(preview[i].name)}</div>`;
+      reelStrip.appendChild(card);
     }
     currentY = 0;
     reelStrip.style.transform = `translate3d(0, 0px, 0)`;
     spinBtn.disabled = false;
   }
-  
-  // Fonction de rendu de la roulette (appelée lors des changements de sélection)
-  function renderReel() {
-    resetReel();
-  }
-  
-  // Ancienne fonction spin remplacée par startSpin
-  const spin = startSpin;
-  
-  // ==================== CATÉGORIES (inchangées) ====================
+
+  // ==================== CATÉGORIES ====================
   function renderCategories() {
     if (!categoriesListEl || typeof DESTINY_DATA === 'undefined') return;
     const categories = DESTINY_DATA.categories;
@@ -1223,7 +1191,7 @@
     document.querySelectorAll('.roulette-item').forEach(el => { el.addEventListener('click', () => { const category = el.dataset.category; selectCategory(category); }); });
     if (Object.keys(categories).length > 0 && !currentCategory) selectCategory(Object.keys(categories)[0]);
   }
-  
+
   function selectCategory(categoryKey) {
     if (spinning) return;
     currentCategory = categoryKey;
@@ -1235,12 +1203,12 @@
     renderReel();
     if (weaponLabel) { const catInfo = DESTINY_DATA.categories[currentCategory]; weaponLabel.innerHTML = catInfo ? catInfo.title : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE'; }
   }
-  
+
   // ==================== MODAL JOUEUR ====================
   function openPlayerModal() { if (playerModal) { playerModal.classList.add('active'); if (playerNameInput) playerNameInput.focus(); } }
   function closePlayerModal() { if (playerModal) playerModal.classList.remove('active'); if (playerNameInput) playerNameInput.value = ''; }
   function addPlayer() { const name = playerNameInput?.value.trim(); if (!name) return; players.push({ id: nextPlayerId++, name: name, items: [] }); renderPlayers(); closePlayerModal(); }
-  
+
   // ==================== INITIALISATION ====================
   function init() {
     if (typeof DESTINY_DATA === 'undefined') { console.error('Impossible de démarrer : data.js non chargé !'); if (weaponLabel) weaponLabel.innerHTML = 'ERREUR : data.js manquant'; return; }
@@ -1251,7 +1219,7 @@
     renderCategories();
     renderPlayers();
     renderHistory();
-    if (spinBtn) spinBtn.addEventListener('click', spin);
+    if (spinBtn) spinBtn.addEventListener('click', startSpin);
     if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearHistory);
     if (addPlayerBtn) addPlayerBtn.addEventListener('click', openPlayerModal);
     if (cancelModalBtn) cancelModalBtn.addEventListener('click', closePlayerModal);
@@ -1267,7 +1235,7 @@
     if (playerNameInput) { playerNameInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addPlayer(); }); }
     console.log('Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
   }
-  
+
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 </script>
 </body>

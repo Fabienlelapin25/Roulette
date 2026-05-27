@@ -695,7 +695,7 @@
   function updateCount() { const selected = currentItems.filter(i => i.checked); countSelectedEl.textContent = selected.length + ' sélectionné(s)'; spinBtn.disabled = selected.length === 0; }
   function getSelectedItems() { return currentItems.filter(i => i.checked); }
 
-  // ==================== EXPORT PNG (capture directe du bandeau) ====================
+  // ==================== EXPORT PNG (capture du bandeau) ====================
   async function exportToPNG() {
     if (!players.length) { showConfirm('Aucun joueur à exporter !', () => {}); return; }
     const banner = document.querySelector('.players-banner');
@@ -800,10 +800,11 @@
     const safeRange = (maxY - minY) * 0.7, offset = (maxY - minY - safeRange)/2;
     return minY + offset + Math.random() * safeRange;
   }
+  // Correction : utiliser Math.round pour que la carte la plus proche du centre soit choisie
   function getWinnerIndexFromPosition() {
     const viewHeight = reelViewport.offsetHeight, centerY = viewHeight/2;
     const absoluteCenter = -currentY + centerY;
-    let idx = Math.floor(absoluteCenter / CARD_H);
+    let idx = Math.round(absoluteCenter / CARD_H);
     const total = reelStrip.children.length;
     if (idx < 0) idx = 0;
     if (idx >= total) idx = total-1;
@@ -883,7 +884,7 @@
         if (winnerCard) {
           const nameDiv = winnerCard.querySelector('.reel-name');
           if (nameDiv) {
-            const winnerName = nameDiv.innerText;
+            const winnerName = nameDiv.innerText.trim(); // important : trim()
             const found = selected.find(i => i.name === winnerName);
             if (found) winnerItem = found;
           }

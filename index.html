@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Destiny 2 - Loadout Manager | Roulette Ultime</title>
-  <!-- Librairie pour l'export PNG -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * {
@@ -12,7 +11,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       background: #0a0a0e;
       font-family: 'Segoe UI', 'Rajdhani', monospace;
@@ -20,13 +18,11 @@
       overflow: hidden;
       color: #c8c8d8;
     }
-
     .app {
       display: flex;
       flex-direction: column;
       height: 100vh;
     }
-
     /* ===== BANNIÈRE SUPÉRIEURE ===== */
     .players-banner {
       background: #0c0c10;
@@ -38,14 +34,12 @@
       flex-wrap: wrap;
       min-height: 90px;
     }
-
     .players-list {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
       flex: 1;
     }
-
     .player-card {
       background: #14141c;
       border: 1px solid #3a3a48;
@@ -54,13 +48,11 @@
       position: relative;
       transition: 0.15s;
     }
-
     .player-card.drag-over {
       border-color: #aa88ff;
       background: #1c1c28;
       box-shadow: 0 0 10px rgba(170, 136, 255, 0.2);
     }
-
     .player-header {
       display: flex;
       justify-content: space-between;
@@ -69,14 +61,12 @@
       padding-bottom: 6px;
       border-bottom: 1px solid #2a2a35;
     }
-
     .player-name {
       font-weight: bold;
       color: #aa88ff;
       font-size: 13px;
       text-transform: uppercase;
     }
-
     .remove-player {
       background: none;
       border: none;
@@ -85,18 +75,13 @@
       font-size: 16px;
       padding: 0 4px;
     }
-
-    .remove-player:hover {
-      color: #ff8888;
-    }
-
+    .remove-player:hover { color: #ff8888; }
     .player-items {
       min-height: 60px;
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-
     .player-item {
       background: #1a1a24;
       border-left: 2px solid #aa88ff;
@@ -107,11 +92,7 @@
       align-items: center;
       cursor: grab;
     }
-
-    .player-item:active {
-      cursor: grabbing;
-    }
-
+    .player-item:active { cursor: grabbing; }
     .remove-item {
       background: none;
       border: none;
@@ -119,11 +100,7 @@
       cursor: pointer;
       font-size: 12px;
     }
-
-    .remove-item:hover {
-      color: #ff8888;
-    }
-
+    .remove-item:hover { color: #ff8888; }
     .empty-player {
       color: #6a6a7a;
       font-size: 10px;
@@ -131,13 +108,11 @@
       padding: 12px;
       font-style: italic;
     }
-
     .button-group {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
-
     .add-player-btn, .export-png-btn {
       background: #14141c;
       border: 1px solid #3a3a48;
@@ -149,24 +124,17 @@
       transition: 0.15s;
       white-space: nowrap;
     }
-
     .add-player-btn:hover, .export-png-btn:hover {
       background: #1c1c26;
       border-color: #8866cc;
     }
-
-    .export-png-btn {
-      background: #1a1a2a;
-      border-color: #8866cc;
-    }
-
+    .export-png-btn { background: #1a1a2a; border-color: #8866cc; }
     /* ===== CONTENU PRINCIPAL ===== */
     .main-content {
       display: flex;
       flex: 1;
       overflow: hidden;
     }
-
     /* PANEL GAUCHE - Catégories */
     .roulettes-panel {
       width: 260px;
@@ -175,19 +143,16 @@
       display: flex;
       flex-direction: column;
     }
-
     .panel-header {
       padding: 16px;
       border-bottom: 1px solid #2a2a35;
       background: #0c0c10;
     }
-
     .panel-header h2 {
       font-size: 12px;
       color: #aa88ff;
       letter-spacing: 2px;
     }
-
     .roulettes-list {
       flex: 1;
       overflow-y: auto;
@@ -196,7 +161,6 @@
       flex-direction: column;
       gap: 8px;
     }
-
     .roulette-item {
       background: #14141c;
       border: 1px solid #2a2a35;
@@ -207,17 +171,14 @@
       cursor: pointer;
       transition: 0.15s;
     }
-
     .roulette-item:hover {
       background: #1c1c26;
       border-color: #8866cc;
     }
-
     .roulette-item.active {
       background: #1a1a24;
       border-left: 3px solid #aa77ff;
     }
-
     .item-icon {
       width: 38px;
       height: 38px;
@@ -227,24 +188,20 @@
       background: #0a0a0e;
       border: 1px solid #3a3a48;
     }
-
     .item-icon img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
-
     .item-title {
       font-size: 13px;
       font-weight: 600;
       color: #d0d0e0;
     }
-
     .item-sub {
       font-size: 10px;
       color: #88889a;
     }
-
     /* PANEL CENTRAL - Roulette + Liste */
     .center-panel {
       flex: 1;
@@ -253,13 +210,11 @@
       background: #0a0a0e;
       overflow-y: auto;
     }
-
     .slot-machine {
       text-align: center;
       padding: 24px 24px 16px 24px;
       border-bottom: 1px solid #2a2a35;
     }
-
     .weapon-label {
       font-size: 14px;
       margin-bottom: 16px;
@@ -272,7 +227,6 @@
       letter-spacing: 1px;
       display: inline-block;
     }
-
     .reel-viewport {
       width: 320px;
       height: 540px;
@@ -282,7 +236,6 @@
       border: 2px solid #3a3a48;
       position: relative;
     }
-
     /* Ligne centrale fixe (repère visuel) */
     .reel-viewport::before {
       content: '';
@@ -297,7 +250,6 @@
       pointer-events: none;
       box-shadow: 0 0 8px #ffcc44;
     }
-
     .reel-strip {
       display: flex;
       flex-direction: column;
@@ -305,7 +257,6 @@
       transform: translateZ(0);
       backface-visibility: hidden;
     }
-
     .reel-item {
       height: 135px;
       display: flex;
@@ -316,13 +267,11 @@
       gap: 8px;
       border-bottom: 1px solid #2a2a35;
     }
-
     .reel-item img {
       max-width: 100px;
       max-height: 80px;
       object-fit: contain;
     }
-
     .reel-item .reel-name {
       font-size: 12px;
       font-weight: bold;
@@ -332,20 +281,15 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-
-    /* Highlight pendant le ralentissement */
     .reel-item.near-center {
       filter: brightness(1.15);
       box-shadow: 0 0 8px #ffcc4488;
     }
-
-    /* Glow final sur la carte gagnante */
     .reel-item.winner-glow {
       filter: brightness(1.3) drop-shadow(0 0 12px #ffcc44);
       background: linear-gradient(145deg, #3a3e60, #2a2c44);
       transition: all 0.2s ease-out;
     }
-
     .result-display {
       position: absolute;
       top: 0;
@@ -365,19 +309,16 @@
       transition: opacity 0.4s ease;
       pointer-events: none;
     }
-
     .result-display.active {
       opacity: 1;
       visibility: visible;
     }
-
     .result-display img {
       max-width: 180px;
       max-height: 180px;
       object-fit: contain;
       animation: zoomExplosion 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
-
     .result-display .result-name {
       font-size: 16px;
       font-weight: bold;
@@ -388,19 +329,16 @@
       padding: 0 16px;
       animation: fadeInUp 0.5s ease-out 0.1s both;
     }
-
     @keyframes zoomExplosion {
       0% { transform: scale(0.2) rotate(-15deg); opacity: 0; filter: blur(4px); }
       40% { transform: scale(1.1) rotate(2deg); }
       70% { transform: scale(0.98); }
       100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
     }
-
     @keyframes fadeInUp {
       0% { transform: translateY(30px); opacity: 0; letter-spacing: 5px; }
       100% { transform: translateY(0); opacity: 1; letter-spacing: 2px; }
     }
-
     .btn-spin {
       margin-top: 20px;
       background: #14141c;
@@ -414,18 +352,15 @@
       letter-spacing: 4px;
       transition: 0.15s;
     }
-
     .btn-spin:hover {
       background: #1c1c26;
       border-color: #8866cc;
     }
-
     .btn-spin:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
-
-    /* Liste des éléments (sous la roulette) */
+    /* Liste des éléments */
     .items-section {
       padding: 16px 24px 24px 24px;
       flex: 1;
@@ -433,18 +368,15 @@
       flex-direction: column;
       min-height: 250px;
     }
-
     .items-header {
       margin-bottom: 12px;
     }
-
     .items-header h3 {
       color: #aa88ff;
       font-size: 11px;
       letter-spacing: 2px;
       margin-bottom: 10px;
     }
-
     .search-bar {
       width: 100%;
       padding: 8px 12px;
@@ -455,18 +387,15 @@
       font-size: 11px;
       margin-bottom: 10px;
     }
-
     .search-bar:focus {
       outline: none;
       border-color: #8866cc;
     }
-
     .list-controls {
       display: flex;
       gap: 8px;
       margin-bottom: 12px;
     }
-
     .list-controls button {
       background: #14141c;
       border: 1px solid #3a3a48;
@@ -477,12 +406,10 @@
       font-family: monospace;
       transition: 0.15s;
     }
-
     .list-controls button:hover {
       background: #1c1c26;
       border-color: #8866cc;
     }
-
     .count-selected {
       color: #aa88ff;
       font-size: 10px;
@@ -490,7 +417,6 @@
       display: flex;
       align-items: center;
     }
-
     .items-list {
       flex: 1;
       overflow-y: auto;
@@ -498,7 +424,6 @@
       border: 1px solid #2a2a35;
       background: #0f0f14;
     }
-
     .item-check {
       background: #14141c;
       border-bottom: 1px solid #2a2a35;
@@ -509,18 +434,15 @@
       cursor: pointer;
       transition: 0.1s;
     }
-
     .item-check:hover {
       background: #1c1c26;
     }
-
     .item-check input {
       width: 14px;
       height: 14px;
       cursor: pointer;
       accent-color: #aa88ff;
     }
-
     .item-check .item-name {
       font-size: 10px;
       font-weight: 500;
@@ -528,7 +450,6 @@
       flex: 1;
       text-transform: uppercase;
     }
-
     /* PANEL DROIT - Historique */
     .history-panel {
       width: 280px;
@@ -537,25 +458,21 @@
       display: flex;
       flex-direction: column;
     }
-
     .history-header {
       padding: 16px;
       border-bottom: 1px solid #2a2a35;
       background: #0c0c10;
     }
-
     .history-header h3 {
       color: #aa88ff;
       font-size: 12px;
       letter-spacing: 2px;
     }
-
     .history-list {
       flex: 1;
       overflow-y: auto;
       padding: 12px;
     }
-
     .history-item {
       background: #14141c;
       border: 1px solid #2a2a35;
@@ -567,15 +484,8 @@
       cursor: grab;
       transition: 0.1s;
     }
-
-    .history-item:active {
-      cursor: grabbing;
-    }
-
-    .history-item.dragging {
-      opacity: 0.4;
-    }
-
+    .history-item:active { cursor: grabbing; }
+    .history-item.dragging { opacity: 0.4; }
     .history-item img {
       width: 36px;
       height: 36px;
@@ -583,30 +493,18 @@
       background: #0a0a0e;
       border: 1px solid #3a3a48;
     }
-
-    .history-info {
-      flex: 1;
-    }
-
+    .history-info { flex: 1; }
     .history-name {
       font-size: 10px;
       font-weight: 600;
       color: #d0d0e0;
       text-transform: uppercase;
     }
-
     .history-category {
       font-size: 8px;
       color: #aa88ff;
       text-transform: uppercase;
     }
-
-    .history-time {
-      font-size: 8px;
-      color: #6a6a7a;
-      margin-top: 2px;
-    }
-
     .clear-history-btn {
       background: #14141c;
       border: 1px solid #4a3a5a;
@@ -618,23 +516,13 @@
       margin: 0 12px 12px 12px;
       text-transform: uppercase;
     }
-
     .clear-history-btn:hover {
       background: #1c1c26;
       border-color: #ff8888;
     }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 4px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0f0f14;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #3a3a48;
-    }
-
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0f0f14; }
+    ::-webkit-scrollbar-thumb { background: #3a3a48; }
     /* Modals */
     .modal {
       display: none;
@@ -648,24 +536,18 @@
       align-items: center;
       justify-content: center;
     }
-
-    .modal.active {
-      display: flex;
-    }
-
+    .modal.active { display: flex; }
     .modal-content {
       background: #14141c;
       border: 1px solid #8866cc;
       padding: 24px;
       min-width: 300px;
     }
-
     .modal-content h3 {
       color: #aa88ff;
       margin-bottom: 16px;
       text-transform: uppercase;
     }
-
     .modal-content input {
       width: 100%;
       padding: 10px;
@@ -675,13 +557,11 @@
       margin-bottom: 16px;
       font-family: monospace;
     }
-
     .modal-buttons {
       display: flex;
       gap: 12px;
       justify-content: flex-end;
     }
-
     .modal-buttons button {
       background: #1c1c26;
       border: 1px solid #3a3a48;
@@ -690,24 +570,20 @@
       cursor: pointer;
       text-transform: uppercase;
     }
-
     .modal-buttons button.confirm {
       border-color: #aa88ff;
       color: #aa88ff;
     }
-
     /* Responsive */
     @media (max-width: 1000px) {
       .history-panel { width: 240px; }
       .reel-viewport { width: 280px; height: 480px; }
       .reel-item { height: 120px; }
     }
-
     @media (max-width: 900px) {
       .roulettes-panel { width: 220px; }
       .history-panel { width: 220px; }
     }
-
     @media (max-width: 768px) {
       .main-content { flex-direction: column; }
       .roulettes-panel { width: 100%; max-height: 120px; flex-direction: row; overflow-x: auto; }
@@ -725,26 +601,18 @@
 </head>
 <body>
 <div class="app">
-  <!-- BANNIÈRE SUPÉRIEURE - PLAYERS -->
   <div class="players-banner">
     <div class="players-list" id="playersList"></div>
     <div class="button-group">
       <button class="add-player-btn" id="addPlayerBtn">+ AJOUTER JOUEUR</button>
-      <button class="export-png-btn" id="exportPngBtn">📸 EXPORTER EN PNG</button>
+      <button class="export-png-btn" id="exportPngBtn">📸 EXPORTER PNG</button>
     </div>
   </div>
-
-  <!-- CONTENU PRINCIPAL -->
   <div class="main-content">
-    <!-- PANEL GAUCHE - Catégories -->
     <div class="roulettes-panel">
-      <div class="panel-header">
-        <h2>CATÉGORIES</h2>
-      </div>
+      <div class="panel-header"><h2>CATÉGORIES</h2></div>
       <div class="roulettes-list" id="categoriesList"></div>
     </div>
-
-    <!-- PANEL CENTRAL - Roulette + Liste des éléments -->
     <div class="center-panel">
       <div class="slot-machine">
         <div class="weapon-label" id="weaponLabel">SÉLECTIONNE UNE CATÉGORIE</div>
@@ -757,8 +625,6 @@
         </div>
         <button class="btn-spin" id="spinBtn" disabled>SPIN</button>
       </div>
-
-      <!-- Liste des éléments sous la roulette -->
       <div class="items-section">
         <div class="items-header">
           <h3>LISTE DES ÉLÉMENTS</h3>
@@ -772,19 +638,13 @@
         <div class="items-list" id="itemsList"></div>
       </div>
     </div>
-
-    <!-- PANEL DROIT - Historique -->
     <div class="history-panel">
-      <div class="history-header">
-        <h3>HISTORIQUE (DRAG & DROP)</h3>
-      </div>
+      <div class="history-header"><h3>HISTORIQUE (DRAG & DROP)</h3></div>
       <div class="history-list" id="historyList"></div>
       <button class="clear-history-btn" id="clearHistoryBtn">EFFACER L'HISTORIQUE</button>
     </div>
   </div>
 </div>
-
-<!-- MODAL pour ajouter un joueur -->
 <div class="modal" id="playerModal">
   <div class="modal-content">
     <h3>AJOUTER UN JOUEUR</h3>
@@ -795,8 +655,6 @@
     </div>
   </div>
 </div>
-
-<!-- MODAL pour confirmation -->
 <div class="modal" id="confirmModalDialog">
   <div class="modal-content" style="max-width: 300px;">
     <h3>CONFIRMER</h3>
@@ -807,136 +665,66 @@
     </div>
   </div>
 </div>
-
-<!-- CHARGEMENT DES DONNÉES (data.js à côté) -->
 <script src="data.js"></script>
-
 <script>
-  // ==================== STORAGE (inchangé) ====================
-  const STORAGE_KEYS = {
-    PLAYERS: 'destiny_players',
-    HISTORY: 'destiny_history'
-  };
+  // ==================== STORAGE ====================
+  const STORAGE_KEYS = { PLAYERS: 'destiny_players', HISTORY: 'destiny_history' };
   const Storage = {
-    savePlayers(players) { try { localStorage.setItem(STORAGE_KEYS.PLAYERS, JSON.stringify(players)); return true; } catch(e) { return false; } },
-    loadPlayers() { try { const data = localStorage.getItem(STORAGE_KEYS.PLAYERS); return data ? JSON.parse(data) : []; } catch(e) { return []; } },
-    saveHistory(history) { try { localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(history.slice(0, 50))); return true; } catch(e) { return false; } },
-    loadHistory() { try { const data = localStorage.getItem(STORAGE_KEYS.HISTORY); return data ? JSON.parse(data) : []; } catch(e) { return []; } }
+    savePlayers(p) { try { localStorage.setItem(STORAGE_KEYS.PLAYERS, JSON.stringify(p)); return true; } catch(e) { return false; } },
+    loadPlayers() { try { const d = localStorage.getItem(STORAGE_KEYS.PLAYERS); return d ? JSON.parse(d) : []; } catch(e) { return []; } },
+    saveHistory(h) { try { localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(h.slice(0, 50))); return true; } catch(e) { return false; } },
+    loadHistory() { try { const d = localStorage.getItem(STORAGE_KEYS.HISTORY); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
   };
 
   // ==================== ÉTAT GLOBAL ====================
-  let players = [];
-  let history = [];
-  let currentCategory = null;
-  let currentItems = [];
-  let nextPlayerId = 1;
-  let draggedItem = null;
-  let pendingConfirmCallback = null;
-  let searchQuery = "";
+  let players = [], history = [], currentCategory = null, currentItems = [], nextPlayerId = 1, draggedItem = null, pendingConfirmCallback = null, searchQuery = "";
+  let spinning = false, animFrame = null, stopTimeout = null, revealTimeout = null, currentY = 0, velocity = 0, lastTimestamp = 0, deceleration = 0;
+  const playersListEl = document.getElementById('playersList'), categoriesListEl = document.getElementById('categoriesList'), itemsListEl = document.getElementById('itemsList');
+  const historyListEl = document.getElementById('historyList'), weaponLabel = document.getElementById('weaponLabel'), reelStrip = document.getElementById('reelStrip');
+  const reelViewport = document.getElementById('reelViewport'), resultDisplay = document.getElementById('resultDisplay'), resultImg = document.getElementById('resultImg');
+  const resultName = document.getElementById('resultName'), spinBtn = document.getElementById('spinBtn'), searchBar = document.getElementById('searchBar');
+  const checkAllBtn = document.getElementById('checkAllBtn'), uncheckAllBtn = document.getElementById('uncheckAllBtn'), countSelectedEl = document.getElementById('countSelected');
+  const clearHistoryBtn = document.getElementById('clearHistoryBtn'), addPlayerBtn = document.getElementById('addPlayerBtn'), exportPngBtn = document.getElementById('exportPngBtn');
+  const playerModal = document.getElementById('playerModal'), confirmDialog = document.getElementById('confirmModalDialog'), playerNameInput = document.getElementById('playerNameInput');
+  const cancelModalBtn = document.getElementById('cancelModal'), confirmModalBtn = document.getElementById('confirmModal'), confirmYesBtn = document.getElementById('confirmYes');
+  const confirmNoBtn = document.getElementById('confirmNo'), confirmMessage = document.getElementById('confirmMessage');
 
-  // État de la roulette
-  let spinning = false;
-  let animFrame = null;
-  let stopTimeout = null;
-  let revealTimeout = null;
-  let currentY = 0;
-  let velocity = 0;
-  let lastTimestamp = 0;
-  let deceleration = 0;
-
-  // DOM Elements
-  const playersListEl = document.getElementById('playersList');
-  const categoriesListEl = document.getElementById('categoriesList');
-  const itemsListEl = document.getElementById('itemsList');
-  const historyListEl = document.getElementById('historyList');
-  const weaponLabel = document.getElementById('weaponLabel');
-  const reelStrip = document.getElementById('reelStrip');
-  const reelViewport = document.getElementById('reelViewport');
-  const resultDisplay = document.getElementById('resultDisplay');
-  const resultImg = document.getElementById('resultImg');
-  const resultName = document.getElementById('resultName');
-  const spinBtn = document.getElementById('spinBtn');
-  const searchBar = document.getElementById('searchBar');
-  const checkAllBtn = document.getElementById('checkAllBtn');
-  const uncheckAllBtn = document.getElementById('uncheckAllBtn');
-  const countSelectedEl = document.getElementById('countSelected');
-  const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-  const addPlayerBtn = document.getElementById('addPlayerBtn');
-  const exportPngBtn = document.getElementById('exportPngBtn');
-
-  // Modals
-  const playerModal = document.getElementById('playerModal');
-  const confirmDialog = document.getElementById('confirmModalDialog');
-  const playerNameInput = document.getElementById('playerNameInput');
-  const cancelModalBtn = document.getElementById('cancelModal');
-  const confirmModalBtn = document.getElementById('confirmModal');
-  const confirmYesBtn = document.getElementById('confirmYes');
-  const confirmNoBtn = document.getElementById('confirmNo');
-  const confirmMessage = document.getElementById('confirmMessage');
-
-  // ==================== FONCTIONS UTILITAIRES ====================
-  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
-  function showConfirm(message, callback) { confirmMessage.textContent = message; confirmDialog.classList.add('active'); pendingConfirmCallback = callback; }
+  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
+  function showConfirm(msg, cb) { confirmMessage.textContent = msg; confirmDialog.classList.add('active'); pendingConfirmCallback = cb; }
   function hideConfirm() { confirmDialog.classList.remove('active'); pendingConfirmCallback = null; }
-  function updateCount() { const selected = currentItems.filter(item => item.checked); countSelectedEl.textContent = selected.length + ' sélectionné(s)'; spinBtn.disabled = selected.length === 0; }
-  function getSelectedItems() { return currentItems.filter(item => item.checked); }
+  function updateCount() { const selected = currentItems.filter(i => i.checked); countSelectedEl.textContent = selected.length + ' sélectionné(s)'; spinBtn.disabled = selected.length === 0; }
+  function getSelectedItems() { return currentItems.filter(i => i.checked); }
 
-  // ==================== EXPORT PNG (avec html2canvas) ====================
+  // ==================== EXPORT PNG (capture directe du bandeau) ====================
   async function exportToPNG() {
     if (!players.length) { showConfirm('Aucun joueur à exporter !', () => {}); return; }
-    const exportContainer = document.createElement('div');
-    exportContainer.style.cssText = `position: fixed; top: -9999px; left: -9999px; background: #0a0a0e; padding: 20px; border-radius: 0; font-family: 'Segoe UI', 'Rajdhani', monospace;`;
-    const header = document.createElement('div');
-    header.style.cssText = `text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #aa88ff;`;
-    header.innerHTML = `<div style="font-size: 24px; font-weight: bold; color: #aa88ff; letter-spacing: 3px;">DESTINY 2</div><div style="font-size: 14px; color: #c8c8d8; margin-top: 5px;">LOADOUT MANAGER</div><div style="font-size: 11px; color: #88889a; margin-top: 5px;">${new Date().toLocaleDateString('fr-FR')} - ${new Date().toLocaleTimeString('fr-FR')}</div>`;
-    exportContainer.appendChild(header);
-    const playersGrid = document.createElement('div');
-    playersGrid.style.cssText = `display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;`;
-    for (const player of players) {
-      const playerCard = document.createElement('div');
-      playerCard.style.cssText = `background: #14141c; border: 1px solid #3a3a48; min-width: 220px; padding: 12px;`;
-      const playerHeader = document.createElement('div');
-      playerHeader.style.cssText = `display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #2a2a35;`;
-      playerHeader.innerHTML = `<span style="font-weight: bold; color: #aa88ff; font-size: 14px; text-transform: uppercase;">${escapeHtml(player.name)}</span><span style="color: #88889a; font-size: 10px;">${player.items.length} équipement(s)</span>`;
-      playerCard.appendChild(playerHeader);
-      const itemsContainer = document.createElement('div');
-      itemsContainer.style.cssText = `display: flex; flex-direction: column; gap: 6px;`;
-      if (player.items.length === 0) { const emptyDiv = document.createElement('div'); emptyDiv.style.cssText = 'color: #6a6a7a; font-size: 11px; text-align: center; padding: 16px; font-style: italic;'; emptyDiv.textContent = 'Aucun équipement'; itemsContainer.appendChild(emptyDiv); }
-      else {
-        for (const item of player.items) {
-          const itemDiv = document.createElement('div');
-          itemDiv.style.cssText = `background: #1a1a24; border-left: 3px solid #aa88ff; padding: 6px 10px; display: flex; align-items: center; gap: 10px;`;
-          if (item.img) { const img = document.createElement('img'); img.src = item.img; img.style.cssText = 'width: 32px; height: 32px; object-fit: contain; border-radius: 4px;'; img.onerror = () => { img.style.display = 'none'; }; itemDiv.appendChild(img); }
-          else { const iconSpan = document.createElement('span'); iconSpan.style.cssText = 'width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 16px;'; iconSpan.textContent = '🎲'; itemDiv.appendChild(iconSpan); }
-          const infoDiv = document.createElement('div'); infoDiv.style.cssText = 'flex: 1;'; infoDiv.innerHTML = `<div style="font-size: 11px; font-weight: 600; color: #d0d0e0; text-transform: uppercase;">${escapeHtml(item.name)}</div><div style="font-size: 9px; color: #aa88ff; text-transform: uppercase;">${escapeHtml(item.category || 'GÉNÉRAL')}</div>`;
-          itemDiv.appendChild(infoDiv); itemsContainer.appendChild(itemDiv);
-        }
-      }
-      playerCard.appendChild(itemsContainer); playersGrid.appendChild(playerCard);
-    }
-    exportContainer.appendChild(playersGrid);
-    const footer = document.createElement('div'); footer.style.cssText = `margin-top: 20px; padding-top: 15px; border-top: 1px solid #2a2a35; text-align: center; font-size: 9px; color: #6a6a7a;`; footer.innerHTML = `Généré par Destiny 2 Loadout Manager - ${players.length} gardien(s)`;
-    exportContainer.appendChild(footer); document.body.appendChild(exportContainer);
-    try { const canvas = await html2canvas(exportContainer, { scale: 2, backgroundColor: '#0a0a0e', logging: false }); const link = document.createElement('a'); link.download = `destiny_loadout_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`; link.href = canvas.toDataURL(); link.click(); } catch (err) { console.error('Erreur export:', err); showConfirm('Erreur lors de l\'export PNG', () => {}); } finally { document.body.removeChild(exportContainer); }
+    const banner = document.querySelector('.players-banner');
+    if (!banner) return;
+    try {
+      const canvas = await html2canvas(banner, { scale: 2, backgroundColor: '#0a0a0e', logging: false, useCORS: true });
+      const link = document.createElement('a');
+      link.download = `destiny_loadout_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    } catch(err) { console.error(err); showConfirm('Erreur lors de l\'export PNG', () => {}); }
   }
 
-  // ==================== GESTION DES JOUEURS (inchangée) ====================
+  // ==================== GESTION DES JOUEURS ====================
   function renderPlayers() {
     if (!playersListEl) return;
     if (players.length === 0) { playersListEl.innerHTML = '<div style="color: #6a6a7a; font-size: 12px; padding: 8px;">Aucun joueur - cliquez sur "Ajouter joueur"</div>'; return; }
-    playersListEl.innerHTML = players.map(player => `<div class="player-card" data-player-id="${player.id}"><div class="player-header"><span class="player-name">${escapeHtml(player.name)}</span><button class="remove-player" data-id="${player.id}">✕</button></div><div class="player-items" data-player-id="${player.id}">${player.items.length === 0 ? '<div class="empty-player">Déposez ici ▼</div>' : player.items.map((item, idx) => `<div class="player-item" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}" draggable="true"><span>${escapeHtml(item.name)}</span><button class="remove-item" data-player-id="${player.id}" data-item-idx="${idx}">✕</button></div>`).join('')}</div></div>`).join('');
+    playersListEl.innerHTML = players.map(p => `<div class="player-card" data-player-id="${p.id}"><div class="player-header"><span class="player-name">${escapeHtml(p.name)}</span><button class="remove-player" data-id="${p.id}">✕</button></div><div class="player-items" data-player-id="${p.id}">${p.items.length === 0 ? '<div class="empty-player">Déposez ici ▼</div>' : p.items.map((it, idx) => `<div class="player-item" data-item-idx="${idx}" data-item-name="${escapeHtml(it.name)}" data-item-img="${it.img || ''}" data-item-cat="${it.category || ''}" draggable="true"><span>${escapeHtml(it.name)}</span><button class="remove-item" data-player-id="${p.id}" data-item-idx="${idx}">✕</button></div>`).join('')}</div></div>`).join('');
     document.querySelectorAll('.remove-player').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const id = parseInt(btn.dataset.id); showConfirm(`Supprimer le joueur ?`, (confirmed) => { if (confirmed) { players = players.filter(p => p.id !== id); renderPlayers(); Storage.savePlayers(players); } }); }); });
-    document.querySelectorAll('.remove-item').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const playerId = parseInt(btn.dataset.playerId); const itemIdx = parseInt(btn.dataset.itemIdx); const player = players.find(p => p.id === playerId); if (player && player.items[itemIdx]) { showConfirm(`Retirer "${player.items[itemIdx].name}" de ${player.name} ?`, (confirmed) => { if (confirmed) { player.items.splice(itemIdx, 1); renderPlayers(); Storage.savePlayers(players); } }); } }); });
+    document.querySelectorAll('.remove-item').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const pid = parseInt(btn.dataset.playerId), iidx = parseInt(btn.dataset.itemIdx); const pl = players.find(p => p.id === pid); if (pl && pl.items[iidx]) { showConfirm(`Retirer "${pl.items[iidx].name}" de ${pl.name} ?`, (confirmed) => { if (confirmed) { pl.items.splice(iidx, 1); renderPlayers(); Storage.savePlayers(players); } }); } }); });
     setupDropZones(); setupPlayerItemDrag(); Storage.savePlayers(players);
   }
-  function addItemToPlayer(playerId, item) { const player = players.find(p => p.id === playerId); if (player) { player.items.push({ ...item }); renderPlayers(); Storage.savePlayers(players); } }
+  function addItemToPlayer(pid, item) { const p = players.find(p => p.id === pid); if (p) { p.items.push({ ...item }); renderPlayers(); Storage.savePlayers(players); } }
   function setupDropZones() {
-    const dropZones = document.querySelectorAll('.player-items');
-    dropZones.forEach(zone => {
+    document.querySelectorAll('.player-items').forEach(zone => {
       zone.removeEventListener('dragover', zone._dragOverHandler); zone.removeEventListener('dragleave', zone._dragLeaveHandler); zone.removeEventListener('drop', zone._dropHandler);
-      zone._dragOverHandler = (e) => { e.preventDefault(); zone.closest('.player-card')?.classList.add('drag-over'); };
+      zone._dragOverHandler = e => { e.preventDefault(); zone.closest('.player-card')?.classList.add('drag-over'); };
       zone._dragLeaveHandler = () => { zone.closest('.player-card')?.classList.remove('drag-over'); };
-      zone._dropHandler = (e) => { e.preventDefault(); zone.closest('.player-card')?.classList.remove('drag-over'); const playerId = parseInt(zone.dataset.playerId); if (draggedItem && playerId) { addItemToPlayer(playerId, draggedItem); draggedItem = null; } };
+      zone._dropHandler = e => { e.preventDefault(); zone.closest('.player-card')?.classList.remove('drag-over'); const pid = parseInt(zone.dataset.playerId); if (draggedItem && pid) { addItemToPlayer(pid, draggedItem); draggedItem = null; } };
       zone.addEventListener('dragover', zone._dragOverHandler); zone.addEventListener('dragleave', zone._dragLeaveHandler); zone.addEventListener('drop', zone._dropHandler);
     });
   }
@@ -944,22 +732,22 @@
     document.querySelectorAll('.player-item').forEach(item => {
       item.setAttribute('draggable', 'true');
       item.removeEventListener('dragstart', item._dragStartHandler); item.removeEventListener('dragend', item._dragEndHandler);
-      item._dragStartHandler = (e) => { const playerCard = item.closest('.player-card'); const playerId = parseInt(playerCard?.dataset.playerId); const itemIdx = parseInt(item.dataset.itemIdx); const player = players.find(p => p.id === playerId); if (player && player.items[itemIdx]) { draggedItem = player.items[itemIdx]; e.dataTransfer.setData('text/plain', JSON.stringify(draggedItem)); } };
+      item._dragStartHandler = e => { const card = item.closest('.player-card'); const pid = parseInt(card?.dataset.playerId); const iidx = parseInt(item.dataset.itemIdx); const p = players.find(p => p.id === pid); if (p && p.items[iidx]) { draggedItem = p.items[iidx]; e.dataTransfer.setData('text/plain', JSON.stringify(draggedItem)); } };
       item._dragEndHandler = () => { draggedItem = null; };
       item.addEventListener('dragstart', item._dragStartHandler); item.addEventListener('dragend', item._dragEndHandler);
     });
   }
 
-  // ==================== HISTORIQUE ====================
-  function addToHistory(item) { history.unshift({ ...item, id: item.id || Date.now(), time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) }); if (history.length > 50) history.pop(); renderHistory(); Storage.saveHistory(history); }
+  // ==================== HISTORIQUE (sans heure) ====================
+  function addToHistory(item) { history.unshift({ ...item, id: item.id || Date.now(), date: new Date().toLocaleDateString('fr-FR') }); if (history.length > 50) history.pop(); renderHistory(); Storage.saveHistory(history); }
   function renderHistory() {
     if (!historyListEl) return;
     if (history.length === 0) { historyListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun tirage</div>'; return; }
-    historyListEl.innerHTML = history.map((item, idx) => `<div class="history-item" draggable="true" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}"><img src="${item.img || ''}" onerror="this.style.display='none'"><div class="history-info"><div class="history-name">${escapeHtml(item.name)}</div><div class="history-category">${escapeHtml(item.category?.toUpperCase() || 'GÉNÉRAL')}</div><div class="history-time">${item.time}</div></div></div>`).join('');
+    historyListEl.innerHTML = history.map((item, idx) => `<div class="history-item" draggable="true" data-item-idx="${idx}" data-item-name="${escapeHtml(item.name)}" data-item-img="${item.img || ''}" data-item-cat="${item.category || ''}"><img src="${item.img || ''}" onerror="this.style.display='none'"><div class="history-info"><div class="history-name">${escapeHtml(item.name)}</div><div class="history-category">${escapeHtml(item.category?.toUpperCase() || 'GÉNÉRAL')}</div></div></div>`).join('');
     document.querySelectorAll('.history-item').forEach(el => {
       el.setAttribute('draggable', 'true');
       el.removeEventListener('dragstart', el._dragStartHandler); el.removeEventListener('dragend', el._dragEndHandler);
-      el._dragStartHandler = (e) => { const name = el.dataset.itemName; const img = el.dataset.itemImg; const cat = el.dataset.itemCat; draggedItem = { name, img, category: cat }; e.dataTransfer.setData('text/plain', JSON.stringify(draggedItem)); el.classList.add('dragging'); };
+      el._dragStartHandler = e => { const name = el.dataset.itemName, img = el.dataset.itemImg, cat = el.dataset.itemCat; draggedItem = { name, img, category: cat }; e.dataTransfer.setData('text/plain', JSON.stringify(draggedItem)); el.classList.add('dragging'); };
       el._dragEndHandler = () => { el.classList.remove('dragging'); draggedItem = null; };
       el.addEventListener('dragstart', el._dragStartHandler); el.addEventListener('dragend', el._dragEndHandler);
     });
@@ -969,106 +757,74 @@
   // ==================== LISTE DES ÉLÉMENTS ====================
   function renderItemsList() {
     if (!itemsListEl || !currentItems.length) { if (itemsListEl) itemsListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun élément</div>'; return; }
-    const filtered = currentItems.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filtered = currentItems.filter(i => i.name.toLowerCase().includes(searchQuery.toLowerCase()));
     if (filtered.length === 0) { itemsListEl.innerHTML = '<div style="text-align: center; color: #6a6a7a; padding: 32px;">Aucun résultat</div>'; return; }
-    itemsListEl.innerHTML = filtered.map(item => `<div class="item-check" data-item-id="${item.id}"><input type="checkbox" id="cb_${item.id}" ${item.checked ? 'checked' : ''}><label for="cb_${item.id}" class="item-name">${escapeHtml(item.name)}</label></div>`).join('');
-    filtered.forEach(item => { const cb = document.getElementById(`cb_${item.id}`); if (cb) { cb.addEventListener('change', () => { item.checked = cb.checked; updateCount(); renderReel(); }); } });
+    itemsListEl.innerHTML = filtered.map(i => `<div class="item-check" data-item-id="${i.id}"><input type="checkbox" id="cb_${i.id}" ${i.checked ? 'checked' : ''}><label for="cb_${i.id}" class="item-name">${escapeHtml(i.name)}</label></div>`).join('');
+    filtered.forEach(i => { const cb = document.getElementById(`cb_${i.id}`); if (cb) cb.addEventListener('change', () => { i.checked = cb.checked; updateCount(); renderReel(); }); });
     updateCount();
   }
-  function checkAll() { currentItems.forEach(item => item.checked = true); renderItemsList(); renderReel(); }
-  function uncheckAll() { currentItems.forEach(item => item.checked = false); renderItemsList(); renderReel(); }
+  function checkAll() { currentItems.forEach(i => i.checked = true); renderItemsList(); renderReel(); }
+  function uncheckAll() { currentItems.forEach(i => i.checked = false); renderItemsList(); renderReel(); }
 
-  // ==================== ROULETTE (version finale avec repère, sélection correcte) ====================
-  const CARD_H = 135;
-  const REPETITIONS = 20;   // nombre de répétitions de chaque item sélectionné dans le ruban
-
-  // Génération d'un ruban équitable et mélangé à partir des items sélectionnés
-  function generateBalancedShuffledStrip(selectedItems) {
-    if (selectedItems.length === 0) return [];
-    // Mélanger les items sélectionnés pour éviter un biais
-    const shuffledSelected = [...selectedItems];
-    for (let i = shuffledSelected.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledSelected[i], shuffledSelected[j]] = [shuffledSelected[j], shuffledSelected[i]];
-    }
+  // ==================== ROULETTE (version finale avec repère et correction gagnant) ====================
+  const CARD_H = 135, REPETITIONS = 20;
+  function generateBalancedShuffledStrip(selected) {
+    if (selected.length === 0) return [];
+    const shuffled = [...selected];
+    for (let i = shuffled.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
     let flat = [];
-    for (let i = 0; i < shuffledSelected.length; i++) {
-      for (let r = 0; r < REPETITIONS; r++) {
-        flat.push({ ...shuffledSelected[i] });
-      }
-    }
-    // Mélange final Fisher-Yates
-    for (let i = flat.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [flat[i], flat[j]] = [flat[j], flat[i]];
-    }
-    // Éviter les doublons consécutifs si possible
-    for (let i = 0; i < flat.length - 1; i++) {
+    for (let i=0; i<shuffled.length; i++) for (let r=0; r<REPETITIONS; r++) flat.push({ ...shuffled[i] });
+    for (let i=flat.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [flat[i], flat[j]] = [flat[j], flat[i]]; }
+    for (let i=0; i<flat.length-1; i++) {
       if (flat[i].name === flat[i+1].name) {
-        let swapIdx = i+2;
-        while (swapIdx < flat.length && flat[swapIdx].name === flat[i].name) swapIdx++;
-        if (swapIdx < flat.length) {
-          [flat[i+1], flat[swapIdx]] = [flat[swapIdx], flat[i+1]];
-        }
+        let swap = i+2;
+        while (swap<flat.length && flat[swap].name === flat[i].name) swap++;
+        if (swap<flat.length) [flat[i+1], flat[swap]] = [flat[swap], flat[i+1]];
       }
     }
     return flat;
   }
-
   function buildStripFromItems(items) {
     reelStrip.innerHTML = '';
-    for (let i = 0; i < items.length; i++) {
+    for (let i=0; i<items.length; i++) {
       const card = document.createElement('div');
       card.className = 'reel-item';
       card.style.height = CARD_H + 'px';
-      card.innerHTML = `<img src="${items[i].img || ''}" alt="${escapeHtml(items[i].name)}" onerror="this.style.display='none'"><div class="reel-name">${escapeHtml(items[i].name)}</div>`;
+      card.innerHTML = `<img src="${items[i].img || ''}" onerror="this.style.display='none'"><div class="reel-name">${escapeHtml(items[i].name)}</div>`;
       reelStrip.appendChild(card);
     }
   }
-
   function getRandomSafeStartPosition(totalHeight) {
     const viewHeight = reelViewport.offsetHeight;
-    const maxY = 0;
-    const minY = -(totalHeight - viewHeight);
-    const safeRange = (maxY - minY) * 0.7;
-    const offset = (maxY - minY - safeRange) / 2;
+    const maxY = 0, minY = -(totalHeight - viewHeight);
+    const safeRange = (maxY - minY) * 0.7, offset = (maxY - minY - safeRange)/2;
     return minY + offset + Math.random() * safeRange;
   }
-
-  // Calcule mathématiquement l'index de la carte gagnante (celle dont le centre est le plus proche du centre de l'écran)
   function getWinnerIndexFromPosition() {
-    const viewHeight = reelViewport.offsetHeight;
-    const centerY = viewHeight / 2;
-    // Position absolue du centre de l'écran dans le repère du ruban
+    const viewHeight = reelViewport.offsetHeight, centerY = viewHeight/2;
     const absoluteCenter = -currentY + centerY;
-    let cardIndex = Math.floor(absoluteCenter / CARD_H);
-    const totalCards = reelStrip.children.length;
-    if (cardIndex < 0) cardIndex = 0;
-    if (cardIndex >= totalCards) cardIndex = totalCards - 1;
-    return cardIndex;
+    let idx = Math.floor(absoluteCenter / CARD_H);
+    const total = reelStrip.children.length;
+    if (idx < 0) idx = 0;
+    if (idx >= total) idx = total-1;
+    return idx;
   }
-
   function updateNearCenterHighlight() {
-    const viewHeight = reelViewport.offsetHeight;
-    const centerY = viewHeight / 2;
+    const viewHeight = reelViewport.offsetHeight, centerY = viewHeight/2;
     const cards = reelStrip.children;
-    for (let i = 0; i < cards.length; i++) {
-      const card = cards[i];
-      const cardTop = currentY + i * CARD_H;
-      const cardCenter = cardTop + CARD_H / 2;
-      const dist = Math.abs(cardCenter - centerY);
-      if (dist < CARD_H * 0.7) card.classList.add('near-center');
-      else card.classList.remove('near-center');
+    for (let i=0; i<cards.length; i++) {
+      const cardTop = currentY + i*CARD_H, cardCenter = cardTop + CARD_H/2;
+      if (Math.abs(cardCenter - centerY) < CARD_H*0.7) cards[i].classList.add('near-center');
+      else cards[i].classList.remove('near-center');
     }
   }
-
   function revealWinnerWithDelay(winnerItem) {
     if (revealTimeout) clearTimeout(revealTimeout);
     revealTimeout = setTimeout(() => {
-      const allCards = reelStrip.children;
-      for (let i = 0; i < allCards.length; i++) allCards[i].classList.remove('winner-glow', 'near-center');
-      const winnerIdx = getWinnerIndexFromPosition();
-      if (allCards[winnerIdx]) allCards[winnerIdx].classList.add('winner-glow');
+      const all = reelStrip.children;
+      for (let i=0; i<all.length; i++) all[i].classList.remove('winner-glow','near-center');
+      const idx = getWinnerIndexFromPosition();
+      if (all[idx]) all[idx].classList.add('winner-glow');
       if (weaponLabel) weaponLabel.innerHTML = winnerItem.name;
       if (resultImg) resultImg.src = winnerItem.img || '';
       if (resultName) resultName.textContent = winnerItem.name;
@@ -1078,26 +834,18 @@
       revealTimeout = null;
     }, 700);
   }
-
   function startSpin() {
     if (spinning) return;
     if (stopTimeout) clearTimeout(stopTimeout);
     if (revealTimeout) clearTimeout(revealTimeout);
-
     const selected = getSelectedItems();
     if (selected.length === 0) return;
-
-    // Générer un nouveau ruban à partir des items sélectionnés
     const freshStrip = generateBalancedShuffledStrip(selected);
     if (freshStrip.length === 0) return;
     buildStripFromItems(freshStrip);
-
     const totalHeight = freshStrip.length * CARD_H;
-    const startY = getRandomSafeStartPosition(totalHeight);
-    currentY = startY;
+    currentY = getRandomSafeStartPosition(totalHeight);
     reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-
-    // Paramètres physiques (vitesse modérée, décélération pour un stop progressif)
     const direction = Math.random() > 0.5 ? -1 : 1;
     const baseSpeed = 1200 + Math.random() * 1800;
     velocity = direction * baseSpeed;
@@ -1108,17 +856,11 @@
     spinBtn.innerHTML = 'SPINNING...';
     weaponLabel.innerHTML = '🌀 SPIN EN COURS... 🌀';
     if (resultDisplay) resultDisplay.classList.remove('active');
-
     const allCards = reelStrip.children;
-    for (let i = 0; i < allCards.length; i++) allCards[i].classList.remove('winner-glow', 'near-center');
-
+    for (let i=0; i<allCards.length; i++) allCards[i].classList.remove('winner-glow','near-center');
     function physicsStep(now) {
-      const dt = Math.min(0.033, (now - lastTimestamp) / 1000);
-      if (dt <= 0) {
-        lastTimestamp = now;
-        animFrame = requestAnimationFrame(physicsStep);
-        return;
-      }
+      const dt = Math.min(0.033, (now - lastTimestamp)/1000);
+      if (dt <= 0) { lastTimestamp = now; animFrame = requestAnimationFrame(physicsStep); return; }
       let velAbs = Math.abs(velocity);
       velAbs -= deceleration * dt;
       if (velAbs < 0) velAbs = 0;
@@ -1128,8 +870,7 @@
       reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
       updateNearCenterHighlight();
       lastTimestamp = now;
-      const almostStopped = (Math.abs(velocity) < 5 && Math.abs(displacement) < 0.5);
-      if (almostStopped) {
+      if (Math.abs(velocity) < 5 && Math.abs(displacement) < 0.5) {
         cancelAnimationFrame(animFrame);
         animFrame = null;
         spinning = false;
@@ -1155,27 +896,18 @@
     }
     animFrame = requestAnimationFrame(physicsStep);
   }
-
-  // Affichage statique de la roulette (aperçu)
   function renderReel() {
     if (spinning) return;
     const selected = getSelectedItems();
-    if (selected.length === 0) {
-      reelStrip.innerHTML = '<div class="reel-item"><div>Aucun élément sélectionné</div></div>';
-      spinBtn.disabled = true;
-      return;
-    }
-    // Aperçu statique : 3 cycles pour montrer les items
+    if (selected.length === 0) { reelStrip.innerHTML = '<div class="reel-item"><div>Aucun élément sélectionné</div></div>'; spinBtn.disabled = true; return; }
     let preview = [];
-    for (let i = 0; i < 3; i++) {
-      preview.push(...selected);
-    }
+    for (let i=0; i<3; i++) preview.push(...selected);
     reelStrip.innerHTML = '';
-    for (let i = 0; i < preview.length; i++) {
+    for (let i=0; i<preview.length; i++) {
       const card = document.createElement('div');
       card.className = 'reel-item';
       card.style.height = CARD_H + 'px';
-      card.innerHTML = `<img src="${preview[i].img || ''}" alt="${escapeHtml(preview[i].name)}" onerror="this.style.display='none'"><div class="reel-name">${escapeHtml(preview[i].name)}</div>`;
+      card.innerHTML = `<img src="${preview[i].img || ''}" onerror="this.style.display='none'"><div class="reel-name">${escapeHtml(preview[i].name)}</div>`;
       reelStrip.appendChild(card);
     }
     currentY = 0;
@@ -1186,57 +918,52 @@
   // ==================== CATÉGORIES ====================
   function renderCategories() {
     if (!categoriesListEl || typeof DESTINY_DATA === 'undefined') return;
-    const categories = DESTINY_DATA.categories;
-    categoriesListEl.innerHTML = Object.keys(categories).map(key => `<div class="roulette-item" data-category="${key}"><div class="item-icon">${categories[key].logo ? `<img src="${categories[key].logo}" alt="${categories[key].title}">` : ''}</div><div class="item-info"><div class="item-title">${categories[key].title}</div><div class="item-sub">${(DESTINY_DATA.items[key] || []).length} items</div></div></div>`).join('');
-    document.querySelectorAll('.roulette-item').forEach(el => { el.addEventListener('click', () => { const category = el.dataset.category; selectCategory(category); }); });
-    if (Object.keys(categories).length > 0 && !currentCategory) selectCategory(Object.keys(categories)[0]);
+    const cats = DESTINY_DATA.categories;
+    categoriesListEl.innerHTML = Object.keys(cats).map(k => `<div class="roulette-item" data-category="${k}"><div class="item-icon">${cats[k].logo ? `<img src="${cats[k].logo}" alt="${cats[k].title}">` : ''}</div><div class="item-info"><div class="item-title">${cats[k].title}</div><div class="item-sub">${(DESTINY_DATA.items[k] || []).length} items</div></div></div>`).join('');
+    document.querySelectorAll('.roulette-item').forEach(el => { el.addEventListener('click', () => { const cat = el.dataset.category; selectCategory(cat); }); });
+    if (Object.keys(cats).length && !currentCategory) selectCategory(Object.keys(cats)[0]);
   }
-
-  function selectCategory(categoryKey) {
+  function selectCategory(catKey) {
     if (spinning) return;
-    currentCategory = categoryKey;
-    const sourceItems = DESTINY_DATA.items[categoryKey] || [];
-    currentItems = sourceItems.map(item => ({ ...item, checked: true }));
+    currentCategory = catKey;
+    const src = DESTINY_DATA.items[catKey] || [];
+    currentItems = src.map(i => ({ ...i, checked: true }));
     if (resultDisplay) resultDisplay.classList.remove('active');
-    document.querySelectorAll('.roulette-item').forEach(el => { if (el.dataset.category === categoryKey) el.classList.add('active'); else el.classList.remove('active'); });
+    document.querySelectorAll('.roulette-item').forEach(el => { if (el.dataset.category === catKey) el.classList.add('active'); else el.classList.remove('active'); });
     renderItemsList();
     renderReel();
-    if (weaponLabel) { const catInfo = DESTINY_DATA.categories[currentCategory]; weaponLabel.innerHTML = catInfo ? catInfo.title : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE'; }
+    if (weaponLabel) { const info = DESTINY_DATA.categories[currentCategory]; weaponLabel.innerHTML = info ? info.title : currentCategory?.toUpperCase() || 'SÉLECTIONNE UNE CATÉGORIE'; }
   }
 
   // ==================== MODAL JOUEUR ====================
-  function openPlayerModal() { if (playerModal) { playerModal.classList.add('active'); if (playerNameInput) playerNameInput.focus(); } }
-  function closePlayerModal() { if (playerModal) playerModal.classList.remove('active'); if (playerNameInput) playerNameInput.value = ''; }
-  function addPlayer() { const name = playerNameInput?.value.trim(); if (!name) return; players.push({ id: nextPlayerId++, name: name, items: [] }); renderPlayers(); closePlayerModal(); }
+  function openPlayerModal() { if (playerModal) { playerModal.classList.add('active'); playerNameInput.focus(); } }
+  function closePlayerModal() { playerModal.classList.remove('active'); playerNameInput.value = ''; }
+  function addPlayer() { const name = playerNameInput?.value.trim(); if (!name) return; players.push({ id: nextPlayerId++, name, items: [] }); renderPlayers(); closePlayerModal(); }
 
   // ==================== INITIALISATION ====================
   function init() {
-    if (typeof DESTINY_DATA === 'undefined') { console.error('Impossible de démarrer : data.js non chargé !'); if (weaponLabel) weaponLabel.innerHTML = 'ERREUR : data.js manquant'; return; }
-    players = Storage.loadPlayers();
-    history = Storage.loadHistory();
-    if (players.length === 0) { players = []; nextPlayerId = 1; }
-    if (players.length > 0) { nextPlayerId = Math.max(...players.map(p => p.id)) + 1; }
-    renderCategories();
-    renderPlayers();
-    renderHistory();
-    if (spinBtn) spinBtn.addEventListener('click', startSpin);
-    if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearHistory);
-    if (addPlayerBtn) addPlayerBtn.addEventListener('click', openPlayerModal);
-    if (cancelModalBtn) cancelModalBtn.addEventListener('click', closePlayerModal);
-    if (confirmModalBtn) confirmModalBtn.addEventListener('click', addPlayer);
-    if (checkAllBtn) checkAllBtn.addEventListener('click', checkAll);
-    if (uncheckAllBtn) uncheckAllBtn.addEventListener('click', uncheckAll);
-    if (exportPngBtn) exportPngBtn.addEventListener('click', exportToPNG);
-    if (searchBar) { searchBar.addEventListener('input', (e) => { searchQuery = e.target.value; renderItemsList(); }); }
-    if (confirmYesBtn) { confirmYesBtn.addEventListener('click', () => { if (pendingConfirmCallback) pendingConfirmCallback(true); hideConfirm(); }); }
-    if (confirmNoBtn) { confirmNoBtn.addEventListener('click', () => { if (pendingConfirmCallback) pendingConfirmCallback(false); hideConfirm(); }); }
-    if (playerModal) { playerModal.addEventListener('click', (e) => { if (e.target === playerModal) closePlayerModal(); }); }
-    if (confirmDialog) { confirmDialog.addEventListener('click', (e) => { if (e.target === confirmDialog) hideConfirm(); }); }
-    if (playerNameInput) { playerNameInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addPlayer(); }); }
+    if (typeof DESTINY_DATA === 'undefined') { console.error('data.js non chargé !'); if (weaponLabel) weaponLabel.innerHTML = 'ERREUR : data.js manquant'; return; }
+    players = Storage.loadPlayers(); history = Storage.loadHistory();
+    if (players.length === 0) players = [];
+    if (players.length) nextPlayerId = Math.max(...players.map(p => p.id)) + 1;
+    renderCategories(); renderPlayers(); renderHistory();
+    spinBtn?.addEventListener('click', startSpin);
+    clearHistoryBtn?.addEventListener('click', clearHistory);
+    addPlayerBtn?.addEventListener('click', openPlayerModal);
+    cancelModalBtn?.addEventListener('click', closePlayerModal);
+    confirmModalBtn?.addEventListener('click', addPlayer);
+    checkAllBtn?.addEventListener('click', checkAll);
+    uncheckAllBtn?.addEventListener('click', uncheckAll);
+    exportPngBtn?.addEventListener('click', exportToPNG);
+    searchBar?.addEventListener('input', (e) => { searchQuery = e.target.value; renderItemsList(); });
+    confirmYesBtn?.addEventListener('click', () => { if (pendingConfirmCallback) pendingConfirmCallback(true); hideConfirm(); });
+    confirmNoBtn?.addEventListener('click', () => { if (pendingConfirmCallback) pendingConfirmCallback(false); hideConfirm(); });
+    playerModal?.addEventListener('click', (e) => { if (e.target === playerModal) closePlayerModal(); });
+    confirmDialog?.addEventListener('click', (e) => { if (e.target === confirmDialog) hideConfirm(); });
+    playerNameInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') addPlayer(); });
     console.log('Application prête - ' + players.length + ' joueurs, ' + history.length + ' historiques');
   }
-
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 </script>
 </body>
 </html>

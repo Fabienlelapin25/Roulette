@@ -679,6 +679,9 @@
   // ==================== ÉTAT GLOBAL ====================
   let players = [], history = [], currentCategory = null, currentItems = [], nextPlayerId = 1, draggedItem = null, pendingConfirmCallback = null, searchQuery = "";
   let spinning = false, animFrame = null, stopTimeout = null, revealTimeout = null, currentY = 0, velocity = 0, lastTimestamp = 0, deceleration = 0;
+  // Tableau des items du ruban actuel (pour récupérer l'objet gagnant directement)
+  let currentStripItems = [];
+
   const playersListEl = document.getElementById('playersList'), categoriesListEl = document.getElementById('categoriesList'), itemsListEl = document.getElementById('itemsList');
   const historyListEl = document.getElementById('historyList'), weaponLabel = document.getElementById('weaponLabel'), reelStrip = document.getElementById('reelStrip');
   const reelViewport = document.getElementById('reelViewport'), resultDisplay = document.getElementById('resultDisplay'), resultImg = document.getElementById('resultImg');
@@ -766,7 +769,7 @@
   function checkAll() { currentItems.forEach(i => i.checked = true); renderItemsList(); renderReel(); }
   function uncheckAll() { currentItems.forEach(i => i.checked = false); renderItemsList(); renderReel(); }
 
-  // ==================== ROULETTE (version finale avec repère et détection par bounding client) ====================
+  // ==================== ROULETTE AVEC STOCKAGE DES ITEMS DU RUBAN ====================
   const CARD_H = 135, REPETITIONS = 20;
   function generateBalancedShuffledStrip(selected) {
     if (selected.length === 0) return [];
@@ -845,6 +848,8 @@
     if (selected.length === 0) return;
     const freshStrip = generateBalancedShuffledStrip(selected);
     if (freshStrip.length === 0) return;
+    // Stocker les items du ruban pour une récupération directe du gagnant
+    currentStripItems = freshStrip;
     buildStripFromItems(freshStrip);
     const totalHeight = freshStrip.length * CARD_H;
     currentY = getRandomSafeStartPosition(totalHeight);
@@ -880,7 +885,7 @@
         spinBtn.disabled = false;
         spinBtn.innerHTML = 'SPIN';
         reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-        // Détection du gagnant par bounding client (précise)
+        // Détection du gagnant par bounding client puis récupération via currentStripItems
         const viewRect = reelViewport.getBoundingClientRect();
         const viewCenterY = viewRect.top + viewRect.height / 2;
         let bestIdx = 0, bestDist = Infinity;
@@ -894,16 +899,8 @@
             bestIdx = i;
           }
         }
-        let winnerItem = selected[0];
-        const winnerCard = cards[bestIdx];
-        if (winnerCard) {
-          const nameDiv = winnerCard.querySelector('.reel-name');
-          if (nameDiv) {
-            const winnerName = nameDiv.innerText.trim();
-            const found = selected.find(i => i.name === winnerName);
-            if (found) winnerItem = found;
-          }
-        }
+        // Récupérer l'item gagnant directement depuis currentStripItems
+        let winnerItem = currentStripItems[bestIdx] || selected[0];
         if (stopTimeout) clearTimeout(stopTimeout);
         stopTimeout = setTimeout(() => { revealWinnerWithDelay(winnerItem); stopTimeout = null; }, 400);
         return;

@@ -863,8 +863,8 @@
     const baseSpeed = 1200 + Math.random() * Math.min(1800, maxVelocity - 1200);
     velocity = direction * baseSpeed;
     // Décélération plus forte pour les petits rubans
-    const decelBase = Math.min(120, Math.max(50, totalHeight / 800));
-    deceleration = decelBase + Math.random() * 40;
+    const decelBase = Math.min(500, Math.max(450, totalHeight / 950));
+    deceleration = decelBase + Math.random() * 200;
     lastTimestamp = performance.now();
     spinning = true;
     spinBtn.disabled = true;

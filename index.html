@@ -858,13 +858,13 @@
     reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
     // Ajustement dynamique de la vitesse en fonction de la taille du ruban pour ne jamais sortir
     const maxSafeDistance = totalHeight * 0.8; // on ne dépasse pas 80% du ruban
-    const maxVelocity = Math.min(3500, maxSafeDistance / 1.5);
+    const maxVelocity = Math.min(4500, maxSafeDistance / 1.5);
     const direction = Math.random() > 0.5 ? -1 : 1;
-    const baseSpeed = 4500 + Math.random() * 2000; 
+    const baseSpeed = 2800 + Math.random() * 1800; 
     velocity = direction * baseSpeed;
     // Décélération plus forte pour les petits rubans
-    const decelBase = Math.min(450, Math.max(300, totalHeight / 700));
-    deceleration = decelBase + Math.random() * 120;
+    const decelBase = Math.min(160, Math.max(300, totalHeight / 700));
+    deceleration = decelBase + Math.random() * 80;
     lastTimestamp = performance.now();
     spinning = true;
     spinBtn.disabled = true;

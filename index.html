@@ -860,7 +860,7 @@
     const maxSafeDistance = totalHeight * 0.8; // on ne dépasse pas 80% du ruban
     const maxVelocity = Math.min(3500, maxSafeDistance / 1.5);
     const direction = Math.random() > 0.5 ? -1 : 1;
-    const baseSpeed = 1200 + Math.random() * Math.min(1800, maxVelocity - 1200);
+    const baseSpeed = 2000 + Math.random(1500) * Math.min(1000, maxVelocity - 1200);
     velocity = direction * baseSpeed;
     // Décélération plus forte pour les petits rubans
     const decelBase = Math.min(500, Math.max(450, totalHeight / 950));

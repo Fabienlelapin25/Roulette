@@ -858,13 +858,13 @@
     reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
     // Ajustement dynamique de la vitesse en fonction de la taille du ruban pour ne jamais sortir
     const maxSafeDistance = totalHeight * 0.8;
-    const maxVelocity = Math.min(5500, maxSafeDistance / 0.9);
+    const maxVelocity = Math.min(6500, maxSafeDistance / 0.6);
     const direction = Math.random() > 0.5 ? -1 : 1;
-    const baseSpeed = 3800 + Math.random() * 2200;  // départ très puissant (3800 à 6000 px/s)
+    const baseSpeed = 5000 + Math.random() * 3000;  // départ ultra puissant (5000 à 8000 px/s)
     velocity = direction * baseSpeed;
-    // Décélération modérée pour un arrêt doux mais pas trop long
-    const decelBase = Math.min(220, Math.max(160, totalHeight / 450));
-    deceleration = decelBase + Math.random() * 50;  // freinage entre 160 et 270 px/s²
+    // Décélération très forte pour un arrêt quasi immédiat mais sans à-coup sec
+    const decelBase = Math.min(800, Math.max(650, totalHeight / 120));
+    deceleration = decelBase + Math.random() * 150;  // freinage entre 650 et 950 px/s²
     lastTimestamp = performance.now();
     spinning = true;
     spinBtn.disabled = true;

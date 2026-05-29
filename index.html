@@ -863,7 +863,7 @@
     const baseSpeed = 5000 + Math.random() * 3000;  // départ ultra puissant (5000 à 8000 px/s)
     velocity = direction * baseSpeed;
     // Décélération très forte pour un arrêt quasi immédiat mais sans à-coup sec
-    const decelBase = Math.min(800, Math.max(650, totalHeight / 120));
+    const decelBase = Math.min(1000, Math.max(850, totalHeight / 320));
     deceleration = decelBase + Math.random() * 150;  // freinage entre 650 et 950 px/s²
     lastTimestamp = performance.now();
     spinning = true;
@@ -885,7 +885,7 @@
       reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
       updateNearCenterHighlight();
       lastTimestamp = now;
-      if (Math.abs(velocity) < 5 && Math.abs(displacement) < 0.5) {
+      if (Math.abs(velocity) < 5 && Math.abs(displacement) < 0.2) {
         cancelAnimationFrame(animFrame);
         animFrame = null;
         spinning = false;

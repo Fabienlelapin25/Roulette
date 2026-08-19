@@ -644,6 +644,698 @@
       }
     }
 
+  
+    /* ================================================================
+       GOLEM // CONTROL PANEL DESIGN 02
+       Même langage visuel que le Control Panel.
+       Aucun changement du moteur de roulette.
+       ================================================================ */
+
+    :root{
+      --bg:#060607;
+      --panel:#0e0e12;
+      --panel-dark:#0b0b0e;
+      --panel-soft:#101013;
+      --panel-hover:#151518;
+      --line:#292933;
+      --line-soft:#25252e;
+      --line-strong:#3a3a40;
+      --text:#f4f4f7;
+      --muted:#858590;
+      --muted2:#707077;
+      --green:#62df8a;
+      --red:#ef7676;
+    }
+
+    *{
+      box-sizing:border-box;
+      border-radius:0 !important;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg) !important;
+      background-image:none !important;
+      color:var(--text);
+      font-family:Arial,sans-serif;
+    }
+
+    button,
+    input{
+      font:inherit;
+    }
+
+    .app{
+      background:var(--bg);
+    }
+
+    /* ---------- BANDEAU JOUEURS ---------- */
+
+    .players-banner{
+      min-height:92px;
+      padding:15px 18px;
+      gap:12px;
+      background:#09090b;
+      border-bottom:1px solid var(--line);
+      box-shadow:none;
+    }
+
+    .players-list{
+      gap:9px;
+    }
+
+    .player-card{
+      min-width:185px;
+      padding:10px;
+      background:var(--panel-dark);
+      border:1px solid var(--line-soft);
+      box-shadow:none;
+      transition:border-color .14s ease,background .14s ease;
+    }
+
+    .player-card:hover{
+      border-color:#34343e;
+    }
+
+    .player-card.drag-over{
+      border-color:#e8e8ec;
+      background:#111114;
+      box-shadow:inset 3px 0 0 #fff;
+    }
+
+    .player-header{
+      margin-bottom:8px;
+      padding-bottom:7px;
+      border-bottom:1px solid #222228;
+    }
+
+    .player-name{
+      color:var(--text);
+      font-family:Georgia,serif;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+    }
+
+    .remove-player,
+    .remove-item{
+      color:#6f6f78;
+      transition:color .12s ease;
+    }
+
+    .remove-player:hover,
+    .remove-item:hover{
+      color:var(--red);
+    }
+
+    .player-items{
+      min-height:57px;
+      gap:4px;
+    }
+
+    .player-item{
+      padding:5px 7px;
+      background:#101013;
+      border-left:3px solid #57575f;
+      color:#d5d5da;
+      font-size:10px;
+    }
+
+    .empty-player{
+      color:#6d6d74;
+      font-size:10px;
+    }
+
+    .button-group{
+      gap:7px;
+    }
+
+    .add-player-btn,
+    .export-png-btn{
+      min-width:154px;
+      padding:9px 12px;
+      font-family:Arial,sans-serif;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:background .14s ease,border-color .14s ease,color .14s ease;
+    }
+
+    .add-player-btn{
+      background:transparent;
+      color:#ddd;
+      border:1px solid #444;
+    }
+
+    .add-player-btn:hover{
+      background:#111114;
+      border-color:#66666d;
+      color:#fff;
+    }
+
+    .export-png-btn{
+      background:#fff;
+      color:#080809;
+      border:1px solid #fff;
+    }
+
+    .export-png-btn:hover{
+      background:#ededf0;
+      border-color:#ededf0;
+      color:#080809;
+    }
+
+    /* ---------- STRUCTURE PRINCIPALE ---------- */
+
+    .main-content{
+      background:var(--bg);
+    }
+
+    .roulettes-panel{
+      width:245px;
+      background:#09090b;
+      border-right:1px solid var(--line);
+    }
+
+    .history-panel{
+      width:280px;
+      background:#09090b;
+      border-left:1px solid var(--line);
+    }
+
+    .center-panel{
+      background:var(--bg);
+    }
+
+    .panel-header,
+    .history-header{
+      padding:16px 15px;
+      background:#09090b;
+      border-bottom:1px solid var(--line);
+    }
+
+    .panel-header h2,
+    .history-header h3{
+      margin:0;
+      color:#f1f1f4;
+      font-family:Georgia,serif;
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:.6px;
+    }
+
+    /* ---------- CATÉGORIES ---------- */
+
+    .roulettes-list{
+      padding:11px;
+      gap:5px;
+    }
+
+    .roulette-item{
+      min-height:61px;
+      padding:10px;
+      gap:10px;
+      background:transparent;
+      border:1px solid transparent;
+      color:#aaa;
+      transition:background .14s ease,border-color .14s ease,color .14s ease;
+    }
+
+    .roulette-item:hover{
+      background:#111114;
+      border-color:#3a3a40;
+      color:#fff;
+    }
+
+    .roulette-item.active{
+      background:#151518;
+      border:1px solid #e8e8ec;
+      border-left:1px solid #e8e8ec;
+      box-shadow:inset 3px 0 0 #fff;
+      color:#fff;
+    }
+
+    .item-icon{
+      width:38px;
+      height:38px;
+      background:#08080a;
+      border:1px solid #363640;
+    }
+
+    .item-title{
+      color:#e2e2e5;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .item-sub{
+      margin-top:2px;
+      color:#707077;
+      font-size:9px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    /* ---------- ZONE CENTRALE / SPIN ---------- */
+
+    .slot-machine{
+      padding:22px 24px 17px;
+      background:var(--bg);
+      border-bottom:1px solid var(--line-soft);
+    }
+
+    .weapon-label{
+      min-width:320px;
+      margin-bottom:14px;
+      padding:10px 15px;
+      background:var(--panel-dark);
+      border:1px solid var(--line-soft);
+      color:#dedee2;
+      font-family:Georgia,serif;
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+
+    .reel-viewport{
+      width:320px;
+      height:540px;
+      margin:0 auto;
+      background:#08080a;
+      border:1px solid #363640;
+      box-shadow:none;
+    }
+
+    .reel-viewport::before{
+      height:2px;
+      background:#f0f0f2;
+      box-shadow:0 0 0 1px rgba(255,255,255,.10);
+    }
+
+    .reel-viewport::after{
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(6,6,7,.96) 0%,
+          rgba(6,6,7,.58) 15%,
+          rgba(6,6,7,0) 37%,
+          rgba(6,6,7,0) 63%,
+          rgba(6,6,7,.58) 85%,
+          rgba(6,6,7,.96) 100%
+        );
+    }
+
+    .reel-item{
+      background:#0d0d11;
+      border-bottom:1px solid #222228;
+      gap:8px;
+    }
+
+    .reel-item:nth-child(even){
+      background:#0b0b0e;
+    }
+
+    .reel-item img{
+      max-width:100px;
+      max-height:80px;
+      filter:none;
+    }
+
+    .reel-item .reel-name{
+      color:#dedee2;
+      font-family:Arial,sans-serif;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.6px;
+    }
+
+    .reel-item.near-center{
+      filter:brightness(1.08);
+      box-shadow:inset 0 0 0 1px #4a4a50;
+    }
+
+    .reel-item.winner-glow{
+      background:#121b14;
+      filter:none;
+      box-shadow:
+        inset 3px 0 0 var(--green),
+        inset -3px 0 0 var(--green);
+      transition:background .2s ease,box-shadow .2s ease;
+    }
+
+    .result-display{
+      background:rgba(6,6,7,.94);
+      backdrop-filter:blur(3px);
+    }
+
+    .result-display img{
+      max-width:180px;
+      max-height:180px;
+    }
+
+    .result-display .result-name{
+      color:#f2f2f4;
+      font-family:Georgia,serif;
+      font-size:17px;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    .btn-spin{
+      min-width:320px;
+      margin-top:17px;
+      padding:10px 14px;
+      background:#fff;
+      color:#080809;
+      border:1px solid #fff;
+      font-family:Arial,sans-serif;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.7px;
+      text-transform:uppercase;
+      transition:background .14s ease,border-color .14s ease,opacity .14s ease;
+    }
+
+    .btn-spin:hover{
+      background:#ededf0;
+      border-color:#ededf0;
+    }
+
+    .btn-spin:disabled{
+      background:#151518;
+      color:#6d6d74;
+      border-color:#303039;
+      opacity:1;
+    }
+
+    /* La ligne reste blanche comme le Control Panel.
+       Le vert n'apparaît que lors du verrouillage du résultat. */
+    .reel-viewport.is-spinning::before{
+      animation:cpMarkerPulse .7s ease-in-out infinite alternate;
+    }
+
+    .reel-viewport.is-settling::before{
+      background:var(--green);
+      animation:cpMarkerLock .18s ease-out 2 alternate;
+    }
+
+    @keyframes cpMarkerPulse{
+      from{opacity:.55}
+      to{opacity:1}
+    }
+
+    @keyframes cpMarkerLock{
+      from{box-shadow:0 0 0 1px rgba(98,223,138,.08)}
+      to{box-shadow:0 0 9px rgba(98,223,138,.38)}
+    }
+
+    /* ---------- LISTE DES ÉLÉMENTS ---------- */
+
+    .items-section{
+      padding:16px 24px 24px;
+      background:var(--bg);
+    }
+
+    .items-header{
+      margin-bottom:11px;
+    }
+
+    .items-header h3{
+      margin:0 0 10px;
+      color:#f1f1f4;
+      font-family:Georgia,serif;
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:.4px;
+    }
+
+    .search-bar{
+      margin-bottom:9px;
+      padding:9px 10px;
+      background:#08080a;
+      color:#fff;
+      border:1px solid #363640;
+      font-family:Arial,sans-serif;
+      font-size:11px;
+      outline:none;
+    }
+
+    .search-bar:focus{
+      border-color:#8a8a92;
+      box-shadow:none;
+    }
+
+    .search-bar::placeholder{
+      color:#6f6f77;
+    }
+
+    .list-controls{
+      gap:7px;
+      margin-bottom:10px;
+    }
+
+    .list-controls button{
+      padding:7px 9px;
+      background:transparent;
+      color:#c7c7cd;
+      border:1px solid #444;
+      font-family:Arial,sans-serif;
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+
+    .list-controls button:hover{
+      background:#111114;
+      border-color:#66666d;
+      color:#fff;
+    }
+
+    .count-selected{
+      color:#858590;
+      font-size:10px;
+    }
+
+    .items-list{
+      max-height:200px;
+      background:var(--panel-dark);
+      border:1px solid var(--line-soft);
+    }
+
+    .item-check{
+      padding:7px 9px;
+      background:#0d0d11;
+      border-bottom:1px solid #222228;
+    }
+
+    .item-check:hover{
+      background:#111116;
+    }
+
+    .item-check input{
+      accent-color:var(--green);
+    }
+
+    .item-check .item-name{
+      color:#d5d5da;
+      font-size:10px;
+      font-weight:600;
+    }
+
+    /* ---------- HISTORIQUE ---------- */
+
+    .history-list{
+      padding:11px;
+    }
+
+    .history-item{
+      margin-bottom:6px;
+      padding:8px;
+      background:var(--panel-dark);
+      border:1px solid var(--line-soft);
+      gap:9px;
+    }
+
+    .history-item:hover{
+      background:#111114;
+      border-color:#34343e;
+    }
+
+    .history-item img{
+      width:36px;
+      height:36px;
+      background:#08080a;
+      border:1px solid #363640;
+    }
+
+    .history-name{
+      color:#dedee2;
+      font-size:10px;
+      font-weight:700;
+    }
+
+    .history-category{
+      margin-top:2px;
+      color:#77777f;
+      font-size:8px;
+      letter-spacing:.4px;
+    }
+
+    .clear-history-btn{
+      width:calc(100% - 22px);
+      margin:0 11px 11px;
+      padding:8px 9px;
+      background:transparent;
+      color:#ff8787;
+      border:1px solid #773636;
+      font-family:Arial,sans-serif;
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+
+    .clear-history-btn:hover{
+      background:#1a0c0c;
+      border-color:#9a4747;
+      color:#ff9a9a;
+    }
+
+    /* ---------- MODALES ---------- */
+
+    .modal{
+      background:#000c;
+      backdrop-filter:none;
+    }
+
+    .modal-content{
+      min-width:320px;
+      padding:18px;
+      background:#101014;
+      border:1px solid #555;
+      box-shadow:none;
+      color:var(--text);
+    }
+
+    .modal-content h3{
+      margin:0 0 14px;
+      color:#f1f1f4;
+      font-family:Georgia,serif;
+      font-size:15px;
+      letter-spacing:.4px;
+      text-transform:none;
+    }
+
+    .modal-content input{
+      padding:9px;
+      background:#08080a;
+      color:#fff;
+      border:1px solid #363640;
+      font-family:Arial,sans-serif;
+    }
+
+    .modal-content input:focus{
+      outline:none;
+      border-color:#8a8a92;
+    }
+
+    .modal-buttons{
+      gap:8px;
+    }
+
+    .modal-buttons button{
+      padding:9px 12px;
+      background:transparent;
+      color:#ddd;
+      border:1px solid #444;
+      font-family:Arial,sans-serif;
+      font-size:10px;
+      font-weight:700;
+    }
+
+    .modal-buttons button:hover{
+      background:#111114;
+      border-color:#66666d;
+      color:#fff;
+    }
+
+    .modal-buttons button.confirm{
+      background:#fff;
+      color:#080809;
+      border-color:#fff;
+    }
+
+    .modal-buttons button.confirm:hover{
+      background:#ededf0;
+      border-color:#ededf0;
+      color:#080809;
+    }
+
+    /* ---------- SCROLLBAR ---------- */
+
+    ::-webkit-scrollbar{
+      width:7px;
+      height:7px;
+    }
+
+    ::-webkit-scrollbar-track{
+      background:#0b0b0e;
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background:#373741;
+    }
+
+    ::-webkit-scrollbar-thumb:hover{
+      background:#4a4a54;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media(max-width:1000px){
+      .history-panel{width:240px}
+      .reel-viewport{width:280px;height:480px}
+      .weapon-label,.btn-spin{min-width:280px}
+      .reel-item{height:120px}
+    }
+
+    @media(max-width:900px){
+      .roulettes-panel{width:220px}
+      .history-panel{width:220px}
+    }
+
+    @media(max-width:768px){
+      .main-content{flex-direction:column}
+      .roulettes-panel{
+        width:100%;
+        max-height:120px;
+        flex-direction:row;
+        overflow-x:auto;
+        border-right:0;
+        border-bottom:1px solid var(--line);
+      }
+      .roulettes-list{flex-direction:row;overflow-x:auto}
+      .roulette-item{min-width:120px}
+      .history-panel{
+        width:100%;
+        max-height:210px;
+        border-left:0;
+        border-top:1px solid var(--line);
+      }
+      .center-panel{order:1}
+      .roulettes-panel{order:2}
+      .history-panel{order:3}
+      .items-list{max-height:150px}
+      .reel-viewport{width:260px;height:420px}
+      .weapon-label,.btn-spin{min-width:260px}
+      .reel-item{height:105px}
+    }
+
   </style>
 </head>
 <body>
@@ -670,7 +1362,7 @@
             <div class="result-name" id="resultName"></div>
           </div>
         </div>
-        <button class="btn-spin" id="spinBtn" disabled>SPIN</button>
+        <button class="btn-spin" id="spinBtn" disabled>LANCER LE TIRAGE</button>
       </div>
       <div class="items-section">
         <div class="items-header">
@@ -996,7 +1688,7 @@
   function finishSpin(winnerItem, winnerIndex) {
     spinning = false;
     spinBtn.disabled = false;
-    spinBtn.innerHTML = 'SPIN';
+    spinBtn.innerHTML = 'LANCER LE TIRAGE';
 
     reelViewport.classList.remove('is-spinning', 'is-settling');
 
@@ -1052,8 +1744,8 @@
 
     spinning = true;
     spinBtn.disabled = true;
-    spinBtn.innerHTML = 'SPINNING...';
-    weaponLabel.innerHTML = '🌀 SPIN EN COURS... 🌀';
+    spinBtn.innerHTML = 'TIRAGE EN COURS...';
+    weaponLabel.innerHTML = 'TIRAGE EN COURS...';
 
     reelViewport.classList.remove('is-settling');
     reelViewport.classList.add('is-spinning');

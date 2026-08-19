@@ -596,6 +596,54 @@
       .reel-viewport { width: 260px; height: 420px; }
       .reel-item { height: 105px; }
     }
+
+    /* ===== SPIN CASE OPENING V2 ===== */
+    .reel-viewport::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(10,10,14,0.92) 0%,
+          rgba(10,10,14,0.35) 18%,
+          rgba(10,10,14,0.00) 38%,
+          rgba(10,10,14,0.00) 62%,
+          rgba(10,10,14,0.35) 82%,
+          rgba(10,10,14,0.92) 100%
+        );
+    }
+
+    .reel-viewport.is-spinning::before {
+      animation: centerMarkerPulse 0.7s ease-in-out infinite alternate;
+    }
+
+    .reel-viewport.is-settling::before {
+      animation: centerMarkerLock 0.18s ease-out 2 alternate;
+    }
+
+    @keyframes centerMarkerPulse {
+      from {
+        box-shadow: 0 0 6px #ffcc44;
+        opacity: 0.78;
+      }
+      to {
+        box-shadow: 0 0 18px #ffcc44;
+        opacity: 1;
+      }
+    }
+
+    @keyframes centerMarkerLock {
+      from {
+        box-shadow: 0 0 8px #ffcc44;
+      }
+      to {
+        box-shadow: 0 0 26px #ffcc44;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -677,8 +725,9 @@
 
   // ==================== ÉTAT GLOBAL ====================
   let players = [], history = [], currentCategory = null, currentItems = [], nextPlayerId = 1, draggedItem = null, pendingConfirmCallback = null, searchQuery = "";
-  let spinning = false, animFrame = null, stopTimeout = null, revealTimeout = null, currentY = 0, velocity = 0, lastTimestamp = 0, deceleration = 0;
+  let spinning = false, animFrame = null, stopTimeout = null, revealTimeout = null, currentY = 0;
   let currentStripItems = [];
+  let currentWinnerIndex = -1;
 
   const playersListEl = document.getElementById('playersList'), categoriesListEl = document.getElementById('categoriesList'), itemsListEl = document.getElementById('itemsList');
   const historyListEl = document.getElementById('historyList'), weaponLabel = document.getElementById('weaponLabel'), reelStrip = document.getElementById('reelStrip');
@@ -767,166 +816,313 @@
   function checkAll() { currentItems.forEach(i => i.checked = true); renderItemsList(); renderReel(); }
   function uncheckAll() { currentItems.forEach(i => i.checked = false); renderItemsList(); renderReel(); }
 
-  // ==================== ROULETTE AVEC RUBAN ADAPTATIF ====================
+  // ==================== ROULETTE — CASE OPENING V2 ====================
   const CARD_H = 135;
-  // Détermine le nombre de répétitions pour garantir un ruban d'au moins 60000px de hauteur
-  function getRequiredRepetitions(selectedCount) {
-    const minTotalHeight = 60000; // hauteur minimale en pixels pour éviter le vide
-    const cycleHeight = selectedCount * CARD_H;
-    let reps = Math.ceil(minTotalHeight / cycleHeight);
-    return Math.max(reps, 25); // au moins 25 répétitions pour la fluidité
+
+  // Nombre de cartes traversées avant le résultat.
+  // Suffisamment long pour créer le suspense sans fabriquer un ruban de 60 000 px.
+  const SPIN_MIN_TRAVEL = 48;
+  const SPIN_MAX_TRAVEL = 66;
+  const SPIN_TAIL_CARDS = 8;
+
+  function randomFrom(list) {
+    return list[Math.floor(Math.random() * list.length)];
   }
 
-  function generateBalancedShuffledStrip(selected) {
-    if (selected.length === 0) return [];
-    const repetitions = getRequiredRepetitions(selected.length);
-    const shuffled = [...selected];
-    for (let i = shuffled.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
-    let flat = [];
-    for (let i=0; i<shuffled.length; i++) for (let r=0; r<repetitions; r++) flat.push({ ...shuffled[i] });
-    for (let i=flat.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [flat[i], flat[j]] = [flat[j], flat[i]]; }
-    for (let i=0; i<flat.length-1; i++) {
-      if (flat[i].name === flat[i+1].name) {
-        let swap = i+2;
-        while (swap<flat.length && flat[swap].name === flat[i].name) swap++;
-        if (swap<flat.length) [flat[i+1], flat[swap]] = [flat[swap], flat[i+1]];
-      }
-    }
-    return flat;
+  // Le résultat est choisi AVANT l'animation.
+  // Chaque élément sélectionné a exactement la même probabilité.
+  function chooseWinner(selected) {
+    return selected[Math.floor(Math.random() * selected.length)];
   }
+
+  // Évite autant que possible 3 cartes identiques d'affilée dans le ruban.
+  // Cela ne change PAS les probabilités du gagnant : ce ne sont que des cartes visuelles.
+  function visualRandomItem(selected, sequence) {
+    if (selected.length <= 1) return selected[0];
+
+    let candidate = randomFrom(selected);
+
+    if (
+      sequence.length >= 2 &&
+      sequence[sequence.length - 1].name === candidate.name &&
+      sequence[sequence.length - 2].name === candidate.name
+    ) {
+      const alternatives = selected.filter(i => i.name !== candidate.name);
+      if (alternatives.length) candidate = randomFrom(alternatives);
+    }
+
+    return candidate;
+  }
+
+  // Construit un ruban fini :
+  // - cartes aléatoires pour l'effet case opening
+  // - gagnant placé à une position connue près de la fin
+  // - quelques cartes après lui pour que le ruban reste visuellement rempli.
+  function buildCaseOpeningStrip(selected, winner) {
+    const travel =
+      SPIN_MIN_TRAVEL +
+      Math.floor(Math.random() * (SPIN_MAX_TRAVEL - SPIN_MIN_TRAVEL + 1));
+
+    const items = [];
+
+    // Quelques cartes existent déjà avant la position de départ visible.
+    for (let i = 0; i < 4; i++) {
+      items.push({ ...visualRandomItem(selected, items) });
+    }
+
+    for (let i = 0; i < travel; i++) {
+      items.push({ ...visualRandomItem(selected, items) });
+    }
+
+    const winnerIndex = items.length;
+    items.push({ ...winner });
+
+    for (let i = 0; i < SPIN_TAIL_CARDS; i++) {
+      items.push({ ...visualRandomItem(selected, items) });
+    }
+
+    return { items, winnerIndex };
+  }
+
   function buildStripFromItems(items) {
     reelStrip.innerHTML = '';
-    for (let i=0; i<items.length; i++) {
+
+    for (let i = 0; i < items.length; i++) {
       const card = document.createElement('div');
       card.className = 'reel-item';
       card.style.height = CARD_H + 'px';
-      card.innerHTML = `<img src="${items[i].img || ''}" onerror="this.style.display='none'"><div class="reel-name">${escapeHtml(items[i].name)}</div>`;
+      card.innerHTML =
+        `<img src="${items[i].img || ''}" onerror="this.style.display='none'">` +
+        `<div class="reel-name">${escapeHtml(items[i].name)}</div>`;
       reelStrip.appendChild(card);
     }
   }
-  function getRandomSafeStartPosition(totalHeight) {
-    const viewHeight = reelViewport.offsetHeight;
-    const maxY = 0, minY = -(totalHeight - viewHeight);
-    const safeRange = (maxY - minY) * 0.7, offset = (maxY - minY - safeRange)/2;
-    return minY + offset + Math.random() * safeRange;
+
+  function centeredYForIndex(index) {
+    const viewportCenter = reelViewport.clientHeight / 2;
+    const cardCenter = index * CARD_H + CARD_H / 2;
+    return viewportCenter - cardCenter;
   }
+
   function updateNearCenterHighlight() {
-    const viewHeight = reelViewport.offsetHeight, centerY = viewHeight/2;
+    const viewHeight = reelViewport.offsetHeight;
+    const centerY = viewHeight / 2;
     const cards = reelStrip.children;
-    for (let i=0; i<cards.length; i++) {
-      const cardTop = currentY + i*CARD_H, cardCenter = cardTop + CARD_H/2;
-      if (Math.abs(cardCenter - centerY) < CARD_H*0.7) cards[i].classList.add('near-center');
-      else cards[i].classList.remove('near-center');
+
+    for (let i = 0; i < cards.length; i++) {
+      const cardTop = currentY + i * CARD_H;
+      const cardCenter = cardTop + CARD_H / 2;
+
+      if (Math.abs(cardCenter - centerY) < CARD_H * 0.68) {
+        cards[i].classList.add('near-center');
+      } else {
+        cards[i].classList.remove('near-center');
+      }
     }
   }
-  function revealWinnerWithDelay(winnerItem) {
+
+  // Courbe "case opening" :
+  // départ très rapide, puis longue décélération dans les derniers mètres.
+  function caseOpeningEase(t) {
+    return 1 - Math.pow(1 - t, 4.35);
+  }
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function animateReel(fromY, toY, duration, easing, onDone) {
+    const startTime = performance.now();
+
+    function frame(now) {
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / duration);
+      const eased = easing(t);
+
+      currentY = fromY + (toY - fromY) * eased;
+      reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
+      updateNearCenterHighlight();
+
+      if (t < 1) {
+        animFrame = requestAnimationFrame(frame);
+        return;
+      }
+
+      animFrame = null;
+      currentY = toY;
+      reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
+      updateNearCenterHighlight();
+
+      if (onDone) onDone();
+    }
+
+    animFrame = requestAnimationFrame(frame);
+  }
+
+  function revealWinnerWithDelay(winnerItem, winnerIndex) {
     if (revealTimeout) clearTimeout(revealTimeout);
+
     revealTimeout = setTimeout(() => {
       const all = reelStrip.children;
-      for (let i=0; i<all.length; i++) all[i].classList.remove('winner-glow','near-center');
-      const viewRect = reelViewport.getBoundingClientRect();
-      const viewCenterY = viewRect.top + viewRect.height / 2;
-      let bestIdx = 0, bestDist = Infinity;
-      for (let i=0; i<all.length; i++) {
-        const rect = all[i].getBoundingClientRect();
-        const cardCenterY = rect.top + rect.height / 2;
-        const dist = Math.abs(cardCenterY - viewCenterY);
-        if (dist < bestDist) { bestDist = dist; bestIdx = i; }
+
+      for (let i = 0; i < all.length; i++) {
+        all[i].classList.remove('winner-glow', 'near-center');
       }
-      if (all[bestIdx]) all[bestIdx].classList.add('winner-glow');
+
+      // Le gagnant est connu : on éclaire exactement sa carte,
+      // au lieu de recalculer "la plus proche" après la physique.
+      if (all[winnerIndex]) {
+        all[winnerIndex].classList.add('winner-glow');
+      }
+
       if (weaponLabel) weaponLabel.innerHTML = winnerItem.name;
       if (resultImg) resultImg.src = winnerItem.img || '';
       if (resultName) resultName.textContent = winnerItem.name;
-      if (resultDisplay) resultDisplay.classList.add('active');
+
+      if (resultDisplay) {
+        resultDisplay.classList.add('active');
+      }
+
       addToHistory(winnerItem);
-      setTimeout(() => { if (resultDisplay) resultDisplay.classList.remove('active'); }, 3000);
+
+      setTimeout(() => {
+        if (resultDisplay) resultDisplay.classList.remove('active');
+      }, 3000);
+
       revealTimeout = null;
-    }, 700);
+    }, 420);
   }
+
+  function finishSpin(winnerItem, winnerIndex) {
+    spinning = false;
+    spinBtn.disabled = false;
+    spinBtn.innerHTML = 'SPIN';
+
+    reelViewport.classList.remove('is-spinning', 'is-settling');
+
+    revealWinnerWithDelay(winnerItem, winnerIndex);
+  }
+
   function startSpin() {
     if (spinning) return;
-    if (stopTimeout) clearTimeout(stopTimeout);
-    if (revealTimeout) clearTimeout(revealTimeout);
+
+    if (animFrame) {
+      cancelAnimationFrame(animFrame);
+      animFrame = null;
+    }
+
+    if (stopTimeout) {
+      clearTimeout(stopTimeout);
+      stopTimeout = null;
+    }
+
+    if (revealTimeout) {
+      clearTimeout(revealTimeout);
+      revealTimeout = null;
+    }
+
     const selected = getSelectedItems();
     if (selected.length === 0) return;
-    const freshStrip = generateBalancedShuffledStrip(selected);
-    if (freshStrip.length === 0) return;
-    currentStripItems = freshStrip;
-    buildStripFromItems(freshStrip);
-    const totalHeight = freshStrip.length * CARD_H;
-    currentY = getRandomSafeStartPosition(totalHeight);
+
+    // 1) Tirage équitable du résultat.
+    const winnerItem = { ...chooseWinner(selected) };
+
+    // 2) Création d'un ruban visuel autour de ce résultat.
+    const spinStrip = buildCaseOpeningStrip(selected, winnerItem);
+    currentStripItems = spinStrip.items;
+    currentWinnerIndex = spinStrip.winnerIndex;
+
+    buildStripFromItems(currentStripItems);
+
+    // On commence avec une carte située vers le centre,
+    // ce qui évite un départ visuel "collé en haut".
+    const startIndex = 2;
+    const startY = centeredYForIndex(startIndex);
+
+    // Arrêt exact : centre de la carte gagnante = ligne jaune.
+    const targetY = centeredYForIndex(currentWinnerIndex);
+
+    // Petit dépassement final comme sur un case opening.
+    // Le gagnant passe légèrement au-dessus de la ligne puis revient se verrouiller.
+    const overshootPixels = 10 + Math.random() * 8;
+    const overshootY = targetY - overshootPixels;
+
+    currentY = startY;
     reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-    // Ajustement dynamique de la vitesse en fonction de la taille du ruban pour ne jamais sortir
-    const maxSafeDistance = totalHeight * 0.8;
-    const maxVelocity = Math.min(6500, maxSafeDistance / 0.6);
-    const direction = Math.random() > 0.5 ? -1 : 1;
-    const baseSpeed = 5000 + Math.random() * 3000;  // départ ultra puissant (5000 à 8000 px/s)
-    velocity = direction * baseSpeed;
-    // Décélération très forte pour un arrêt quasi immédiat mais sans à-coup sec
-    const decelBase = Math.min(1000, Math.max(850, totalHeight / 320));
-    deceleration = decelBase + Math.random() * 150;  // freinage entre 650 et 950 px/s²
-    lastTimestamp = performance.now();
+
     spinning = true;
     spinBtn.disabled = true;
     spinBtn.innerHTML = 'SPINNING...';
     weaponLabel.innerHTML = '🌀 SPIN EN COURS... 🌀';
+
+    reelViewport.classList.remove('is-settling');
+    reelViewport.classList.add('is-spinning');
+
     if (resultDisplay) resultDisplay.classList.remove('active');
-    const allCards = reelStrip.children;
-    for (let i=0; i<allCards.length; i++) allCards[i].classList.remove('winner-glow','near-center');
-    function physicsStep(now) {
-      const dt = Math.min(0.033, (now - lastTimestamp)/1000);
-      if (dt <= 0) { lastTimestamp = now; animFrame = requestAnimationFrame(physicsStep); return; }
-      let velAbs = Math.abs(velocity);
-      velAbs -= deceleration * dt;
-      if (velAbs < 0) velAbs = 0;
-      velocity = (velocity > 0 ? velAbs : -velAbs);
-      const displacement = velocity * dt;
-      currentY += displacement;
-      reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-      updateNearCenterHighlight();
-      lastTimestamp = now;
-      if (Math.abs(velocity) < 5 && Math.abs(displacement) < 0.2) {
-        cancelAnimationFrame(animFrame);
-        animFrame = null;
-        spinning = false;
-        spinBtn.disabled = false;
-        spinBtn.innerHTML = 'SPIN';
-        reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
-        const viewRect = reelViewport.getBoundingClientRect();
-        const viewCenterY = viewRect.top + viewRect.height / 2;
-        let bestIdx = 0, bestDist = Infinity;
-        const cards = reelStrip.children;
-        for (let i=0; i<cards.length; i++) {
-          const rect = cards[i].getBoundingClientRect();
-          const cardCenterY = rect.top + rect.height / 2;
-          const dist = Math.abs(cardCenterY - viewCenterY);
-          if (dist < bestDist) { bestDist = dist; bestIdx = i; }
-        }
-        let winnerItem = currentStripItems[bestIdx] || selected[0];
-        if (stopTimeout) clearTimeout(stopTimeout);
-        stopTimeout = setTimeout(() => { revealWinnerWithDelay(winnerItem); stopTimeout = null; }, 400);
-        return;
-      }
-      animFrame = requestAnimationFrame(physicsStep);
+
+    const cards = reelStrip.children;
+    for (let i = 0; i < cards.length; i++) {
+      cards[i].classList.remove('winner-glow', 'near-center');
     }
-    animFrame = requestAnimationFrame(physicsStep);
+
+    updateNearCenterHighlight();
+
+    // Durée légèrement variable pour éviter un ressenti mécanique identique à chaque clic.
+    const mainDuration = 5000 + Math.random() * 850;
+
+    // 3) Grande décélération.
+    animateReel(
+      startY,
+      overshootY,
+      mainDuration,
+      caseOpeningEase,
+      () => {
+        reelViewport.classList.remove('is-spinning');
+        reelViewport.classList.add('is-settling');
+
+        // 4) Petit retour de verrouillage sur la ligne centrale.
+        animateReel(
+          overshootY,
+          targetY,
+          210,
+          easeOutCubic,
+          () => finishSpin(winnerItem, currentWinnerIndex)
+        );
+      }
+    );
   }
+
   function renderReel() {
     if (spinning) return;
+
     const selected = getSelectedItems();
-    if (selected.length === 0) { reelStrip.innerHTML = '<div class="reel-item"><div>Aucun élément sélectionné</div></div>'; spinBtn.disabled = true; return; }
-    let preview = [];
-    for (let i=0; i<3; i++) preview.push(...selected);
-    reelStrip.innerHTML = '';
-    for (let i=0; i<preview.length; i++) {
-      const card = document.createElement('div');
-      card.className = 'reel-item';
-      card.style.height = CARD_H + 'px';
-      card.innerHTML = `<img src="${preview[i].img || ''}" onerror="this.style.display='none'"><div class="reel-name">${escapeHtml(preview[i].name)}</div>`;
-      reelStrip.appendChild(card);
+
+    reelViewport.classList.remove('is-spinning', 'is-settling');
+    currentWinnerIndex = -1;
+
+    if (selected.length === 0) {
+      reelStrip.innerHTML =
+        '<div class="reel-item"><div>Aucun élément sélectionné</div></div>';
+      spinBtn.disabled = true;
+      return;
     }
-    currentY = 0;
-    reelStrip.style.transform = `translate3d(0, 0px, 0)`;
+
+    // Aperçu court avant le spin.
+    const preview = [];
+    const previewCount = Math.max(8, Math.min(16, selected.length * 2));
+
+    for (let i = 0; i < previewCount; i++) {
+      preview.push({ ...selected[i % selected.length] });
+    }
+
+    buildStripFromItems(preview);
+
+    // Centre une carte de l'aperçu sur la ligne plutôt que de démarrer à 0.
+    const previewIndex = Math.min(2, preview.length - 1);
+    currentY = centeredYForIndex(previewIndex);
+    reelStrip.style.transform = `translate3d(0, ${currentY}px, 0)`;
+
+    updateNearCenterHighlight();
     spinBtn.disabled = false;
   }
 

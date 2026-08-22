@@ -124,7 +124,7 @@ const DESTINY_DATA = {
       {"id":"armes_077","name":"Pochette d'allumettes de Tommy","img":"https://www.bungie.net/common/destiny2_content/icons/251630147cd942ade9414781e96237ec.jpg","category":"armes"},
       {"id":"armes_078","name":"Le Quatrième Cavalier","img":"https://www.bungie.net/common/destiny2_content/icons/74e1434dd585c5c305f4d331d05895c6.jpg","category":"armes"},
       {"id":"armes_079","name":"Symétrie","img":"https://www.bungie.net/common/destiny2_content/icons/55f9629f4674c351e3a2efd9ab9ca6e9.jpg","category":"armes"},
-      {"id":"armes_080","name":"Ruines du Diable","img":"https://www.bungie.net/common/destiny2_content/icons/5fed5e618423591a8cf4bd66a4f69c97.png","category":"armes"},
+      {"id":"armes_080","name":"Ruines du Diable","img":"https://www.bungie.net/common/destiny2_content/icons/92cdbf57fe2a29cad14d18e33689463b.jpg","category":"armes"},
       {"id":"armes_081","name":"Serment d'Ériana","img":"https://www.bungie.net/common/destiny2_content/icons/588133859fa98c801d8a9d66ea6aae2f.jpg","category":"armes"},
       {"id":"armes_082","name":"Divinité","img":"https://www.bungie.net/common/destiny2_content/icons/c6aa03536fd68b5fca5ad6b83ea0cf1e.jpg","category":"armes"},
       {"id":"armes_083","name":"Tarrabah","img":"https://www.bungie.net/common/destiny2_content/icons/88ea7e35e14f29c4cda6588cb258333b.jpg","category":"armes"},

@@ -182,7 +182,8 @@ const DESTINY_DATA = {
       {"id":"armes_135","name":"Empereur des rats","img":"https://www.bungie.net/common/destiny2_content/icons/b86c24934b3ec9954218ecfa0992aeb2.jpg","category":"armes"},
       {"id":"armes_136","name":"Lame praxique","img":"https://www.bungie.net/common/destiny2_content/icons/d63292c9248c5e3ae823605307140199.jpg","category":"armes"},
       {"id":"armes_137","name":"Service de Luzaku","img":"https://www.bungie.net/common/destiny2_content/icons/e7d4497fbdd8339eaf9da4b9151c9559.jpg","category":"armes"},
-      {"id":"armes_138","name":"Hoirie","img":"https://www.bungie.net/common/destiny2_content/icons/95e57b924511a206cee9fb6b8bab8ce2.jpg","category":"armes"}
+      {"id":"armes_138","name":"Fafnir","img":"https://www.bungie.net/common/destiny2_content/icons/b91b241c65b5743e4ac89ba77fda551b.jpg","category":"armes"},
+      {"id":"armes_139","name":"Hoirie","img":"https://www.bungie.net/common/destiny2_content/icons/95e57b924511a206cee9fb6b8bab8ce2.jpg","category":"armes"}
     ],
 
     // ==================== CHASSEUR ====================

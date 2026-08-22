@@ -46,7 +46,7 @@ const DESTINY_DATA = {
     // ==================== ARMES EXOTIQUES ====================
     armes: [
       {"id":"armes_001","name":"Nouveau Malpais","img":"https://www.bungie.net/common/destiny2_content/icons/238e6c3afdc31870d15231656f2d6bcb.jpg","category":"armes"},
-      {"id":"armes_002","name":"Neo Finis Terrae","img":"https://www.bungie.net/common/destiny2_content/icons/1e56af6ab4bbbe7cafba8b3bab690d7c.png","category":"armes"},
+      {"id":"armes_002","name":"Neo Finis Terrae","img":"https://www.bungie.net/common/destiny2_content/icons/ab5a4d92675023c3f565d4e8fa3db3a1.jpg","category":"armes"},
       {"id":"armes_003","name":"Tumulus Dyadique","img":"https://www.bungie.net/common/destiny2_content/icons/938bc6eb5c5c772e2f3d066380179d36.jpg","category":"armes"},
       {"id":"armes_004","name":"Aléthonyme","img":"https://www.bungie.net/common/destiny2_content/icons/09da11cd4fc285affeb6922f09b431ee.jpg","category":"armes"},
       {"id":"armes_005","name":"Khvostov 7G-0X","img":"https://www.bungie.net/common/destiny2_content/icons/23aac6d8454ee1bcd2234e303bd2d6bf.jpg","category":"armes"},

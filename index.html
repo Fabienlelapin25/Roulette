@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GOLEM Planning v15.1 · Discord 16:9 · AM / SOIR</title>
+    <title>GOLEM Planning v15.2 · AM / SOIR · Preview classique</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js">
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
@@ -761,173 +761,6 @@
 
     
         /* ============================================================
-           GOLEM PLANNING v14 — DISCORD 16:9
-           La carte passe en paysage pour profiter de la largeur
-           d'aperçu de Discord. Aucun changement du moteur GOLEM-WEEK.
-           ============================================================ */
-
-        :root {
-            --discord-card-width: 896px;
-            --discord-card-height: 504px;
-        }
-
-        .planning-card {
-            width: var(--discord-card-width);
-            height: var(--discord-card-height);
-            min-height: var(--discord-card-height);
-            padding: 14px 18px 12px;
-        }
-
-        .planning-card .header {
-            margin-bottom: 8px;
-            padding-bottom: 7px;
-        }
-
-        .planning-card .header h1 {
-            font-size: 1.90rem;
-            letter-spacing: 5px;
-            line-height: 1.05;
-        }
-
-        .planning-card .header .ornament {
-            font-size: .48rem;
-            letter-spacing: 8px;
-            margin-top: 0;
-        }
-
-        .planning-card .header p {
-            font-size: .66rem;
-            letter-spacing: 2.5px;
-            padding-top: 4px;
-            margin-top: 3px;
-        }
-
-        .planning-body {
-            gap: 5px;
-            margin-bottom: 5px;
-        }
-
-        .day-row {
-            grid-template-columns: 68px 1fr 1fr;
-            min-height: 49px;
-        }
-
-        .day-row.inactive {
-            min-height: 34px;
-            grid-template-columns: 68px 1fr;
-        }
-
-        .day-row .day-abbr {
-            font-size: 1rem;
-        }
-
-        .slot-line {
-            grid-template-columns: 56px 1fr;
-            column-gap: 8px;
-            row-gap: 2px;
-            padding: 6px 10px;
-        }
-
-        .slot-line.slot-off {
-            font-size: .67rem;
-            letter-spacing: 2.5px;
-        }
-
-        .slot-line .slot-time {
-            padding: 3px 5px;
-            font-size: .66rem;
-            letter-spacing: .2px;
-        }
-
-        .slot-line .slot-activity {
-            font-size: .92rem;
-            line-height: 1.05;
-        }
-
-        .slot-line .slot-tag {
-            font-size: .55rem;
-            padding: 2px 6px;
-            letter-spacing: .3px;
-        }
-
-        .day-row .day-off {
-            font-size: .67rem;
-            letter-spacing: 3px;
-        }
-
-        .planning-card .footer {
-            font-size: .43rem;
-            padding-top: 4px;
-            letter-spacing: 2.5px;
-        }
-
-        /* Le menu V13 reste large. La prévisualisation gagne uniquement
-           le format paysage. */
-        @media (min-width: 1660px) {
-            .preview-wrapper {
-                width: 934px;
-            }
-        }
-
-        /* Sur un écran plus étroit on autorise le navigateur à réduire
-           visuellement la carte, sans modifier le format de l'export. */
-        @media (max-width: 1050px) {
-            .preview-wrapper {
-                width: min(96vw, 934px);
-                overflow-x: auto;
-            }
-
-            .planning-card {
-                width: var(--discord-card-width);
-                height: var(--discord-card-height);
-                min-height: var(--discord-card-height);
-                flex: 0 0 auto;
-            }
-        }
-
-        /* Neutralise les anciennes règles mobiles de la carte :
-           le document Discord doit rester 16:9 et à deux créneaux. */
-        @media (max-width: 760px) {
-            .planning-card {
-                padding: 14px 18px 12px;
-            }
-
-            .day-row {
-                grid-template-columns: 68px 1fr 1fr;
-            }
-
-            .day-row.inactive {
-                grid-template-columns: 68px 1fr;
-            }
-
-            .day-row .day-abbr {
-                grid-row: auto;
-                font-size: 1rem;
-            }
-
-            .day-row .slots-container {
-                grid-column: 2 / 4;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .slot-line {
-                border-right: 1px solid #1e1e1e;
-                border-bottom: 0;
-                grid-template-columns: 56px 1fr;
-                padding: 6px 10px;
-            }
-
-            .slot-line:last-child {
-                border-right: 0;
-            }
-
-            .slot-line .slot-activity {
-                font-size: .92rem;
-            }
-        }
-
-    
-        /* ============================================================
            GOLEM PLANNING v15.1 — CORRECTION AM / SOIR
            Le libellé "◑ SOIR" est plus large que l'ancien libellé.
            L'ancienne largeur fixe de 62 px le faisait revenir à la ligne.
@@ -984,7 +817,7 @@
             </div>
         </div>
 
-        <!-- ===== PRÉVISUALISATION DISCORD 16:9 ===== -->
+        <!-- ===== PRÉVISUALISATION CLASSIQUE ===== -->
         <div class="preview-wrapper">
             <h2>❧ PRÉVISUALISATION</h2>
             <div class="planning-card" id="planningCard">
@@ -1001,7 +834,7 @@
                 </div>
             </div>
             <div class="actions">
-                <button class="btn btn-success" id="exportPngBtn" title="Export Discord 1600 × 900">⬇ Exporter PNG · 1600×900</button>
+                <button class="btn btn-success" id="exportPngBtn">⬇ Exporter PNG</button>
                 <button class="btn btn-code" id="copyGolemCodeBtn">◈ Copier code GOLEM</button>
             </div>
             <div class="code-status" id="codeStatus"></div>
@@ -1626,42 +1459,16 @@
             // ---------- EXPORT PNG ----------
             function exportPng() {
                 const card = document.getElementById('planningCard');
-                const targetWidth = 1600;
-                const targetHeight = 900;
-                const rect = card.getBoundingClientRect();
-
-                // Capture à une densité calculée pour viser 1600 px de large.
-                const captureScale = targetWidth / rect.width;
-
                 html2canvas(card, {
-                    scale: captureScale,
+                    scale: 2.5,
                     useCORS: true,
                     backgroundColor: '#000000',
                     allowTaint: false,
                     logging: false,
-                    width: rect.width,
-                    height: rect.height
-                }).then((capturedCanvas) => {
-                    // Canvas final fixe : Discord reçoit toujours un vrai 1600 × 900.
-                    const outputCanvas = document.createElement('canvas');
-                    outputCanvas.width = targetWidth;
-                    outputCanvas.height = targetHeight;
-
-                    const ctx = outputCanvas.getContext('2d');
-                    ctx.fillStyle = '#000000';
-                    ctx.fillRect(0, 0, targetWidth, targetHeight);
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-
-                    ctx.drawImage(
-                        capturedCanvas,
-                        0, 0, capturedCanvas.width, capturedCanvas.height,
-                        0, 0, targetWidth, targetHeight
-                    );
-
+                }).then((canvas) => {
                     const link = document.createElement('a');
-                    link.download = 'planning_golem_discord_1600x900.png';
-                    link.href = outputCanvas.toDataURL('image/png');
+                    link.download = 'planning_golem_clan.png';
+                    link.href = canvas.toDataURL('image/png');
                     link.click();
                 }).catch((err) => {
                     alert('Erreur export : ' + err);

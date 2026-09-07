@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GOLEM Planning v15 · Discord 16:9 · AM / SOIR</title>
+    <title>GOLEM Planning v15.1 · Discord 16:9 · AM / SOIR</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js">
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
@@ -924,6 +924,30 @@
             .slot-line .slot-activity {
                 font-size: .92rem;
             }
+        }
+
+    
+        /* ============================================================
+           GOLEM PLANNING v15.1 — CORRECTION AM / SOIR
+           Le libellé "◑ SOIR" est plus large que l'ancien libellé.
+           L'ancienne largeur fixe de 62 px le faisait revenir à la ligne.
+           On réserve assez de place au libellé et au champ horaire.
+           ============================================================ */
+        @media (min-width: 1660px) {
+            .slot-row .slot-label {
+                min-width: 88px;
+                flex: 0 0 88px;
+                white-space: nowrap;
+            }
+
+            .slot-row input[type="time"] {
+                flex: 0 0 112px;
+                min-width: 112px;
+            }
+        }
+
+        .slot-row .slot-label {
+            white-space: nowrap;
         }
 
     </style>
